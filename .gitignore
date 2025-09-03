@@ -4,9 +4,6 @@
 # React Router
 /.react-router/
 /build/
-package-lock.json
-package-lock.json
-
 
 .cache/
 public/
