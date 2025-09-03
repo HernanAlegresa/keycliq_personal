@@ -2,9 +2,7 @@
   "name": "keycliq",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=20 <23"
-  },
+  "engines": { "node": ">=20 <23" },
   "scripts": {
     "dev": "remix dev",
     "build": "remix build",
