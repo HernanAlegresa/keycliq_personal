@@ -1,74 +1,62 @@
-import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
-
-import "./app.css";
+// app/root.jsx
+import { Links, LiveReload, Meta, NavLink, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import tailwind from "./styles/tailwind.css?url";      // optional
+import appCss from "./styles/app.css?url";             // <-- the CSS I gave you
+import { Form } from "@remix-run/react";
 
 export const links = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
+  { rel: "stylesheet", href: tailwind },
+  { rel: "stylesheet", href: appCss },
 ];
 
-export function Layout({ children }) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  );
-}
+export const meta = () => ([
+  { title: "KeyCliq" },
+  { name: "viewport", content: "width=device-width, initial-scale=1" },
+]);
 
 export default function App() {
-  return <Outlet />;
-}
-
-export function ErrorBoundary({ error }) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack;
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
-  }
-
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <html lang="en">
+      <head><Meta /><Links /></head>
+      <body>
+        {/* Top bar */}
+        <header className="topbar">
+          <div className="container topbar__inner">
+            <a href="/" className="h1" style={{ textDecoration: "none", color: "inherit" }}>KeyCliq</a>
+            <nav className="hidden sm:flex" style={{ gap: 12 }}>
+              <a href="/scan">Scan</a>
+              <a href="/identify">Identify</a>
+              <a href="/keys">Library</a>
+            </nav>
+          </div>
+        </header>
+
+
+
+<Form method="post" action="/logout">
+  <button type="submit" className="btn btn--outline">Log out</button>
+</Form>
+
+
+        {/* Page content */}
+        <main className="container stack with-bottombar">
+          <Outlet />
+        </main>
+
+        {/* Bottom tab bar (mobile) */}
+        <nav className="bottombar sm:hidden">
+          <div className="bottombar__grid">
+            <NavLink className="tablink" to="/">Home</NavLink>
+            <NavLink className="tablink" to="/scan">Scan</NavLink>
+            <NavLink className="tablink" to="/identify">Find</NavLink>
+            <NavLink className="tablink" to="/keys">Keys</NavLink>
+          </div>
+        </nav>
+
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
+      </body>
+    </html>
   );
 }
