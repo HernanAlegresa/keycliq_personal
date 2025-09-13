@@ -1,0 +1,73 @@
+/* Settings Screen Styles */
+
+.settings-container {
+  min-height: 100dvh;
+  background: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px;
+}
+
+/* Main Content */
+.settings-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Log Out Button */
+.settings-logout-button {
+  width: 100%;
+  max-width: 320px;
+  height: 48px;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-error);
+  color: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-logout-button:hover {
+  background: #b91c1c; /* Darker red for hover */
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.settings-logout-button:focus-visible {
+  outline: 2px solid var(--color-error);
+  outline-offset: 2px;
+}
+
+.settings-logout-button:disabled {
+  background: var(--color-disabled);
+  color: var(--color-white);
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Mobile Responsive */
+@media (max-width: 375px) {
+  .settings-container {
+    padding: 0 16px;
+  }
+  
+  .settings-logout-button {
+    max-width: 280px;
+  }
+}
