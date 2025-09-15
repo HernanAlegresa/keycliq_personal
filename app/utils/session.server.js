@@ -32,7 +32,7 @@ return redirect(redirectTo, { headers: { "Set-Cookie": await commitSession(sessi
 export async function requireUserId(request) {
 const session = await getSession(request.headers.get("Cookie"));
 const userId = session.get("userId");
-if (!userId) throw redirect("/login");
+if (!userId) throw redirect("/Auth/signin");
 return userId;
 }
 

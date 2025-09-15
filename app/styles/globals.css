@@ -1,0 +1,130 @@
+/* KeyCliq Global Styles - Style Guide Implementation */
+
+/* 1) CSS Variables - Exact Brand Colors */
+:root {
+  /* Brand Colors */
+  --color-primary: #006209;        /* Primary Green */
+  --color-secondary: #595959;      /* Secondary Grey */
+  --color-white: #FFFFFF;          /* White */
+  --color-black: #000000;          /* Black */
+  --color-light-grey: #F5F5F5;     /* Light Grey (UI) */
+  
+  /* Typography */
+  --font-heading: "Raleway", system-ui, -apple-system, sans-serif;
+  --font-body: "Open Sans", system-ui, -apple-system, sans-serif;
+  
+  /* Typography Sizes */
+  --text-h1: 24px;
+  --text-h2: 20px;
+  --text-body: 16px;
+  --text-caption: 12px;
+  
+  /* Spacing & Layout */
+  --radius: 12px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06), 0 1px 1px rgba(0,0,0,.04);
+  --shadow-md: 0 6px 16px rgba(0,0,0,.08);
+  
+  /* UI Colors */
+  --color-bg: var(--color-white);
+  --color-surface: var(--color-white);
+  --color-text: var(--color-black);
+  --color-muted: var(--color-secondary);
+  --color-border: #E5E5E5;
+  --color-disabled: var(--color-light-grey);
+  
+  /* Extended Colors */
+  --color-primary-dark: #004d07;        /* Darker green for hover */
+  --color-primary-light: #dcfce7;       /* Light green for success */
+  --color-success-text: #166534;        /* Dark green for success text */
+  --color-error: #dc2626;               /* Red for errors */
+  --color-error-light: #fef2f2;         /* Light red for error backgrounds */
+  --color-warning: #d97706;             /* Orange for warnings */
+  --color-warning-light: #fef3c7;       /* Light orange for warning backgrounds */
+  --color-info: #1d4ed8;                /* Blue for info */
+  --color-info-light: #dbeafe;          /* Light blue for info backgrounds */
+  --color-slate-900: #1e293b;           /* Dark slate for camera placeholder */
+  --color-slate-400: #94a3b8;           /* Medium slate for placeholders */
+  --color-slate-50: #f8fafc;            /* Very light slate for backgrounds */
+}
+
+/* 2) Reset & Base Styles */
+*, *::before, *::after { 
+  box-sizing: border-box; 
+}
+
+html, body, #root { 
+  height: 100%; 
+}
+
+html:focus-within { 
+  scroll-behavior: smooth; 
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+/* 3) Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700; /* Bold */
+  margin: 0;
+}
+
+h1 { font-size: var(--text-h1); }
+h2 { font-size: var(--text-h2); }
+
+p, span, div {
+  font-family: var(--font-body);
+  font-weight: 400; /* Regular */
+}
+
+.caption {
+  font-size: var(--text-caption);
+  color: var(--color-muted);
+}
+
+/* 4) Layout Helpers */
+.container {
+  max-width: 640px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+.stack > * + * { 
+  margin-top: 12px; 
+}
+
+.grid { 
+  display: grid; 
+  gap: 12px; 
+}
+
+.grid.two { 
+  grid-template-columns: 1fr 1fr; 
+}
+
+.grid.three { 
+  grid-template-columns: 1fr 1fr 1fr; 
+}
+
+/* 5) Mobile-First Responsive */
+@media (min-width: 640px) {
+  .container {
+    max-width: 768px;
+    padding-inline: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+    padding-inline: 32px;
+  }
+}

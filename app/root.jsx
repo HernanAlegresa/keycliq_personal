@@ -1,12 +1,28 @@
 // app/root.jsx
-import { Links, LiveReload, Meta, NavLink, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
-import tailwind from "./styles/tailwind.css?url";      // optional
-import appCss from "./styles/app.css?url";             // <-- the CSS I gave you
-import { Form } from "@remix-run/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useMatches } from "@remix-run/react";
+import tailwind from "./styles/tailwind.css?url";
+import globalsCss from "./styles/globals.css?url";
+import componentsCss from "./styles/components.css?url";
+import pagesCss from "./styles/pages.css?url";
+import welcomeCss from "./styles/welcome.css?url";
+import authCss from "./styles/auth.css?url";
+import settingsCss from "./styles/settings.css?url";
+import { Header } from "./components/layout/Header";
+import { FooterNav } from "./components/layout/FooterNav";
+import { BackButton } from "./components/ui/BackButton";
+import { DynamicBackButton } from "./components/ui/DynamicBackButton";
 
 export const links = () => [
+  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+  { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Raleway:wght@400;600;700&display=swap" },
   { rel: "stylesheet", href: tailwind },
-  { rel: "stylesheet", href: appCss },
+  { rel: "stylesheet", href: globalsCss },
+  { rel: "stylesheet", href: componentsCss },
+  { rel: "stylesheet", href: pagesCss },
+  { rel: "stylesheet", href: welcomeCss },
+  { rel: "stylesheet", href: authCss },
+  { rel: "stylesheet", href: settingsCss },
 ];
 
 export const meta = () => ([
@@ -15,43 +31,44 @@ export const meta = () => ([
 ]);
 
 export default function App() {
+  const matches = useMatches();
+  
+  // Find if any route wants to hide footer or has custom header
+  const currentMatch = matches[matches.length - 1];
+  const shouldHideFooter = matches.some(match => match.handle?.hideFooter);
+  const shouldHideHeader = matches.some(match => match.handle?.hideHeader);
+  const headerProps = currentMatch?.handle;
+
+  // Create leftSlot if back button is needed
+  const leftSlot = headerProps?.showBackButton ? (
+    headerProps.backTo === 'dynamic' ? (
+      <DynamicBackButton />
+    ) : (
+      <BackButton 
+        to={headerProps.backTo || "/"} 
+        ariaLabel="Go back" 
+      />
+    )
+  ) : null;
+
   return (
     <html lang="en">
       <head><Meta /><Links /></head>
       <body>
-        {/* Top bar */}
-        <header className="topbar">
-          <div className="container topbar__inner">
-            <a href="/" className="h1" style={{ textDecoration: "none", color: "inherit" }}>KeyCliq</a>
-            <nav className="hidden sm:flex" style={{ gap: 12 }}>
-              <a href="/scan">Scan</a>
-              <a href="/identify">Identify</a>
-              <a href="/keys">Library</a>
-            </nav>
-          </div>
-        </header>
-
-
-
-<Form method="post" action="/logout">
-  <button type="submit" className="btn btn--outline">Log out</button>
-</Form>
-
-
+        {!shouldHideHeader && (
+          <Header 
+            title={headerProps?.title || "KeyCliq"}
+            leftSlot={leftSlot}
+            rightSlot={headerProps?.stepLabel}
+          />
+        )}
+        
         {/* Page content */}
-        <main className="container stack with-bottombar">
+        <main className={shouldHideFooter ? "" : "container stack with-bottombar"}>
           <Outlet />
         </main>
 
-        {/* Bottom tab bar (mobile) */}
-        <nav className="bottombar sm:hidden">
-          <div className="bottombar__grid">
-            <NavLink className="tablink" to="/">Home</NavLink>
-            <NavLink className="tablink" to="/scan">Scan</NavLink>
-            <NavLink className="tablink" to="/identify">Find</NavLink>
-            <NavLink className="tablink" to="/keys">Keys</NavLink>
-          </div>
-        </nav>
+        {!shouldHideFooter && <FooterNav />}
 
         <ScrollRestoration />
         <Scripts />
