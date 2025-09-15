@@ -1,8 +1,8 @@
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
-import { verifyLogin } from "../../utils/auth.server.js";
-import { createUserSession, getSession } from "../../utils/session.server.js";
-import logo from "../../assets/Logo KeyCliq (1).png";
+import { verifyLogin } from "../utils/auth.server.js";
+import { createUserSession, getSession } from "../utils/session.server.js";
+import logo from "../assets/Logo KeyCliq (1).png";
 
 export const handle = {
   hideFooter: true,
@@ -114,7 +114,7 @@ export default function SignIn() {
       <div className="auth-footer">
         <p className="auth-footer-text">
           Don't have an account?{" "}
-          <Link to="/Auth/signup" className="auth-footer-link">
+          <Link to="/signup" className="auth-footer-link">
             Create account
           </Link>
         </p>

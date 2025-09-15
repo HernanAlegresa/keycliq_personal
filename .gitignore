@@ -7,3 +7,6 @@
 
 .cache/
 public/
+
+# Private development documentation
+docs/dev-notes.md

@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
-import { getSession } from "../../utils/session.server.js";
-import logo from "../../assets/Logo KeyCliq (1).png";
+import { getSession } from "../utils/session.server.js";
+import logo from "../assets/Logo KeyCliq (1).png";
 
 export const handle = {
   hideHeader: true,
@@ -33,14 +33,14 @@ export default function Welcome() {
       {/* Action Buttons Section */}
       <div className="welcome-buttons">
         <Link 
-          to="/Auth/signin" 
+          to="/signin" 
           className="welcome-button welcome-button--primary"
         >
           Sign In
         </Link>
         
         <Link 
-          to="/Auth/signup" 
+          to="/signup" 
           className="welcome-button welcome-button--secondary"
         >
           Create Account

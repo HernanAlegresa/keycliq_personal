@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { useRef, useState } from "react";
-import { requireUserId } from "../../utils/session.server.js";
-import { Button } from "../../components/ui/Button.jsx";
-import { CameraPlaceholder } from "../../components/ui/CameraPlaceholder.jsx";
+import { requireUserId } from "../utils/session.server.js";
+import { Button } from "../components/ui/Button.jsx";
+import { CameraPlaceholder } from "../components/ui/CameraPlaceholder.jsx";
 
 export const handle = { 
   hideFooter: true, 
@@ -49,7 +49,7 @@ export default function ScanCapture() {
       sessionStorage.setItem('tempKeyImageName', file.name);
       
       // Navigate to review page
-      navigate('/Scan_Flow/scan/review');
+      navigate('/scan/review');
     } catch (err) {
       setError('Failed to process image');
       setIsLoading(false);

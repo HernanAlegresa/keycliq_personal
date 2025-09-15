@@ -1,16 +1,16 @@
 import { json } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import { requireUserId } from "../../utils/session.server.js";
-import { Button } from "../../components/ui/Button.jsx";
-import { ImagePreview } from "../../components/ui/ImagePreview.jsx";
+import { requireUserId } from "../utils/session.server.js";
+import { Button } from "../components/ui/Button.jsx";
+import { ImagePreview } from "../components/ui/ImagePreview.jsx";
 
 export const handle = { 
   hideFooter: true, 
   title: 'Scan a Key', 
   stepLabel: '2 of 2',
   showBackButton: true,
-  backTo: '/Scan_Flow/scan'
+  backTo: '/scan'
 };
 
 export async function loader({ request }) {
@@ -40,7 +40,7 @@ export default function ScanReview() {
   const handleContinue = () => {
     // Navigate to processing screen
     console.log('Continue to AI processing with image:', imageName);
-    navigate('/Scan_Flow/scan/check');
+    navigate('/scan/check');
   };
 
   const handleRetakePhoto = () => {
@@ -53,7 +53,7 @@ export default function ScanReview() {
       URL.revokeObjectURL(imageUrl);
     }
     
-    navigate('/Scan_Flow/scan');
+    navigate('/scan');
   };
 
   return (
