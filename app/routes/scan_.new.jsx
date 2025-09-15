@@ -1,7 +1,7 @@
 import { json } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
-import { requireUserId } from "../../utils/session.server.js";
-import { Button } from "../../components/ui/Button.jsx";
+import { requireUserId } from "../utils/session.server.js";
+import { Button } from "../components/ui/Button.jsx";
 
 export const handle = { 
   hideFooter: true, 
@@ -24,11 +24,11 @@ export default function ScanNoMatch() {
 
   const handleSaveAsNewKey = () => {
     // Navigate to Key Details with a new key ID and empty form
-    navigate('/MyKeys/keys/new-key?from=/Scan_Flow/scan/new');
+    navigate('/keys/new-key?from=/scan/new');
   };
 
   const handleScanAnotherKey = () => {
-    navigate('/Scan_Flow/scan');
+    navigate('/scan');
   };
 
   return (

@@ -32,12 +32,27 @@ return redirect(redirectTo, { headers: { "Set-Cookie": await commitSession(sessi
 export async function requireUserId(request) {
 const session = await getSession(request.headers.get("Cookie"));
 const userId = session.get("userId");
-if (!userId) throw redirect("/Auth/signin");
+if (!userId) throw redirect("/welcome");
 return userId;
 }
 
 
 export async function logout(request) {
-const session = await getSession(request.headers.get("Cookie"));
-return redirect("/", { headers: { "Set-Cookie": await destroySession(session) } });
+  const session = await getSession(request.headers.get("Cookie"));
+  const userId = session.get("userId");
+  
+  // Clean up database session if userId exists
+  if (userId) {
+    try {
+      await prisma.session.deleteMany({
+        where: { userId }
+      });
+    } catch (error) {
+      console.error("Error cleaning up database sessions:", error);
+    }
+  }
+  
+  return redirect("/welcome", { 
+    headers: { "Set-Cookie": await destroySession(session) } 
+  });
 }

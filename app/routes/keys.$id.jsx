@@ -1,8 +1,8 @@
 import { json } from "@remix-run/node";
 import { useNavigate, useParams } from "@remix-run/react";
 import { useState, useEffect } from "react";
-import { requireUserId } from "../../utils/session.server.js";
-import { Button } from "../../components/ui/Button.jsx";
+import { requireUserId } from "../utils/session.server.js";
+import { Button } from "../components/ui/Button.jsx";
 
 export const handle = { 
   hideFooter: true, 
@@ -134,7 +134,7 @@ export default function KeyDetails() {
       if (isNewKey) {
         // For new keys, redirect to My Keys after saving
         console.log('New key saved, redirecting to My Keys');
-        navigate('/MyKeys/keys');
+        navigate('/keys');
       } else {
         // For existing keys, stay in edit mode
         setOriginalData(formData);
@@ -147,7 +147,7 @@ export default function KeyDetails() {
   const handleDelete = () => {
     // TODO: Delete key from backend
     console.log('Deleting key:', id);
-    navigate('/MyKeys/keys');
+    navigate('/keys');
   };
 
   const handleCancel = () => {

@@ -1,5 +1,5 @@
 import { Form, useNavigation } from "@remix-run/react";
-import { requireUserId } from "../../utils/session.server.js";
+import { requireUserId } from "../utils/session.server.js";
 
 export const handle = {
   title: "Settings",
@@ -18,7 +18,7 @@ export default function Settings() {
     <div className="settings-container">
       {/* Main Content */}
       <div className="settings-content">
-        <Form method="post" action="/Auth/logout">
+        <Form method="post" action="/logout">
           <button
             type="submit"
             className="settings-logout-button"

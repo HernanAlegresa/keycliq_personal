@@ -1,7 +1,7 @@
 import { json } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
-import { requireUserId } from "../../utils/session.server.js";
-import { Button } from "../../components/ui/Button.jsx";
+import { requireUserId } from "../utils/session.server.js";
+import { Button } from "../components/ui/Button.jsx";
 
 export const handle = { 
   hideFooter: false, 
@@ -18,7 +18,7 @@ export default function ScanError() {
   const navigate = useNavigate();
 
   const handleRetry = () => {
-    navigate('/Scan_Flow/scan/new');
+    navigate('/scan/new');
   };
 
   return (
