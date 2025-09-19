@@ -1,5 +1,6 @@
 import { json } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import { requireUserId } from "../utils/session.server.js";
 import { Button } from "../components/ui/Button.jsx";
 
@@ -16,15 +17,20 @@ export async function loader({ request }) {
 
 export default function ScanNoMatch() {
   const navigate = useNavigate();
+  const [scannedImageUrl, setScannedImageUrl] = useState("/api/placeholder/200/150");
 
-  // Mock data - will be replaced with real scanned image later
-  const scannedKey = {
-    imageUrl: "/api/placeholder/200/150" // Placeholder for now - will be the actual scanned image
-  };
+  useEffect(() => {
+    // Get the scanned image from sessionStorage
+    const tempUrl = sessionStorage.getItem('tempKeyImage');
+    if (tempUrl) {
+      setScannedImageUrl(tempUrl);
+    }
+  }, []);
 
   const handleSaveAsNewKey = () => {
-    // Navigate to Key Details with a new key ID and empty form
-    navigate('/keys/new-key?from=/scan/new');
+    // Navigate to Key Details with the scanned image
+    const imageUrl = sessionStorage.getItem('tempKeyImage') || "/api/placeholder/200/150";
+    navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent(imageUrl)}`);
   };
 
   const handleScanAnotherKey = () => {
@@ -50,7 +56,7 @@ export default function ScanNoMatch() {
           {/* Key Image */}
           <div className="scan-no-match__key-image">
             <img 
-              src={scannedKey.imageUrl} 
+              src={scannedImageUrl} 
               alt="Scanned key"
               className="scan-no-match__key-img"
             />

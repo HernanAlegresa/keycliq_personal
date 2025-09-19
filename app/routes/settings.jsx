@@ -27,6 +27,13 @@ export default function Settings() {
             {isSubmitting ? "Signing Out..." : "Log Out"}
           </button>
         </Form>
+        
+        {/* Fun message from the client */}
+        <div className="settings-fun-message">
+          <p className="settings-fun-text">R.I.P logout button without padding...
+            <br />Always in our hearts!
+          </p>
+        </div>
       </div>
     </div>
   );
