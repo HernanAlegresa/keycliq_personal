@@ -39,7 +39,6 @@ export default function ScanReview() {
 
   const handleContinue = () => {
     // Navigate to processing screen
-    console.log('Continue to AI processing with image:', imageName);
     navigate('/scan/check');
   };
 

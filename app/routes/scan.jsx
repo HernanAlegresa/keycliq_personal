@@ -56,13 +56,10 @@ export default function ScanCapture() {
     }
   };
 
-  const handleUploadClick = () => {
+  const handleScan = () => {
+    // Trigger file input which will handle both camera and file upload
+    // On mobile devices, this will show options for camera, photo library, etc.
     fileInputRef.current?.click();
-  };
-
-  const handleTakePhoto = () => {
-    // TODO: Implement camera functionality
-    console.log('Take photo - not implemented yet');
   };
 
   return (
@@ -80,22 +77,12 @@ export default function ScanCapture() {
         <Button
           variant="primary"
           size="large"
-          onClick={handleTakePhoto}
+          onClick={handleScan}
           disabled={isLoading}
           className="w-full py-3 rounded-2xl"
         >
-          Take Photo
+          SCAN
         </Button>
-        
-        <button
-          type="button"
-          onClick={handleUploadClick}
-          className="scan-capture__secondary-button"
-          aria-label="Upload an image instead"
-          disabled={isLoading}
-        >
-          Upload an image instead
-        </button>
 
         {error && (
           <p className="text-red-600 text-sm text-center" role="alert">
@@ -109,9 +96,10 @@ export default function ScanCapture() {
         ref={fileInputRef}
         type="file"
         accept="image/*"
+        capture="environment"
         onChange={handleFileUpload}
         className="scan-capture__file-input"
-        aria-label="Upload a key image"
+        aria-label="Scan a key image"
       />
     </div>
   );

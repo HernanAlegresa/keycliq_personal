@@ -37,22 +37,20 @@ createdAt DateTime @default(now())
 
 
 model Key {
-id String @id @default(cuid())
-ownerId String
-owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-label String
-description String?
-imageUrl String?
-images KeyImage[]
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name String
+  description String?
+  unit String? // Unidad opcional
+  door String? // Puerta opcional
+  notes String? // Notas opcionales
+  images Json? // Array de URLs de imágenes
+  signature Json? // Vector de características
+  sigStatus String @default("pending") // 'pending' | 'ready' | 'failed'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("keys")
 }
 
-
-model KeyImage {
-id String @id @default(cuid())
-keyId String
-key Key @relation(fields: [keyId], references: [id], onDelete: Cascade)
-imageUrl String
-createdAt DateTime @default(now())
-}

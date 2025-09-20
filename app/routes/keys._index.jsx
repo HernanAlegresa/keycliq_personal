@@ -1,7 +1,8 @@
 import { json } from "@remix-run/node";
-import { useNavigate } from "@remix-run/react";
+import { useNavigate, useLoaderData, useSearchParams } from "@remix-run/react";
 import { useState, useMemo } from "react";
 import { requireUserId } from "../utils/session.server.js";
+import { getUserKeys, getKeyStats } from "../lib/keys.server.js";
 
 export const handle = { 
   hideFooter: false, 
@@ -10,71 +11,53 @@ export const handle = {
 };
 
 export async function loader({ request }) {
-  await requireUserId(request);
-  return json({});
+  const userId = await requireUserId(request);
+  const url = new URL(request.url);
+  const search = url.searchParams.get("search") || "";
+
+  const [keys, stats] = await Promise.all([
+    getUserKeys(userId, search),
+    getKeyStats(userId)
+  ]);
+
+  return json({ keys, stats, search });
 }
 
 export default function KeysInventory() {
   const navigate = useNavigate();
-  
-  // Mock data - will be replaced with real data later
-  const mockKeys = [
-    {
-      id: "key-1",
-      name: "Bedroom Key",
-      property: "15 Main St.",
-      imageUrl: "https://imgur.com/xdCqMes.jpg"
-    },
-    {
-      id: "key-2", 
-      name: "Garage Key",
-      property: "10 Main St.",
-      imageUrl: "https://imgur.com/UdNqZEM.jpg"
-    },
-    {
-      id: "key-3",
-      name: "Main Door Key", 
-      property: "2 Main St.",
-      imageUrl: "https://imgur.com/3AympjL.jpg"
-    },
-    {
-      id: "key-4",
-      name: "Back Door Key",
-      property: "2 Main St.", 
-      imageUrl: "https://imgur.com/gi5oVWo.jpg"
-    }
-  ];
+  const { keys, stats, search } = useLoaderData();
+  const [searchParams] = useSearchParams();
 
-  // State for search and filter
-  const [searchTerm, setSearchTerm] = useState("");
+  // State for filter and search
   const [activeFilter, setActiveFilter] = useState("All");
+  const [searchTerm, setSearchTerm] = useState(search || "");
 
   // Get unique properties for filter chips
   const properties = useMemo(() => {
-    const uniqueProps = [...new Set(mockKeys.map(key => key.property))];
+    const uniqueProps = [...new Set(keys.map(key => key.description || "Sin descripción"))];
     return uniqueProps;
-  }, []);
+  }, [keys]);
 
-  // Filter keys based on search and active filter
+  // Filter keys based on active filter and search term
   const filteredKeys = useMemo(() => {
-    let filtered = mockKeys;
-
-    // Filter by property
-    if (activeFilter !== "All") {
-      filtered = filtered.filter(key => key.property === activeFilter);
-    }
+    let filtered = keys;
 
     // Filter by search term
     if (searchTerm.trim()) {
-      const term = searchTerm.toLowerCase();
+      const searchLower = searchTerm.toLowerCase();
       filtered = filtered.filter(key => 
-        key.name.toLowerCase().includes(term) || 
-        key.property.toLowerCase().includes(term)
+        key.name.toLowerCase().includes(searchLower) ||
+        (key.description && key.description.toLowerCase().includes(searchLower))
       );
     }
 
+    // Filter by property/description
+    if (activeFilter !== "All") {
+      filtered = filtered.filter(key => (key.description || "Sin descripción") === activeFilter);
+    }
+
     return filtered;
-  }, [mockKeys, activeFilter, searchTerm]);
+  }, [keys, activeFilter, searchTerm]);
 
   const handleKeyClick = (keyId) => {
     navigate(`/keys/${keyId}`);
@@ -82,6 +65,10 @@ export default function KeysInventory() {
 
   const handleFilterClick = (filter) => {
     setActiveFilter(filter);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -93,7 +80,7 @@ export default function KeysInventory() {
           type="text"
           placeholder="Search Key"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
           className="keys-inventory__search-input"
         />
       </div>
@@ -128,15 +115,30 @@ export default function KeysInventory() {
                 onClick={() => handleKeyClick(key.id)}
               >
                 <div className="keys-inventory__item-image">
-                  <img
-                    src={key.imageUrl}
-                    alt={key.name}
-                    className="keys-inventory__item-img"
-                  />
+                  {key.images && key.images.length > 0 ? (
+                    <img
+                      src={key.images[0]}
+                      alt={key.name}
+                      className="keys-inventory__item-img"
+                    />
+                  ) : (
+                    <div className="keys-inventory__item-placeholder">
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1721 9z" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
                 <div className="keys-inventory__item-content">
                   <h3 className="keys-inventory__item-name">{key.name}</h3>
-                  <p className="keys-inventory__item-property">{key.property}</p>
+                  <p className="keys-inventory__item-property">{key.description || "Sin descripción"}</p>
+                  {/* Status badge hidden for now - will be shown when Key Scan is implemented */}
+                  {/* <div className="keys-inventory__item-status">
+                    <span className={`keys-inventory__status-badge keys-inventory__status-badge--${key.sigStatus}`}>
+                      {key.sigStatus === "ready" ? "Lista" :
+                       key.sigStatus === "pending" ? "Pendiente" : "Fallida"}
+                    </span>
+                  </div> */}
                 </div>
               </div>
           ))}

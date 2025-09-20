@@ -1,5 +1,6 @@
 import { json } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
+import { useEffect } from "react";
 import { requireUserId } from "../utils/session.server.js";
 import { Button } from "../components/ui/Button.jsx";
 
@@ -16,6 +17,16 @@ export async function loader({ request, params }) {
 
 export default function ScanSuccess() {
   const navigate = useNavigate();
+
+  // Clean up temporary image data after successful save
+  useEffect(() => {
+    const tempUrl = sessionStorage.getItem('tempKeyImage');
+    if (tempUrl) {
+      URL.revokeObjectURL(tempUrl);
+      sessionStorage.removeItem('tempKeyImage');
+      sessionStorage.removeItem('tempKeyImageName');
+    }
+  }, []);
 
   const handleScanAnotherKey = () => {
     navigate('/scan');
