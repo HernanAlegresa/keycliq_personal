@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-09-22T21:35:16.173Z",
+  "version": "V1.2 Hybrid",
+  "results": {
+    "sameKeyConsistency": [],
+    "differentKeyDiscrimination": [],
+    "inventorySimulation": [],
+    "allScores": [],
+    "deltaAnalysis": [],
+    "confusionMatrix": {
+      "truePositives": 0,
+      "falsePositives": 0,
+      "trueNegatives": 0,
+      "falseNegatives": 0
+    }
+  },
+  "accuracy": {
+    "sameKey": 0,
+    "differentKey": 0,
+    "inventory": 0,
+    "overall": 0
+  },
+  "config": {
+    "thresholds": {
+      "sameKey": {
+        "match": 0.9,
+        "possible": 0.8,
+        "noMatch": 0.7
+      },
+      "differentKey": {
+        "match": 0.95,
+        "possible": 0.85,
+        "noMatch": 0.75
+      },
+      "inventory": {
+        "match": 0.92,
+        "possible": 0.82,
+        "noMatch": 0.72
+      }
+    },
+    "weights": {
+      "contour": 0.3,
+      "bitting": 0.5,
+      "bow": 0.15,
+      "shank": 0.05
+    },
+    "deltaMargin": 0.05,
+    "algorithm": "cosine_similarity"
+  }
+}
