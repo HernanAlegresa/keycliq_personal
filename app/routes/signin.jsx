@@ -72,7 +72,13 @@ export default function SignIn() {
             autoComplete="email"
             className={`auth-input ${actionData?.errors?.email ? 'auth-input--error' : ''}`}
             onInvalid={(e) => {
-              e.target.setCustomValidity('Please enter a valid email address');
+              if (e.target.validity.valueMissing) {
+                e.target.setCustomValidity('Please enter an email address');
+              } else if (e.target.validity.typeMismatch) {
+                e.target.setCustomValidity('Please enter a valid email address');
+              } else {
+                e.target.setCustomValidity('Please enter a valid email address');
+              }
             }}
             onInput={(e) => {
               e.target.setCustomValidity('');
