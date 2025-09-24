@@ -71,6 +71,12 @@ export default function SignIn() {
             required
             autoComplete="email"
             className={`auth-input ${actionData?.errors?.email ? 'auth-input--error' : ''}`}
+            onInvalid={(e) => {
+              e.target.setCustomValidity('Please enter a valid email address');
+            }}
+            onInput={(e) => {
+              e.target.setCustomValidity('');
+            }}
           />
           {actionData?.errors?.email && (
             <p className="auth-error">{actionData.errors.email}</p>
@@ -87,6 +93,12 @@ export default function SignIn() {
             required
             autoComplete="current-password"
             className={`auth-input ${actionData?.errors?.password ? 'auth-input--error' : ''}`}
+            onInvalid={(e) => {
+              e.target.setCustomValidity('Password is required');
+            }}
+            onInput={(e) => {
+              e.target.setCustomValidity('');
+            }}
           />
           {actionData?.errors?.password && (
             <p className="auth-error">{actionData.errors.password}</p>

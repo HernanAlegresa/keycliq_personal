@@ -70,7 +70,7 @@ export async function action({ request, params }) {
       notes: notes || null
     };
 
-    // Validar datos
+    // Validate data
     const validation = validateKeyData(keyData);
     if (!validation.isValid) {
       return json({ 
@@ -105,7 +105,7 @@ export async function action({ request, params }) {
 
         if (!updatedKey) {
           return json({ 
-            errors: ["No se pudo actualizar la llave"],
+            errors: ["Could not update the key"],
             fields: { name, property, unit, door, notes } 
           }, { status: 404 });
         }
@@ -114,8 +114,20 @@ export async function action({ request, params }) {
       }
     } catch (error) {
       console.error("Error saving key:", error);
+      
+      // Handle specific error cases
+      let errorMessage = "Error saving the key. Please try again.";
+      
+      if (error.message.includes("User with ID") && error.message.includes("not found")) {
+        errorMessage = "Your session has expired. Please log in again.";
+      } else if (error.message.includes("Foreign key constraint failed")) {
+        errorMessage = "Your session has expired. Please log in again.";
+      } else if (error.message.includes("A key with this information already exists")) {
+        errorMessage = "A key with this information already exists.";
+      }
+      
       return json({ 
-        errors: ["Error al guardar la llave. Inténtalo de nuevo."],
+        errors: [errorMessage],
         fields: { name, property, unit, door, notes } 
       }, { status: 500 });
     }
@@ -126,14 +138,14 @@ export async function action({ request, params }) {
     
     if (!deleted) {
       return json({ 
-        error: "No se pudo eliminar la llave" 
+        error: "Could not delete the key" 
       }, { status: 400 });
     }
 
     return redirect("/keys");
   }
 
-  return json({ error: "Acción no válida" }, { status: 400 });
+  return json({ error: "Invalid action" }, { status: 400 });
 }
 
 export default function KeyDetails() {
@@ -367,7 +379,7 @@ return (
               size="large"
               type="submit"
               onClick={(e) => {
-                if (!confirm("¿Estás seguro de que quieres eliminar esta llave? Esta acción no se puede deshacer.")) {
+                if (!confirm("Are you sure you want to delete this key? This action cannot be undone.")) {
                   e.preventDefault();
                 }
               }}
