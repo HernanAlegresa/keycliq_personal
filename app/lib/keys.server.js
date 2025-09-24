@@ -158,23 +158,23 @@ export function validateKeyData(data) {
   const errors = [];
 
   if (!data.name || data.name.trim().length === 0) {
-    errors.push("El nombre es requerido");
+    errors.push("Name is required");
   }
 
   if (data.name && data.name.length > 100) {
-    errors.push("El nombre no puede tener más de 100 caracteres");
+    errors.push("Name cannot be longer than 100 characters");
   }
 
   if (data.description && data.description.length > 500) {
-    errors.push("La descripción no puede tener más de 500 caracteres");
+    errors.push("Description cannot be longer than 500 characters");
   }
 
   if (data.images && !Array.isArray(data.images)) {
-    errors.push("Las imágenes deben ser un array");
+    errors.push("Images must be an array");
   }
 
   if (data.images && data.images.length > 10) {
-    errors.push("No se pueden subir más de 10 imágenes por llave");
+    errors.push("Cannot upload more than 10 images per key");
   }
 
   return {

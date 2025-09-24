@@ -79,6 +79,12 @@ export default function SignUp() {
             required
             autoComplete="email"
             className={`auth-input ${actionData?.errors?.email ? 'auth-input--error' : ''}`}
+            onInvalid={(e) => {
+              e.target.setCustomValidity('Please enter a valid email address');
+            }}
+            onInput={(e) => {
+              e.target.setCustomValidity('');
+            }}
           />
           {actionData?.errors?.email && (
             <p className="auth-error">{actionData.errors.email}</p>
@@ -95,6 +101,12 @@ export default function SignUp() {
             required
             autoComplete="new-password"
             className={`auth-input ${actionData?.errors?.password ? 'auth-input--error' : ''}`}
+            onInvalid={(e) => {
+              e.target.setCustomValidity('Password is required');
+            }}
+            onInput={(e) => {
+              e.target.setCustomValidity('');
+            }}
           />
           {actionData?.errors?.password && (
             <p className="auth-error">{actionData.errors.password}</p>
@@ -109,6 +121,12 @@ export default function SignUp() {
             id="agreeToTerms"
             className="auth-checkbox"
             required
+            onInvalid={(e) => {
+              e.target.setCustomValidity('Please agree to the terms and privacy policy to continue');
+            }}
+            onInput={(e) => {
+              e.target.setCustomValidity('');
+            }}
           />
           <label htmlFor="agreeToTerms" className="auth-checkbox-label">
             I agree to{" "}

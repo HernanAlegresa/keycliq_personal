@@ -3,7 +3,7 @@ export function KeyForm({ key, isEditing = false }) {
     <div className="space-y-6">
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-          Nombre de la llave *
+          Key Name *
         </label>
         <input
           type="text"
@@ -12,7 +12,7 @@ export function KeyForm({ key, isEditing = false }) {
           required
           defaultValue={key?.name || ""}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          placeholder="Ej: Llave de casa, Llave del auto, etc."
+          placeholder="e.g., House key, Car key, etc."
         />
       </div>
 
@@ -26,7 +26,7 @@ export function KeyForm({ key, isEditing = false }) {
           rows={3}
           defaultValue={key?.description || ""}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          placeholder="Información adicional sobre esta llave..."
+          placeholder="Additional information about this key..."
         />
       </div>
 
@@ -55,7 +55,7 @@ export function KeyForm({ key, isEditing = false }) {
                 <div key={index} className="relative">
                   <img 
                     src={imageUrl} 
-                    alt={`Imagen ${index + 1}`}
+                    alt={`Image ${index + 1}`}
                     className="w-full h-20 object-cover rounded-lg"
                   />
                 </div>
