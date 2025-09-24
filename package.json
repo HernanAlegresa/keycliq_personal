@@ -11,7 +11,10 @@
     "start": "remix-serve build/index.js",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
-    "db:migrate:deploy": "prisma migrate deploy"
+    "db:migrate:deploy": "prisma migrate deploy",
+    "keyscan:validate": "node scripts/keyscan/keyscan-validate.js",
+    "keyscan:qa": "node scripts/keyscan/keyscan-qa.js",
+    "keyscan:test": "npm run keyscan:validate && npm run keyscan:qa"
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
@@ -19,9 +22,11 @@
     "@remix-run/react": "2.17.0",
     "@remix-run/serve": "2.17.0",
     "bcryptjs": "3.0.2",
+    "canvas": "^3.2.0",
     "isbot": "5.1.27",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "sharp": "^0.34.4"
   },
   "devDependencies": {
     "@remix-run/dev": "2.17.0",

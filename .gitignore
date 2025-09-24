@@ -10,3 +10,17 @@ public/
 
 # Private development documentation
 docs/
+
+# Key Scan Dataset - Client images (keep out of repository)
+tests/fixtures/keys/*/
+tests/fixtures/images/
+client-dataset/
+
+# Configuration secrets
+.env.local
+config/secrets.json
+dataset-config.local.json
+
+# Test results with sensitive data
+test-results/
+qa-reports/
