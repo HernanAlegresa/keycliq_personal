@@ -20,13 +20,12 @@ export async function loader({ request, params }) {
   const isNewKey = keyId === 'new-key';
   
   if (isNewKey) {
-    // Get scanned image from URL params or use placeholder
-    const url = new URL(request.url);
-    const imageUrl = url.searchParams.get("image") || "/api/placeholder/200/150";
-    
+    // For new keys, we'll use sessionStorage on the client side
+    // No need to pass image data through URL to avoid header size issues
     return json({ 
       isNewKey: true, 
-      imageUrl,
+      imageUrl: "/api/placeholder/200x150",
+      imageDataUrl: null,
       key: null 
     });
   }
@@ -59,15 +58,31 @@ export async function action({ request, params }) {
     const unit = formData.get("unit");
     const door = formData.get("door");
     const notes = formData.get("notes");
-    const imageUrl = formData.get("imageUrl");
+    const imageDataUrl = formData.get("imageDataUrl");
+
+    // Convert image data URL to binary if provided
+    let imageData = null;
+    let imageMimeType = null;
+    
+    if (imageDataUrl && imageDataUrl.startsWith('data:')) {
+      try {
+        const { dataUrlToBinary } = await import("../utils/imageConversion.js");
+        const { data, mimeType } = dataUrlToBinary(imageDataUrl);
+        imageData = data;
+        imageMimeType = mimeType;
+      } catch (error) {
+        console.error('Error converting image:', error);
+      }
+    }
 
     const keyData = {
       name,
       description: property, // Using property as description for now
-      images: imageUrl ? [imageUrl] : [],
       unit: unit || null,
       door: door || null,
-      notes: notes || null
+      notes: notes || null,
+      imageData,
+      imageMimeType
     };
 
     // Validate data
@@ -89,7 +104,8 @@ export async function action({ request, params }) {
           unit: unit?.trim() || null,
           door: door?.trim() || null,
           notes: notes?.trim() || null,
-          images: imageUrl ? [imageUrl] : []
+          imageData,
+          imageMimeType
         });
         return redirect(`/scan/success/${key.id}`);
       } else {
@@ -100,7 +116,8 @@ export async function action({ request, params }) {
           unit: unit?.trim() || null,
           door: door?.trim() || null,
           notes: notes?.trim() || null,
-          images: imageUrl ? [imageUrl] : null
+          imageData,
+          imageMimeType
         });
 
         if (!updatedKey) {
@@ -150,7 +167,7 @@ export async function action({ request, params }) {
 
 export default function KeyDetails() {
   const navigate = useNavigate();
-  const { isNewKey, imageUrl, key } = useLoaderData();
+  const { isNewKey, imageUrl, imageDataUrl, key } = useLoaderData();
   const actionData = useActionData();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
@@ -162,14 +179,16 @@ export default function KeyDetails() {
     unit: "",
     door: "",
     notes: "",
-    imageUrl: imageUrl || "/api/placeholder/200/150"
+    imageUrl: "/api/placeholder/200x150",
+    imageDataUrl: null
   } : {
     name: key?.name || "",
     property: key?.description || "",
     unit: key?.unit || "",
     door: key?.door || "",
     notes: key?.notes || "",
-    imageUrl: (key?.images && key.images.length > 0) ? key.images[0] : "/api/placeholder/200/150"
+    imageUrl: key?.imageData ? `/api/key-image/${key.id}` : "/api/placeholder/200x150",
+    imageDataUrl: null
   };
 
   // State for form data
@@ -180,6 +199,22 @@ export default function KeyDetails() {
 
   // Check if form is valid
   const isFormValid = formData.name.trim() !== "" && formData.property.trim() !== "";
+
+  // Load image from sessionStorage for new keys
+  useEffect(() => {
+    if (isNewKey) {
+      const dataURL = sessionStorage.getItem('tempKeyImageDataURL');
+      const blobURL = sessionStorage.getItem('tempKeyImage');
+      
+      if (dataURL && dataURL.startsWith('data:')) {
+        setFormData(prev => ({
+          ...prev,
+          imageUrl: blobURL || "/api/placeholder/200x150",
+          imageDataUrl: dataURL
+        }));
+      }
+    }
+  }, [isNewKey]);
 
   // Check if there are changes
   useEffect(() => {
@@ -280,7 +315,9 @@ return (
         {/* Form */}
         <Form method="post" encType="multipart/form-data" id="key-form">
           <input type="hidden" name="intent" value="save" />
-          <input type="hidden" name="imageUrl" value={formData.imageUrl} />
+          {formData.imageDataUrl && (
+            <input type="hidden" name="imageDataUrl" value={formData.imageDataUrl} />
+          )}
           
           <div className="key-details__form">
             {/* Key Name */}

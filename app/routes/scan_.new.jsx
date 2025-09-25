@@ -17,7 +17,7 @@ export async function loader({ request }) {
 
 export default function ScanNoMatch() {
   const navigate = useNavigate();
-  const [scannedImageUrl, setScannedImageUrl] = useState("/api/placeholder/200/150");
+  const [scannedImageUrl, setScannedImageUrl] = useState("/api/placeholder/200x150");
 
   useEffect(() => {
     // Get the scanned image from sessionStorage
@@ -27,38 +27,17 @@ export default function ScanNoMatch() {
     }
   }, []);
 
-  const handleSaveAsNewKey = async () => {
-    try {
-      // Get the data URL from sessionStorage
-      const dataURL = sessionStorage.getItem('tempKeyImageDataURL');
-      
-      if (dataURL && dataURL.startsWith('data:')) {
-        // Convert to permanent image via API
-        const response = await fetch('/api/convert-image', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ imageUrl: dataURL }),
-        });
-        
-        if (response.ok) {
-          const { permanentUrl } = await response.json();
-          navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent(permanentUrl)}`);
-        } else {
-          // Fallback to placeholder
-          navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent('/api/placeholder/200/150')}`);
+      const handleSaveAsNewKey = async () => {
+        try {
+          // Navigate without passing imageDataUrl in URL
+          // The image data will be retrieved from sessionStorage in the destination page
+          navigate(`/keys/new-key?from=/scan/new`);
+        } catch (error) {
+          console.error('Error processing image:', error);
+          // Fallback to new key page without image
+          navigate(`/keys/new-key?from=/scan/new`);
         }
-      } else {
-        // No data URL available, use placeholder
-        navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent('/api/placeholder/200/150')}`);
-      }
-    } catch (error) {
-      console.error('Error converting image:', error);
-      // Fallback to placeholder
-      navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent('/api/placeholder/200/150')}`);
-    }
-  };
+      };
 
   const handleScanAnotherKey = () => {
     navigate('/scan');
