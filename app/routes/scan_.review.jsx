@@ -45,6 +45,7 @@ export default function ScanReview() {
   const handleRetakePhoto = () => {
     // Clean up sessionStorage and go back to scan
     sessionStorage.removeItem('tempKeyImage');
+    sessionStorage.removeItem('tempKeyImageDataURL');
     sessionStorage.removeItem('tempKeyImageName');
     
     // Revoke object URL to free memory
