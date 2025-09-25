@@ -7,9 +7,19 @@ export const handle = {
 };
 
 export async function loader({ request }) {
-  const userId = await requireUserId(request);
-  const user = await getUserById(userId);
-  return { user };
+  try {
+    const userId = await requireUserId(request);
+    const user = await getUserById(userId);
+    
+    if (!user) {
+      throw new Response("User not found", { status: 404 });
+    }
+    
+    return { user };
+  } catch (error) {
+    console.error("Error in settings loader:", error);
+    throw new Response("Internal Server Error", { status: 500 });
+  }
 }
 
 export default function Settings() {
@@ -49,7 +59,7 @@ export default function Settings() {
           <h2 className="settings-section-title">Your Statistics</h2>
           <div className="settings-stats-single">
             <div className="settings-stat-item">
-              <div className="settings-stat-number">{user._count.keys}</div>
+              <div className="settings-stat-number">{user._count?.keys || 0}</div>
               <div className="settings-stat-label">Keys in Inventory</div>
             </div>
           </div>
