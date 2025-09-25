@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { requireUserId } from "../utils/session.server.js";
 import { Button } from "../components/ui/Button.jsx";
 import { CameraPlaceholder } from "../components/ui/CameraPlaceholder.jsx";
+import { fileToDataURL } from "../utils/imageUtils.js";
 
 export const handle = { 
   hideFooter: true, 
@@ -43,14 +44,19 @@ export default function ScanCapture() {
     setIsLoading(true);
 
     try {
-      // Store file temporarily for review page
+      // Convert file to data URL for better persistence
+      const dataURL = await fileToDataURL(file);
+      
+      // Store both blob URL (for preview) and data URL (for persistence)
       const objectUrl = URL.createObjectURL(file);
       sessionStorage.setItem('tempKeyImage', objectUrl);
+      sessionStorage.setItem('tempKeyImageDataURL', dataURL);
       sessionStorage.setItem('tempKeyImageName', file.name);
       
       // Navigate to review page
       navigate('/scan/review');
     } catch (err) {
+      console.error('Error processing image:', err);
       setError('Failed to process image');
       setIsLoading(false);
     }

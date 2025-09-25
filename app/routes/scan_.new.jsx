@@ -27,10 +27,37 @@ export default function ScanNoMatch() {
     }
   }, []);
 
-  const handleSaveAsNewKey = () => {
-    // Navigate to Key Details with the scanned image
-    const imageUrl = sessionStorage.getItem('tempKeyImage') || "/api/placeholder/200/150";
-    navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent(imageUrl)}`);
+  const handleSaveAsNewKey = async () => {
+    try {
+      // Get the data URL from sessionStorage
+      const dataURL = sessionStorage.getItem('tempKeyImageDataURL');
+      
+      if (dataURL && dataURL.startsWith('data:')) {
+        // Convert to permanent image via API
+        const response = await fetch('/api/convert-image', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ imageUrl: dataURL }),
+        });
+        
+        if (response.ok) {
+          const { permanentUrl } = await response.json();
+          navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent(permanentUrl)}`);
+        } else {
+          // Fallback to placeholder
+          navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent('/api/placeholder/200/150')}`);
+        }
+      } else {
+        // No data URL available, use placeholder
+        navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent('/api/placeholder/200/150')}`);
+      }
+    } catch (error) {
+      console.error('Error converting image:', error);
+      // Fallback to placeholder
+      navigate(`/keys/new-key?from=/scan/new&image=${encodeURIComponent('/api/placeholder/200/150')}`);
+    }
   };
 
   const handleScanAnotherKey = () => {

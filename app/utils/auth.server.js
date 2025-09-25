@@ -15,3 +15,20 @@ export async function verifyLogin(email, password) {
   if (!isValid) return null;
   return user;
 }
+
+export async function getUserById(userId) {
+  return prisma.user.findUnique({ 
+    where: { id: userId },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      _count: {
+        select: {
+          keys: true
+        }
+      }
+    }
+  });
+}

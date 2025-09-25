@@ -1,38 +1,74 @@
-import { Form, useNavigation } from "@remix-run/react";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { requireUserId } from "../utils/session.server.js";
+import { getUserById } from "../utils/auth.server.js";
 
 export const handle = {
   title: "Settings",
 };
 
 export async function loader({ request }) {
-  await requireUserId(request);
-  return null;
+  const userId = await requireUserId(request);
+  const user = await getUserById(userId);
+  return { user };
 }
 
 export default function Settings() {
+  const { user } = useLoaderData();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <div className="settings-container">
       {/* Main Content */}
       <div className="settings-content">
-        <Form method="post" action="/logout">
-          <button
-            type="submit"
-            className="settings-logout-button"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Signing Out..." : "Log Out"}
-          </button>
-        </Form>
-        
-        {/* Fun message from the client */}
-        <div className="settings-fun-message">
-          <p className="settings-fun-text">R.I.P logout button without padding...
-            <br />Always in our hearts!
-          </p>
+        {/* User Profile Section */}
+        <div className="settings-section">
+          <h2 className="settings-section-title">Account Information</h2>
+          <div className="settings-info-grid">
+            <div className="settings-info-item">
+              <label className="settings-info-label">Email Address</label>
+              <div className="settings-info-value">{user.email}</div>
+            </div>
+            <div className="settings-info-item">
+              <label className="settings-info-label">Member Since</label>
+              <div className="settings-info-value">{formatDate(user.createdAt)}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Statistics Section */}
+        <div className="settings-section">
+          <h2 className="settings-section-title">Your Statistics</h2>
+          <div className="settings-stats-single">
+            <div className="settings-stat-item">
+              <div className="settings-stat-number">{user._count.keys}</div>
+              <div className="settings-stat-label">Keys in Inventory</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Account Actions Section */}
+        <div className="settings-section">
+          <h2 className="settings-section-title">Account Actions</h2>
+          <div className="settings-actions">
+            <Form method="post" action="/logout">
+              <button
+                type="submit"
+                className="settings-logout-button"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Signing Out..." : "Sign Out"}
+              </button>
+            </Form>
+          </div>
         </div>
       </div>
     </div>

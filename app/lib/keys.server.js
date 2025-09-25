@@ -1,4 +1,5 @@
 import { prisma } from "../utils/db.server.js";
+import { convertToPermanentImage } from "../utils/storage.server.js";
 
 /**
  * Obtener todas las llaves de un usuario
@@ -48,18 +49,44 @@ export async function getKeyById(keyId, userId) {
  * @returns {Promise<Object>} Llave creada
  */
 export async function createKey({ userId, name, description, unit, door, notes, images = [] }) {
-  return await prisma.key.create({
-    data: {
-      userId,
-      name,
-      description,
-      unit: unit || null,
-      door: door || null,
-      notes: notes || null,
-      images: images.length > 0 ? images : null,
-      sigStatus: "pending"
+  try {
+    // Convert temporary image URLs to permanent ones
+    let permanentImages = null;
+    if (images.length > 0) {
+      permanentImages = [];
+      for (const imageUrl of images) {
+        try {
+          console.log('Converting image URL:', imageUrl.substring(0, 100) + '...');
+          const permanentUrl = await convertToPermanentImage(imageUrl);
+          permanentImages.push(permanentUrl);
+          console.log('Converted to permanent URL:', permanentUrl);
+        } catch (error) {
+          console.error('Error converting image URL:', error);
+          // If conversion fails, use placeholder
+          permanentImages.push('/api/placeholder/200/150');
+        }
+      }
     }
-  });
+
+    const key = await prisma.key.create({
+      data: {
+        userId,
+        name,
+        description,
+        unit: unit || null,
+        door: door || null,
+        notes: notes || null,
+        images: permanentImages,
+        sigStatus: "pending"
+      }
+    });
+
+    console.log('Successfully created key:', key.id);
+    return key;
+  } catch (error) {
+    console.error('Error creating key:', error);
+    throw error;
+  }
 }
 
 /**
@@ -76,10 +103,30 @@ export async function updateKey(keyId, userId, updateData) {
     return null;
   }
 
+  // Convert temporary image URLs to permanent ones if images are being updated
+  let processedUpdateData = { ...updateData };
+  if (updateData.images !== undefined) {
+    if (updateData.images && updateData.images.length > 0) {
+      processedUpdateData.images = [];
+      for (const imageUrl of updateData.images) {
+        try {
+          const permanentUrl = await convertToPermanentImage(imageUrl);
+          processedUpdateData.images.push(permanentUrl);
+        } catch (error) {
+          console.error('Error converting image URL:', error);
+          // If conversion fails, use placeholder
+          processedUpdateData.images.push('/api/placeholder/200/150');
+        }
+      }
+    } else {
+      processedUpdateData.images = null;
+    }
+  }
+
   return await prisma.key.update({
     where: { id: keyId },
     data: {
-      ...updateData,
+      ...processedUpdateData,
       updatedAt: new Date()
     }
   });

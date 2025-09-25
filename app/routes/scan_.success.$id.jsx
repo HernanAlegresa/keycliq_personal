@@ -23,9 +23,10 @@ export default function ScanSuccess() {
     const tempUrl = sessionStorage.getItem('tempKeyImage');
     if (tempUrl) {
       URL.revokeObjectURL(tempUrl);
-      sessionStorage.removeItem('tempKeyImage');
-      sessionStorage.removeItem('tempKeyImageName');
     }
+    sessionStorage.removeItem('tempKeyImage');
+    sessionStorage.removeItem('tempKeyImageDataURL');
+    sessionStorage.removeItem('tempKeyImageName');
   }, []);
 
   const handleScanAnotherKey = () => {
