@@ -45,7 +45,8 @@ model Key {
   unit String? // Unidad opcional
   door String? // Puerta opcional
   notes String? // Notas opcionales
-  images Json? // Array de URLs de imágenes
+  imageData Bytes? // Imagen como datos binarios
+  imageMimeType String? // Tipo de imagen (image/jpeg, image/png, etc.)
   signature Json? // Vector de características
   sigStatus String @default("pending") // 'pending' | 'ready' | 'failed'
   createdAt DateTime @default(now())

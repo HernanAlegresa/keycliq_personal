@@ -23,7 +23,7 @@ export default function ScanMatchFound() {
     name: "Front Door Key",
     address: "12 Main St.",
     matchLevel: "High match",
-    imageUrl: "/api/placeholder/200/150" // Placeholder for now
+    imageUrl: "/api/placeholder/200x150" // Placeholder for now
   };
 
   const handleOpenKeyDetails = () => {
