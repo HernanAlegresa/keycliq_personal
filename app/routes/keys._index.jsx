@@ -115,7 +115,7 @@ export default function KeysInventory() {
                 onClick={() => handleKeyClick(key.id)}
               >
                 <div className="keys-inventory__item-image">
-                  {key.imageData ? (
+                  {key.imageUrl ? (
                     <img
                       src={`/api/key-image/${key.id}`}
                       alt={key.name}

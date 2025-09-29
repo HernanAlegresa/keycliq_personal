@@ -1,4 +1,5 @@
 import { prisma } from "../utils/db.server.js";
+import { uploadImageToCloudinary, deleteImageFromCloudinary } from "../utils/cloudinary.server.js";
 
 /**
  * Obtener todas las llaves de un usuario
@@ -44,12 +45,29 @@ export async function getKeyById(keyId, userId) {
  * @param {string} keyData.userId - ID del usuario
  * @param {string} keyData.name - Nombre de la llave
  * @param {string} keyData.description - Descripción opcional
- * @param {string} keyData.imageData - Datos binarios de la imagen
- * @param {string} keyData.imageMimeType - Tipo MIME de la imagen
+ * @param {string} keyData.imageDataUrl - Data URL de la imagen
  * @returns {Promise<Object>} Llave creada
  */
-export async function createKey({ userId, name, description, unit, door, notes, imageData, imageMimeType }) {
+export async function createKey({ userId, name, description, unit, door, notes, imageDataUrl }) {
   try {
+    let imageUrl = null;
+    let imagePublicId = null;
+
+    // Subir imagen a Cloudinary si se proporciona
+    if (imageDataUrl && imageDataUrl.startsWith('data:')) {
+      console.log('📤 Subiendo imagen a Cloudinary...');
+      const uploadResult = await uploadImageToCloudinary(imageDataUrl);
+      
+      if (uploadResult.success) {
+        imageUrl = uploadResult.url;
+        imagePublicId = uploadResult.publicId;
+        console.log('✅ Imagen subida a Cloudinary:', imageUrl);
+      } else {
+        console.error('❌ Error subiendo imagen a Cloudinary:', uploadResult.error);
+        // Continuar sin imagen en caso de error
+      }
+    }
+
     const key = await prisma.key.create({
       data: {
         userId,
@@ -58,16 +76,16 @@ export async function createKey({ userId, name, description, unit, door, notes, 
         unit: unit || null,
         door: door || null,
         notes: notes || null,
-        imageData: imageData || null,
-        imageMimeType: imageMimeType || null,
+        imageUrl: imageUrl,
+        imagePublicId: imagePublicId,
         sigStatus: "pending"
       }
     });
 
-    console.log('Successfully created key:', key.id);
+    console.log('✅ Llave creada exitosamente:', key.id);
     return key;
   } catch (error) {
-    console.error('Error creating key:', error);
+    console.error('❌ Error creando llave:', error);
     throw error;
   }
 }

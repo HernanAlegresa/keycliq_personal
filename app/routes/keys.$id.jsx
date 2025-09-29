@@ -81,8 +81,7 @@ export async function action({ request, params }) {
       unit: unit || null,
       door: door || null,
       notes: notes || null,
-      imageData,
-      imageMimeType
+      imageDataUrl: imageDataUrl || null
     };
 
     // Validate data
@@ -104,8 +103,7 @@ export async function action({ request, params }) {
           unit: unit?.trim() || null,
           door: door?.trim() || null,
           notes: notes?.trim() || null,
-          imageData,
-          imageMimeType
+          imageDataUrl: imageDataUrl
         });
         return redirect(`/scan/success/${key.id}`);
       } else {
@@ -116,8 +114,7 @@ export async function action({ request, params }) {
           unit: unit?.trim() || null,
           door: door?.trim() || null,
           notes: notes?.trim() || null,
-          imageData,
-          imageMimeType
+          imageDataUrl: imageDataUrl
         });
 
         if (!updatedKey) {
@@ -187,7 +184,7 @@ export default function KeyDetails() {
     unit: key?.unit || "",
     door: key?.door || "",
     notes: key?.notes || "",
-    imageUrl: key?.imageData ? `/api/key-image/${key.id}` : "/api/placeholder/200x150",
+    imageUrl: key?.imageUrl ? `/api/key-image/${key.id}` : "/api/placeholder/200x150",
     imageDataUrl: null
   };
 
