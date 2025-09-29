@@ -104,6 +104,30 @@ export async function updateKey(keyId, userId, updateData) {
     return null;
   }
 
+  // Manejar actualización de imagen si se proporciona
+  if (updateData.imageDataUrl && updateData.imageDataUrl.startsWith('data:')) {
+    // Eliminar imagen anterior de Cloudinary si existe
+    if (existingKey.imagePublicId) {
+      await deleteImageFromCloudinary(existingKey.imagePublicId);
+    }
+
+    // Subir nueva imagen a Cloudinary
+    const uploadResult = await uploadImageToCloudinary(updateData.imageDataUrl);
+    
+    if (uploadResult.success) {
+      updateData.imageUrl = uploadResult.url;
+      updateData.imagePublicId = uploadResult.publicId;
+      console.log('Image updated in Cloudinary:', uploadResult.url);
+    } else {
+      console.error('Failed to upload new image to Cloudinary:', uploadResult.error);
+      // Mantener imagen anterior en caso de error
+      delete updateData.imageDataUrl;
+    }
+  }
+
+  // Remover imageDataUrl del updateData ya que no es un campo de la base de datos
+  delete updateData.imageDataUrl;
+
   return await prisma.key.update({
     where: { id: keyId },
     data: {
@@ -124,6 +148,17 @@ export async function deleteKey(keyId, userId) {
   const existingKey = await getKeyById(keyId, userId);
   if (!existingKey) {
     return false;
+  }
+
+  // Eliminar imagen de Cloudinary si existe
+  if (existingKey.imagePublicId) {
+    const deleteResult = await deleteImageFromCloudinary(existingKey.imagePublicId);
+    if (deleteResult.success) {
+      console.log('Image deleted from Cloudinary:', existingKey.imagePublicId);
+    } else {
+      console.error('Failed to delete image from Cloudinary:', deleteResult.error);
+      // Continuar con la eliminación de la llave aunque falle la eliminación de la imagen
+    }
   }
 
   await prisma.key.delete({

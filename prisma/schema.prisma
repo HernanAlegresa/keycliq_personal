@@ -4,7 +4,7 @@ provider = "prisma-client-js"
 
 
 datasource db {
-provider = "sqlite"
+provider = "postgresql"
 url = env("DATABASE_URL")
 }
 
@@ -45,8 +45,8 @@ model Key {
   unit String? // Unidad opcional
   door String? // Puerta opcional
   notes String? // Notas opcionales
-  imageData Bytes? // Imagen como datos binarios
-  imageMimeType String? // Tipo de imagen (image/jpeg, image/png, etc.)
+  imageUrl String? // URL de la imagen en Cloudinary
+  imagePublicId String? // Public ID de Cloudinary para gestión
   signature Json? // Vector de características
   sigStatus String @default("pending") // 'pending' | 'ready' | 'failed'
   createdAt DateTime @default(now())
