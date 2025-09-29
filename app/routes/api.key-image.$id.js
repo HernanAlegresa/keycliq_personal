@@ -1,4 +1,4 @@
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { getKeyById } from "../lib/keys.server.js";
 
 export async function loader({ request, params }) {
@@ -16,17 +16,13 @@ export async function loader({ request, params }) {
       return new Response("Key not found", { status: 404 });
     }
 
-    if (!key.imageData || !key.imageMimeType) {
-      return new Response("No image data found", { status: 404 });
+    // If key has Cloudinary URL, redirect to it
+    if (key.imageUrl) {
+      return redirect(key.imageUrl);
     }
 
-    // Return the image as binary data
-    return new Response(key.imageData, {
-      headers: {
-        'Content-Type': key.imageMimeType,
-        'Cache-Control': 'public, max-age=31536000', // Cache for 1 year
-      },
-    });
+    // If no image URL, return 404
+    return new Response("No image found", { status: 404 });
   } catch (error) {
     console.error('Error serving key image:', error);
     return new Response("Internal Server Error", { status: 500 });

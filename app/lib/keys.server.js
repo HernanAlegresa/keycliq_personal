@@ -1,4 +1,5 @@
 import { prisma } from "../utils/db.server.js";
+import { uploadImageToCloudinary, deleteImageFromCloudinary } from "../utils/cloudinary.server.js";
 
 /**
  * Obtener todas las llaves de un usuario
@@ -44,12 +45,28 @@ export async function getKeyById(keyId, userId) {
  * @param {string} keyData.userId - ID del usuario
  * @param {string} keyData.name - Nombre de la llave
  * @param {string} keyData.description - Descripción opcional
- * @param {string} keyData.imageData - Datos binarios de la imagen
- * @param {string} keyData.imageMimeType - Tipo MIME de la imagen
+ * @param {string} keyData.imageDataUrl - Data URL de la imagen
  * @returns {Promise<Object>} Llave creada
  */
-export async function createKey({ userId, name, description, unit, door, notes, imageData, imageMimeType }) {
+export async function createKey({ userId, name, description, unit, door, notes, imageDataUrl }) {
   try {
+    let imageUrl = null;
+    let imagePublicId = null;
+
+    // Subir imagen a Cloudinary si se proporciona
+    if (imageDataUrl && imageDataUrl.startsWith('data:')) {
+      const uploadResult = await uploadImageToCloudinary(imageDataUrl);
+      
+      if (uploadResult.success) {
+        imageUrl = uploadResult.url;
+        imagePublicId = uploadResult.publicId;
+        console.log('Image uploaded to Cloudinary:', imageUrl);
+      } else {
+        console.error('Failed to upload image to Cloudinary:', uploadResult.error);
+        // Continuar sin imagen en caso de error
+      }
+    }
+
     const key = await prisma.key.create({
       data: {
         userId,
@@ -58,8 +75,8 @@ export async function createKey({ userId, name, description, unit, door, notes, 
         unit: unit || null,
         door: door || null,
         notes: notes || null,
-        imageData: imageData || null,
-        imageMimeType: imageMimeType || null,
+        imageUrl: imageUrl,
+        imagePublicId: imagePublicId,
         sigStatus: "pending"
       }
     });
@@ -86,6 +103,30 @@ export async function updateKey(keyId, userId, updateData) {
     return null;
   }
 
+  // Manejar actualización de imagen si se proporciona
+  if (updateData.imageDataUrl && updateData.imageDataUrl.startsWith('data:')) {
+    // Eliminar imagen anterior de Cloudinary si existe
+    if (existingKey.imagePublicId) {
+      await deleteImageFromCloudinary(existingKey.imagePublicId);
+    }
+
+    // Subir nueva imagen a Cloudinary
+    const uploadResult = await uploadImageToCloudinary(updateData.imageDataUrl);
+    
+    if (uploadResult.success) {
+      updateData.imageUrl = uploadResult.url;
+      updateData.imagePublicId = uploadResult.publicId;
+      console.log('Image updated in Cloudinary:', uploadResult.url);
+    } else {
+      console.error('Failed to upload new image to Cloudinary:', uploadResult.error);
+      // Mantener imagen anterior en caso de error
+      delete updateData.imageDataUrl;
+    }
+  }
+
+  // Remover imageDataUrl del updateData ya que no es un campo de la base de datos
+  delete updateData.imageDataUrl;
+
   return await prisma.key.update({
     where: { id: keyId },
     data: {
@@ -106,6 +147,17 @@ export async function deleteKey(keyId, userId) {
   const existingKey = await getKeyById(keyId, userId);
   if (!existingKey) {
     return false;
+  }
+
+  // Eliminar imagen de Cloudinary si existe
+  if (existingKey.imagePublicId) {
+    const deleteResult = await deleteImageFromCloudinary(existingKey.imagePublicId);
+    if (deleteResult.success) {
+      console.log('Image deleted from Cloudinary:', existingKey.imagePublicId);
+    } else {
+      console.error('Failed to delete image from Cloudinary:', deleteResult.error);
+      // Continuar con la eliminación de la llave aunque falle la eliminación de la imagen
+    }
   }
 
   await prisma.key.delete({

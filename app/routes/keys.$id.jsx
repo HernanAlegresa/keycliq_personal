@@ -60,29 +60,13 @@ export async function action({ request, params }) {
     const notes = formData.get("notes");
     const imageDataUrl = formData.get("imageDataUrl");
 
-    // Convert image data URL to binary if provided
-    let imageData = null;
-    let imageMimeType = null;
-    
-    if (imageDataUrl && imageDataUrl.startsWith('data:')) {
-      try {
-        const { dataUrlToBinary } = await import("../utils/imageConversion.js");
-        const { data, mimeType } = dataUrlToBinary(imageDataUrl);
-        imageData = data;
-        imageMimeType = mimeType;
-      } catch (error) {
-        console.error('Error converting image:', error);
-      }
-    }
-
     const keyData = {
       name,
       description: property, // Using property as description for now
       unit: unit || null,
       door: door || null,
       notes: notes || null,
-      imageData,
-      imageMimeType
+      imageDataUrl: imageDataUrl || null
     };
 
     // Validate data
@@ -104,8 +88,7 @@ export async function action({ request, params }) {
           unit: unit?.trim() || null,
           door: door?.trim() || null,
           notes: notes?.trim() || null,
-          imageData,
-          imageMimeType
+          imageDataUrl: imageDataUrl
         });
         return redirect(`/scan/success/${key.id}`);
       } else {
@@ -116,8 +99,7 @@ export async function action({ request, params }) {
           unit: unit?.trim() || null,
           door: door?.trim() || null,
           notes: notes?.trim() || null,
-          imageData,
-          imageMimeType
+          imageDataUrl: imageDataUrl
         });
 
         if (!updatedKey) {
