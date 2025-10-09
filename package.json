@@ -12,10 +12,8 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate:deploy": "prisma migrate deploy",
-    "db:migrate:postgres": "node scripts/migrate-to-postgres.js",
-    "keyscan:validate": "node scripts/keyscan/keyscan-validate.js",
-    "keyscan:qa": "node scripts/keyscan/keyscan-qa.js",
-    "keyscan:test": "npm run keyscan:validate && npm run keyscan:qa"
+    "db:migrate:postgres": "node scripts/database/migrate-to-postgres.js",
+    "keyscan:v3:test": "node scripts/v3/test-suite-v3.js"
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
