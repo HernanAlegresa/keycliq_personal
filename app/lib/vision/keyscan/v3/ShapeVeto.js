@@ -1,17 +1,17 @@
-/**
+﻿/**
  * KeyScan V3 - Shape Veto Module
  * Veto temprano basado en Hausdorff Distance + Hu Moments
- * CRÍTICO para reducir FPR de 100% a ≤10%
+ * CR├ìTICO para reducir FPR de 100% a Ôëñ10%
  */
 
 export class ShapeVeto {
   constructor(config = {}) {
     this.config = {
       // Thresholds (calibrar con datos reales)
-      hausdorff_max: 50,          // Distancia Hausdorff máxima permitida
-      hu_similarity_min: 0.70,    // Similitud mínima de Hu Moments
+      hausdorff_max: 50,          // Distancia Hausdorff m├íxima permitida
+      hu_similarity_min: 0.70,    // Similitud m├¡nima de Hu Moments
       compactness_tolerance: 0.30, // Tolerancia en compactness
-      area_ratio_tolerance: 0.40,  // Tolerancia en ratio de áreas
+      area_ratio_tolerance: 0.40,  // Tolerancia en ratio de ├íreas
       ...config
     };
   }
@@ -24,7 +24,7 @@ export class ShapeVeto {
    */
   compareShapes(shape1, shape2) {
     try {
-      // 1. Usar Hu Moments precalculados (optimización)
+      // 1. Usar Hu Moments precalculados (optimizaci├│n)
       const huMoments1 = shape1.huMoments || this.computeHuMoments(shape1.contour);
       const huMoments2 = shape2.huMoments || this.computeHuMoments(shape2.contour);
       const huSimilarity = this.compareHuMoments(huMoments1, huMoments2);
@@ -35,7 +35,7 @@ export class ShapeVeto {
         hausdorff = this.computeHausdorffDistance(shape1.contour, shape2.contour);
       }
       
-      // 3. Comparar métricas básicas
+      // 3. Comparar m├®tricas b├ísicas
       const compactnessCheck = this.compareCompactness(
         shape1.metadata,
         shape2.metadata
@@ -46,7 +46,7 @@ export class ShapeVeto {
         shape2.metadata
       );
       
-      // 4. Decisión de veto
+      // 4. Decisi├│n de veto
       const hausdorffPass = hausdorff <= this.config.hausdorff_max;
       const huPass = huSimilarity >= this.config.hu_similarity_min;
       const compactnessPass = compactnessCheck;
@@ -129,7 +129,7 @@ export class ShapeVeto {
   /**
    * Sample contour para reducir complejidad computacional
    * @param {Array} contour - Contorno
-   * @param {number} targetPoints - Número de puntos objetivo
+   * @param {number} targetPoints - N├║mero de puntos objetivo
    * @returns {Array} Contorno sampleado
    */
   sampleContour(contour, targetPoints) {
@@ -250,16 +250,16 @@ export class ShapeVeto {
    */
   compareHuMoments(hu1, hu2) {
     if (!hu1 || !hu2) {
-      console.log(`🔍 DEBUG compareHuMoments: hu1 or hu2 is null/undefined`);
+      console.log(`­ƒöì DEBUG compareHuMoments: hu1 or hu2 is null/undefined`);
       return 0;
     }
     
     if (hu1.length !== 7 || hu2.length !== 7) {
-      console.log(`🔍 DEBUG compareHuMoments: Invalid length - hu1.length=${hu1.length}, hu2.length=${hu2.length}`);
+      console.log(`­ƒöì DEBUG compareHuMoments: Invalid length - hu1.length=${hu1.length}, hu2.length=${hu2.length}`);
       return 0;
     }
     
-    // Usar log-scale para Hu Moments (son muy pequeños)
+    // Usar log-scale para Hu Moments (son muy peque├▒os)
     let totalDist = 0;
     let validMoments = 0;
     
@@ -273,15 +273,15 @@ export class ShapeVeto {
     }
     
     if (validMoments === 0) {
-      console.log(`🔍 DEBUG compareHuMoments: No valid moments found`);
+      console.log(`­ƒöì DEBUG compareHuMoments: No valid moments found`);
       return 0;
     }
     
     const avgDist = totalDist / validMoments;
     
     // Convertir distancia a similitud [0,1]
-    // Distancia típica entre formas similares: 0-2
-    // Distancia típica entre formas diferentes: 2-10+
+    // Distancia t├¡pica entre formas similares: 0-2
+    // Distancia t├¡pica entre formas diferentes: 2-10+
     const similarity = Math.max(0, 1 - avgDist / 5);
     
     return similarity;
@@ -305,7 +305,7 @@ export class ShapeVeto {
   }
 
   /**
-   * Compara ratio de áreas entre dos formas
+   * Compara ratio de ├íreas entre dos formas
    * @param {Object} meta1 - Metadata 1
    * @param {Object} meta2 - Metadata 2
    * @returns {boolean} Pass/fail
@@ -324,13 +324,13 @@ export class ShapeVeto {
   }
 
   /**
-   * Calibra thresholds basándose en dataset
+   * Calibra thresholds bas├índose en dataset
    * @param {Array} sameKeyPairs - Pares de misma llave
    * @param {Array} differentKeyPairs - Pares de llaves diferentes
    * @returns {Object} Thresholds calibrados
    */
   calibrateThresholds(sameKeyPairs, differentKeyPairs) {
-    // Calcular distribución de métricas
+    // Calcular distribuci├│n de m├®tricas
     const sameKeyMetrics = sameKeyPairs.map(pair => 
       this.compareShapes(pair.shape1, pair.shape2)
     );
@@ -340,7 +340,7 @@ export class ShapeVeto {
     );
     
     // Encontrar threshold que maximiza F1 score
-    // Target: FPR ≤ 10%, mantener recall ≥ 75%
+    // Target: FPR Ôëñ 10%, mantener recall ÔëÑ 75%
     
     const hausdorffValues = [
       ...sameKeyMetrics.map(m => m.hausdorff),
@@ -352,7 +352,7 @@ export class ShapeVeto {
       ...differentKeyMetrics.map(m => m.huSimilarity)
     ].sort((a, b) => b - a);
     
-    // Buscar threshold que da FPR ≤ 10%
+    // Buscar threshold que da FPR Ôëñ 10%
     let bestHausdorff = this.config.hausdorff_max;
     let bestHuSim = this.config.hu_similarity_min;
     let bestF1 = 0;
@@ -386,7 +386,7 @@ export class ShapeVeto {
         const f1 = 2 * (precision * recall) / (precision + recall) || 0;
         const fpr = fp / (fp + tn) || 0;
         
-        // Objetivo: FPR ≤ 10% y recall ≥ 75%
+        // Objetivo: FPR Ôëñ 10% y recall ÔëÑ 75%
         if (fpr <= 0.10 && recall >= 0.75 && f1 > bestF1) {
           bestF1 = f1;
           bestHausdorff = testHausdorff;

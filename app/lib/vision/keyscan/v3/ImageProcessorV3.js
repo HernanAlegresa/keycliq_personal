@@ -1,6 +1,6 @@
-/**
+﻿/**
  * KeyScan V3 - Image Processor OPTIMIZADO
- * Sin dependencia de segmentación perfecta - usa features robustos
+ * Sin dependencia de segmentaci├│n perfecta - usa features robustos
  */
 
 import sharp from 'sharp';
@@ -31,7 +31,7 @@ export class ImageProcessorV3 {
     try {
       const startTime = Date.now();
       
-      // 1. Preprocessing básico
+      // 1. Preprocessing b├ísico
       const preprocessed = await this.preprocess(imageInput);
       const prepTime = Date.now() - startTime;
       
@@ -85,7 +85,7 @@ export class ImageProcessorV3 {
         },
         quality: {
           valid: true,
-          segmentationValid: true, // En V3 no dependemos de segmentación perfecta
+          segmentationValid: true, // En V3 no dependemos de segmentaci├│n perfecta
           bittingValid: bittingProfile.profile && bittingProfile.profile.length > 0
         }
       };
@@ -129,7 +129,7 @@ export class ImageProcessorV3 {
       
       const { width, height } = info;
       
-      // Crear contorno del borde de la llave (detección simple)
+      // Crear contorno del borde de la llave (detecci├│n simple)
       const threshold = 128;
       const contour = [];
       
@@ -258,7 +258,7 @@ export class ImageProcessorV3 {
   }
 
   /**
-   * Extrae perfil de bitting robusto (sin segmentación)
+   * Extrae perfil de bitting robusto (sin segmentaci├│n)
    */
   async extractBittingProfileRobust(imageBuffer, metadata) {
     try {
@@ -444,10 +444,10 @@ export class ImageProcessorV3 {
       const recommendations = [];
       
       const resolution = width * height;
-      // Más permisivo para desarrollo local
+      // M├ís permisivo para desarrollo local
       if (resolution < 20000) {
-        issues.push('Resolución muy baja');
-        recommendations.push('Tomar foto más cerca de la llave');
+        issues.push('Resoluci├│n muy baja');
+        recommendations.push('Tomar foto m├ís cerca de la llave');
       }
       
       const aspectRatio = width / height;
@@ -474,7 +474,7 @@ export class ImageProcessorV3 {
       return {
         valid: false,
         issues: ['Error validando imagen'],
-        recommendations: ['Verificar que la imagen sea válida'],
+        recommendations: ['Verificar que la imagen sea v├ílida'],
         error: error.message
       };
     }

@@ -1,6 +1,6 @@
-/**
+﻿/**
  * KeyScan Version Selector
- * Factory para seleccionar versión de KeyScan basado en ENV variable
+ * Factory para seleccionar versi├│n de KeyScan basado en ENV variable
  */
 
 import { ProductionKeyScanV3 } from './v3/ProductionKeyScanV3.js';
@@ -12,19 +12,19 @@ const VERSIONS = {
 };
 
 /**
- * Obtener instancia de KeyScan según versión configurada
- * @param {string} version - Versión específica ('v3') o null para usar ENV
+ * Obtener instancia de KeyScan seg├║n versi├│n configurada
+ * @param {string} version - Versi├│n espec├¡fica ('v3') o null para usar ENV
  * @returns {Object} Instancia de KeyScan
  */
 export function getKeyScan(version = null) {
   const selectedVersion = version || process.env.KEYSCAN_VERSION || DEFAULT_VERSION;
 
   if (!VERSIONS[selectedVersion]) {
-    console.warn(`⚠️ KeyScan version '${selectedVersion}' not found, using default '${DEFAULT_VERSION}'`);
+    console.warn(`ÔÜá´©Å KeyScan version '${selectedVersion}' not found, using default '${DEFAULT_VERSION}'`);
     return new VERSIONS[DEFAULT_VERSION]();
   }
 
-  console.log(`🔑 Using KeyScan ${selectedVersion}`);
+  console.log(`­ƒöæ Using KeyScan ${selectedVersion}`);
   return new VERSIONS[selectedVersion]();
 }
 
