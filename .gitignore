@@ -17,6 +17,7 @@ tests/fixtures/images/
 client-dataset/
 
 # Configuration secrets
+.env
 .env.local
 config/secrets.json
 dataset-config.local.json
