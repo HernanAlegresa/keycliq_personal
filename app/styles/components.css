@@ -166,8 +166,9 @@
 .topbar__inner {
   height: 56px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
+  padding-bottom: 4px;
 }
 
 .topbar__title {
@@ -175,6 +176,29 @@
   font-size: var(--text-h1);
   font-weight: 700;
   color: var(--color-text);
+}
+
+.topbar__logo-link {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s ease;
+}
+
+.topbar__logo-link:hover {
+  opacity: 1;
+}
+
+.topbar__logo {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+/* Responsive logo sizing for larger screens */
+@media (min-width: 640px) {
+  .topbar__logo {
+    height: 44px;
+  }
 }
 
 /* Header with slots layout */

@@ -138,9 +138,17 @@
 }
 
 .recent-keys__empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.recent-keys__brandmark {
+  width: 65px;
+  height: 80px;
+  display: block;
+  opacity: 1;
 }
 
 .recent-keys__empty-text {

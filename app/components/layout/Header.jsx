@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import wordmarkLogo from "../../assets/KeyCliq_Wordmark_TwoTone_Dark.png";
 
 /**
  * Header component for KeyCliq app
@@ -36,8 +37,12 @@ export function Header({ title = "KeyCliq", leftSlot, rightSlot, children }) {
   return (
     <header className="topbar">
       <div className="container topbar__inner">
-        <Link to="/" className="h1 topbar__title" style={{ textDecoration: "none", color: "inherit" }}>
-          {title}
+        <Link to="/" className="topbar__logo-link">
+          <img 
+            src={wordmarkLogo} 
+            alt="KeyCliq" 
+            className="topbar__logo"
+          />
         </Link>
         
         {children && (
