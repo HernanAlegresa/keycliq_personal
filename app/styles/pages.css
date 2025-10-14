@@ -840,7 +840,7 @@
 .scan-match-found__key-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -1185,7 +1185,7 @@
 .keys-inventory__item-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -1313,11 +1313,75 @@
 .key-details__image {
   width: 200px;
   height: 200px;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   border-radius: 12px;
   box-shadow: var(--shadow-md);
   background: var(--color-white);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.key-details__image:hover {
+  transform: scale(1.02);
+}
+
+/* Image Modal Styles */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.image-modal__content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-modal__img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.image-modal__close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.image-modal__close:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.image-modal__close svg {
+  width: 18px;
+  height: 18px;
+  color: #333;
 }
 
 .key-details__form {
