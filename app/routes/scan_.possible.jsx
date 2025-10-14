@@ -70,7 +70,7 @@ export default function ScanPossibleMatch() {
         {/* Message */}
         <div className="scan-match-found__message" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <p style={{ fontSize: '0.95rem', color: '#4b5563', lineHeight: '1.5' }}>
-            We found a key that might match ({confidencePercent}% confidence). 
+            We found a key that might match. 
             Is this the key you scanned?
           </p>
         </div>
@@ -103,7 +103,7 @@ export default function ScanPossibleMatch() {
             <div className="scan-match-found__match-badge" style={{ backgroundColor: '#fef3c7' }}>
               <div className="scan-match-found__match-dot" style={{ backgroundColor: '#f59e0b' }}></div>
               <span className="scan-match-found__match-text" style={{ color: '#92400e' }}>
-                Possible match ({confidencePercent}%)
+                Possible match
               </span>
             </div>
           </div>

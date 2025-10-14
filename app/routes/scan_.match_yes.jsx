@@ -92,7 +92,7 @@ export default function ScanMatchFound() {
             {/* Match Level Badge */}
             <div className="scan-match-found__match-badge">
               <div className="scan-match-found__match-dot"></div>
-              <span className="scan-match-found__match-text">{matchLevel} ({confidencePercent}%)</span>
+              <span className="scan-match-found__match-text">{matchLevel}</span>
             </div>
           </div>
         </div>
