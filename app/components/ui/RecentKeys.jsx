@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import brandmarkLogo from "../../assets/KeyCliq_Brandmark_TwoTone_Dark.png";
 
 /**
  * RecentKeys component for Homepage
@@ -12,7 +13,13 @@ export function RecentKeys({ keys = [], isEmpty = true }) {
       <div className="recent-keys">
         <h2 className="recent-keys__title">Recent Keys</h2>
         <div className="recent-keys__empty">
-          <div className="recent-keys__empty-icon">🗝️</div>
+          <div className="recent-keys__empty-icon">
+            <img 
+              src={brandmarkLogo} 
+              alt="" 
+              className="recent-keys__brandmark"
+            />
+          </div>
           <p className="recent-keys__empty-text">Add your first key to get started</p>
         </div>
       </div>

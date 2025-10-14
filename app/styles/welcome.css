@@ -19,9 +19,11 @@
 }
 
 .welcome-logo img {
-  height: 120px;
-  width:fit-content;
+  height: auto;
+  max-width: 280px;
+  width: 100%;
   margin-bottom: 20px;
+  display: block;
 }
 
 .welcome-tagline {

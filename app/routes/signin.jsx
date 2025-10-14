@@ -2,7 +2,7 @@ import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import { verifyLogin } from "../utils/auth.server.js";
 import { createUserSession, getSession } from "../utils/session.server.js";
-import logo from "../assets/Logo KeyCliq (1).png";
+import wordmarkLogo from "../assets/KeyCliq_Wordmark_TwoTone_Dark.png";
 
 export const handle = {
   hideFooter: true,
@@ -49,7 +49,7 @@ export default function SignIn() {
     <div className="auth-container">
       {/* Logo and Tagline - Same as Welcome */}
       <div className="auth-logo">
-        <img src={logo} alt="KeyCliq logo" />
+        <img src={wordmarkLogo} alt="KeyCliq logo" />
         <p className="auth-tagline">Your Digital Key Inventory</p>
       </div>
 

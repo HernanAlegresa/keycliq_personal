@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import { getSession } from "../utils/session.server.js";
-import logo from "../assets/Logo KeyCliq (1).png";
+import wordmarkLogo from "../assets/KeyCliq_Wordmark_TwoTone_Dark.png";
 
 export const handle = {
   hideHeader: true,
@@ -22,7 +22,7 @@ export default function Welcome() {
       {/* Logo and Tagline Section */}
       <div className="welcome-logo">
         <img 
-          src={logo} 
+          src={wordmarkLogo} 
           alt="KeyCliq logo" 
         />
         <p className="welcome-tagline">

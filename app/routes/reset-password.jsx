@@ -1,7 +1,7 @@
 import { Form, Link, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import { validatePasswordResetToken, resetPassword } from "../utils/auth.server.js";
-import logo from "../assets/Logo KeyCliq (1).png";
+import wordmarkLogo from "../assets/KeyCliq_Wordmark_TwoTone_Dark.png";
 
 export const handle = {
   hideFooter: true,
@@ -76,7 +76,7 @@ export default function ResetPassword() {
     return (
       <div className="auth-container">
         <div className="auth-logo">
-          <img src={logo} alt="KeyCliq logo" />
+          <img src={wordmarkLogo} alt="KeyCliq logo" />
           <p className="auth-tagline">Your Digital Key Inventory</p>
         </div>
         <div className="auth-error-message">
@@ -93,7 +93,7 @@ export default function ResetPassword() {
     <div className="auth-container">
       {/* Logo and Tagline */}
       <div className="auth-logo">
-        <img src={logo} alt="KeyCliq logo" />
+        <img src={wordmarkLogo} alt="KeyCliq logo" />
         <p className="auth-tagline">Your Digital Key Inventory</p>
       </div>
 
