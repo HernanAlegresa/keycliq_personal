@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { requireUserId } from "../utils/session.server.js";
 import { getKeyById, createKey, updateKey, deleteKey, validateKeyData } from "../lib/keys.server.js";
 import { Button } from "../components/ui/Button.jsx";
+import { ImageModal } from "../components/ui/ImageModal.jsx";
 
 export const handle = { 
   hideFooter: true, 
@@ -178,6 +179,7 @@ export default function KeyDetails() {
   const [originalData, setOriginalData] = useState(initialFormData);
   const [isEditing, setIsEditing] = useState(isNewKey); // Start in edit mode for new keys
   const [hasChanges, setHasChanges] = useState(isNewKey); // New keys have "changes" by default
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false); // State for image modal
 
   // Check if form is valid
   const isFormValid = formData.name.trim() !== "" && formData.property.trim() !== "";
@@ -291,6 +293,7 @@ return (
             src={formData.imageUrl}
             alt={formData.name}
             className="key-details__image"
+            onClick={() => setIsImageModalOpen(true)}
           />
         </div>
 
@@ -420,6 +423,14 @@ return (
           {isNewKey ? 'Save Key' : 'Save'}
         </Button>
       </div>
+
+      {/* Image Modal */}
+      <ImageModal
+        src={formData.imageUrl}
+        alt={formData.name}
+        isOpen={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+      />
     </div>
   );
 }
