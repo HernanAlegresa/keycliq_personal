@@ -13,6 +13,10 @@ export function DynamicBackButton() {
     const from = urlParams.get('from');
     
     if (from) {
+      // Handle special case for Home page
+      if (from === '/') {
+        return '/';
+      }
       return from;
     }
     
