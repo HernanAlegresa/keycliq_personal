@@ -1,19 +1,23 @@
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { requireUserId } from "../utils/session.server.js";
+import { getRecentKeys } from "../lib/keys.server.js";
 import { QuickAction } from "../components/ui/QuickAction.jsx";
 import { RecentKeys } from "../components/ui/RecentKeys.jsx";
 
 export async function loader({ request }) {
   // If not authenticated, send to welcome
-  try {
-    await requireUserId(request);
-  } catch {
-    return redirect("/welcome");
-  }
-  return null;
+  const userId = await requireUserId(request);
+  
+  // Get recent keys for the user
+  const recentKeys = await getRecentKeys(userId, 2);
+  
+  return json({ recentKeys });
 }
 
 export default function Index() {
+  const { recentKeys } = useLoaderData();
+  
   return (
     <div className="homepage">
       {/* Quick Actions Section */}
@@ -39,7 +43,7 @@ export default function Index() {
       </div>
 
       {/* Recent Keys Section */}
-      <RecentKeys isEmpty={true} />
+      <RecentKeys keys={recentKeys} isEmpty={recentKeys.length === 0} />
     </div>
   );
 }
