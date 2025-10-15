@@ -60,7 +60,7 @@ export default function KeysInventory() {
   }, [keys, activeFilter, searchTerm]);
 
   const handleKeyClick = (keyId) => {
-    navigate(`/keys/${keyId}`);
+    navigate(`/keys/${keyId}?from=/keys`);
   };
 
   const handleFilterClick = (filter) => {

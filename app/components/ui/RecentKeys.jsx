@@ -11,7 +11,7 @@ export function RecentKeys({ keys = [], isEmpty = true }) {
   const navigate = useNavigate();
 
   const handleKeyClick = (keyId) => {
-    navigate(`/keys/${keyId}`);
+    navigate(`/keys/${keyId}?from=/`);
   };
 
   if (isEmpty || keys.length === 0) {
