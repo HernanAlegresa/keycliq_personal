@@ -607,7 +607,7 @@
   width: 100%;
   max-width: 300px;
   aspect-ratio: 1;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: var(--radius);
   margin: 0 auto 24px;
   display: block;
@@ -883,7 +883,7 @@
 .scan-match-found__key-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -1025,7 +1025,7 @@
 .scan-no-match__key-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -1228,7 +1228,7 @@
 .keys-inventory__item-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -1356,11 +1356,17 @@
 .key-details__image {
   width: 200px;
   height: 200px;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   border-radius: 12px;
   box-shadow: var(--shadow-md);
   background: var(--color-white);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.key-details__image:hover {
+  transform: scale(1.02);
 }
 
 .key-details__form {
@@ -1705,7 +1711,7 @@
 .scan-new-key__key-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .scan-new-key__key-badge {
