@@ -41,6 +41,31 @@ export async function getKeyById(keyId, userId) {
 }
 
 /**
+ * Obtener las últimas llaves del usuario (para Recent Keys)
+ * @param {string} userId - ID del usuario
+ * @param {number} limit - Número de llaves a obtener (default: 2)
+ * @returns {Promise<Array>} Lista de llaves más recientes
+ */
+export async function getRecentKeys(userId, limit = 2) {
+  return await prisma.key.findMany({
+    where: {
+      userId
+    },
+    orderBy: { 
+      createdAt: "desc" 
+    },
+    take: limit,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      imageUrl: true,
+      createdAt: true
+    }
+  });
+}
+
+/**
  * Crear una nueva llave
  * @param {Object} keyData - Datos de la llave
  * @param {string} keyData.userId - ID del usuario
