@@ -13,8 +13,10 @@
     "db:push": "prisma db push",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:postgres": "node scripts/database/migrate-to-postgres.js",
-        "test:v3": "node scripts/keyscan/v3/run-v3-tests.js",
-        "test:v4": "node scripts/keyscan/v4/run-v4-tests.js"
+    "test:v3-multi": "node scripts/keyscan/multi-tests/run-v3-multi-tests.js",
+    "test:v4-multi": "node scripts/keyscan/multi-tests/run-v4-multi-tests.js",
+    "test:v3-individual": "node scripts/keyscan/individual-tests/run-v3-individual.js",
+    "test:v4-individual": "node scripts/keyscan/individual-tests/run-v4-individual.js"
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
