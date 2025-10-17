@@ -13,7 +13,8 @@
     "db:push": "prisma db push",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:postgres": "node scripts/database/migrate-to-postgres.js",
-    "keyscan:v3:test": "node scripts/v3/test-suite-v3.js"
+        "test:v3": "node scripts/keyscan/v3/run-v3-tests.js",
+        "test:v4": "node scripts/keyscan/v4/run-v4-tests.js"
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
@@ -27,6 +28,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "resend": "^6.1.1",
+    "seedrandom": "^3.0.5",
     "sharp": "^0.34.4"
   },
   "devDependencies": {
