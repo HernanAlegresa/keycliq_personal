@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSubmit } from "@remix-run/react";
 import { requireUserId, getSession, commitSession } from "../utils/session.server.js";
 import { getUserKeys } from "../lib/keys.server.js";
-import { processKeyImageV3, extractFeaturesV3 } from "../lib/keyscan.server.js";
+import { processKeyImageV5, extractFeaturesV5 } from "../lib/keyscan.server.js";
 
 export const handle = { 
   hideFooter: true, 
@@ -71,7 +71,7 @@ export async function action({ request }) {
       });
     }
     
-    const result = await processKeyImageV3(imageDataURL, inventory);
+    const result = await processKeyImageV5(imageDataURL, inventory);
     const extractMatchTime = Date.now() - startExtractMatch;
     
     console.log(`ÔÜÖ´©Å  Extract + Match time: ${extractMatchTime}ms`);

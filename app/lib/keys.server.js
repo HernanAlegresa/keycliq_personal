@@ -1,6 +1,6 @@
 ﻿import { prisma } from "../utils/db.server.js";
 import { uploadImageToCloudinary, deleteImageFromCloudinary } from "../utils/cloudinary.server.js";
-import { extractFeaturesV3 } from "./keyscan.server.js";
+import { extractFeaturesV5 } from "./keyscan.server.js";
 
 /**
  * Obtener todas las llaves de un usuario
@@ -115,7 +115,7 @@ export async function createKey({ userId, name, description, unit, door, notes, 
         console.log('🔬 Extrayendo signature V5...');
         const startSig = Date.now();
         
-        const features = await extractFeaturesV3(imageDataUrl);
+        const features = await extractFeaturesV5(imageDataUrl);
         
         // Verificar calidad de features
         const isSegmentationValid = features.quality.segmentationValid === true;
