@@ -27,9 +27,9 @@ export async function processKeyImageV5(imageDataURL, inventory = [], config = {
     const keyScan = new ProductionKeyScanV5({
       matching: {
         thresholds: {
-          T_match: parseFloat(process.env.KEYSCAN_THRESHOLD_MATCH || '0.55'),     // MATCH: ajustado para producción (reducir FP)
-          T_possible: parseFloat(process.env.KEYSCAN_THRESHOLD_POSSIBLE || '0.48'), // POSSIBLE: ajustado para producción
-          delta: parseFloat(process.env.KEYSCAN_THRESHOLD_DELTA || '0.07')         // Margen optimizado (7%)
+          T_match: parseFloat(process.env.KEYSCAN_THRESHOLD_MATCH || '0.85'),     // MATCH: más conservador para evitar falsos positivos
+          T_possible: parseFloat(process.env.KEYSCAN_THRESHOLD_POSSIBLE || '0.75'), // POSSIBLE: threshold más alto
+          delta: parseFloat(process.env.KEYSCAN_THRESHOLD_DELTA || '0.10')         // Margen más amplio
         },
         weights: {
           bitting: parseFloat(process.env.KEYSCAN_WEIGHT_BITTING || '0.70'),  // Bitting: optimizado (validado en testing)
@@ -111,14 +111,37 @@ export async function processKeyImageV5(imageDataURL, inventory = [], config = {
  * @returns {Promise<Object>} Features extraídas
  */
 export async function extractFeaturesV5(imageDataURL) {
-  // Convertir dataURL a Buffer
-  const { data: imageBuffer } = dataUrlToBinary(imageDataURL);
-  
-  // Inicializar KeyScan V5 FINAL
-  const keyScan = new ProductionKeyScanV5();
-  
-  // Extraer features
-  return await keyScan.imageProcessor.extractFeatures(imageBuffer);
+  try {
+    // Convertir dataURL a Buffer
+    const { data: imageBuffer } = dataUrlToBinary(imageDataURL);
+    
+    // Inicializar KeyScan V5 FINAL
+    const keyScan = new ProductionKeyScanV5();
+    
+    // Extraer features usando el método completo
+    const result = await keyScan.processKeyImage(imageBuffer);
+    
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error,
+        message: result.error
+      };
+    }
+    
+    return {
+      success: true,
+      features: result.features,
+      metadata: result.metadata
+    };
+  } catch (error) {
+    console.error('Error in extractFeaturesV5:', error);
+    return {
+      success: false,
+      error: error.message,
+      message: `Feature extraction error: ${error.message}`
+    };
+  }
 }
 
 // Backward compatibility aliases

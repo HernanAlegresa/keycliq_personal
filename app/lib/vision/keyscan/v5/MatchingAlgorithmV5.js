@@ -11,9 +11,9 @@ export class MatchingAlgorithmV5 {
     this.config = {
       // Thresholds FINALES ajustados para producción (reducir falsos positivos)
       thresholds: {
-        T_match: 0.55,           // MATCH: ajustado para producción (era 0.48)
-        T_possible: 0.48,        // POSSIBLE: ajustado para producción (era 0.40)
-        delta: 0.07,             // Margen optimizado (7%)
+        T_match: 0.85,           // MATCH: conservador para evitar falsos positivos
+        T_possible: 0.75,        // POSSIBLE: threshold más alto
+        delta: 0.10,             // Margen más amplio (10%)
         shape_veto: 0.50         // Shape veto optimizado
       },
       
