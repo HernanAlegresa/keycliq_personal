@@ -14,7 +14,7 @@ import { dataUrlToBinary } from '../utils/imageConversion.js';
  * @param {Object} config - Configuración de KeyScan V5
  * @returns {Promise<Object>} Resultado del procesamiento
  */
-export async function processKeyImageV3(imageDataURL, inventory = [], config = {}) {
+export async function processKeyImageV5(imageDataURL, inventory = [], config = {}) {
   // Convertir dataURL a Buffer
   const { data: imageBuffer } = dataUrlToBinary(imageDataURL);
   
@@ -51,7 +51,7 @@ export async function processKeyImageV3(imageDataURL, inventory = [], config = {
  * @param {string} imageDataURL - Data URL de la imagen
  * @returns {Promise<Object>} Features extraídas
  */
-export async function extractFeaturesV3(imageDataURL) {
+export async function extractFeaturesV5(imageDataURL) {
   // Convertir dataURL a Buffer
   const { data: imageBuffer } = dataUrlToBinary(imageDataURL);
   
@@ -62,3 +62,6 @@ export async function extractFeaturesV3(imageDataURL) {
   return await keyScan.imageProcessor.extractFeatures(imageBuffer);
 }
 
+// Backward compatibility aliases
+export const processKeyImageV3 = processKeyImageV5;
+export const extractFeaturesV3 = extractFeaturesV5;
