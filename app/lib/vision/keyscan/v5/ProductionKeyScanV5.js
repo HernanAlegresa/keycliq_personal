@@ -105,9 +105,11 @@ export class ProductionKeyScanV5 {
         if (comparison.similarity > bestSimilarity) {
           bestSimilarity = comparison.similarity;
           bestMatch = {
-            ...comparison,
+            similarity: comparison.similarity,
+            matchStatus: comparison.matchStatus,
+            confidence: comparison.confidence,
+            details: comparison.details,
             key: item.key,
-            decision: comparison.matchStatus,
             margin: 0 // Calculate margin vs second best
           };
         }
