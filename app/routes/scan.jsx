@@ -1,9 +1,10 @@
 import { json } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { requireUserId } from "../utils/session.server.js";
 import { Button } from "../components/ui/Button.jsx";
 import { CameraPlaceholder } from "../components/ui/CameraPlaceholder.jsx";
+import { ScanGuidelines } from "../components/ui/ScanGuidelines.jsx";
 import { fileToDataURL } from "../utils/imageUtils.js";
 
 export const handle = { 
@@ -24,6 +25,16 @@ export default function ScanCapture() {
   const fileInputRef = useRef(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showGuidelines, setShowGuidelines] = useState(false);
+
+  // Check if user has seen guidelines before
+  useEffect(() => {
+    const hasSeenGuidelines = localStorage.getItem('hasSeenScanGuidelines');
+    if (!hasSeenGuidelines) {
+      // Show guidelines on first visit
+      setShowGuidelines(true);
+    }
+  }, []);
 
   const handleFileUpload = async (event) => {
     const file = event.target.files?.[0];
@@ -63,9 +74,31 @@ export default function ScanCapture() {
   };
 
   const handleScan = () => {
-    // Trigger file input which will handle both camera and file upload
-    // On mobile devices, this will show options for camera, photo library, etc.
+    // Check if user has seen guidelines
+    const hasSeenGuidelines = localStorage.getItem('hasSeenScanGuidelines');
+    
+    if (!hasSeenGuidelines) {
+      // Show guidelines first
+      setShowGuidelines(true);
+    } else {
+      // Proceed with scan
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleGuidelinesContinue = () => {
+    // Mark guidelines as seen
+    localStorage.setItem('hasSeenScanGuidelines', 'true');
+    setShowGuidelines(false);
+    
+    // Proceed with scan
     fileInputRef.current?.click();
+  };
+
+  const handleGuidelinesCancel = () => {
+    // User skipped guidelines
+    localStorage.setItem('hasSeenScanGuidelines', 'true');
+    setShowGuidelines(false);
   };
 
   return (
@@ -107,6 +140,14 @@ export default function ScanCapture() {
         className="scan-capture__file-input"
         aria-label="Scan a key image"
       />
+
+      {/* Scan Guidelines Modal */}
+      {showGuidelines && (
+        <ScanGuidelines 
+          onContinue={handleGuidelinesContinue}
+          onCancel={handleGuidelinesCancel}
+        />
+      )}
     </div>
   );
 }
