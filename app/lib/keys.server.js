@@ -108,11 +108,11 @@ export async function createKey({ userId, name, description, unit, door, notes, 
       }
     }
 
-    // Extraer signature V3 si tenemos imagen
+    // Extraer signature V5 si tenemos imagen
     if (imageDataUrl && imageDataUrl.startsWith('data:')) {
       try {
         // Extraer signature
-        console.log('­ƒöì Extrayendo signature V3...');
+        console.log('🔬 Extrayendo signature V5...');
         const startSig = Date.now();
         
         const features = await extractFeaturesV3(imageDataUrl);

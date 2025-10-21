@@ -12,7 +12,7 @@ export const handle = {
 };
 
 /**
- * Action server para procesar la imagen con KeyScan V3
+ * Action server para procesar la imagen con KeyScan V5
  */
 export async function action({ request }) {
   const userId = await requireUserId(request);
@@ -21,7 +21,7 @@ export async function action({ request }) {
   
   // Logging inicio
   const startTotal = Date.now();
-  console.log('\n­ƒöì ===== KEYSCAN V3 - PROCESSING START =====');
+  console.log('\n🔬 ===== KEYSCAN V5 - PROCESSING START =====');
   console.log(`­ƒôà Timestamp: ${new Date().toISOString()}`);
   console.log(`­ƒæñ User ID: ${userId}`);
   
@@ -49,7 +49,7 @@ export async function action({ request }) {
     console.log(`­ƒôª Inventory loaded: ${inventory.length} keys with signatures ready`);
     console.log(`ÔÜÖ´©Å  Inventory load time: ${inventoryTime}ms`);
     
-    // 3. Procesar imagen con KeyScan V3
+    // 3. Procesar imagen con KeyScan V5
     const startExtractMatch = Date.now();
     
     // Caso especial: inventario vac├¡o
@@ -62,7 +62,7 @@ export async function action({ request }) {
       
       const totalTime = Date.now() - startTotal;
       console.log(`ÔÜÖ´©Å  Total time: ${totalTime}ms`);
-      console.log('Ô£à ===== KEYSCAN V3 - EMPTY INVENTORY =====\n');
+      console.log('✅ ===== KEYSCAN V5 - EMPTY INVENTORY =====\n');
       
       return redirect('/scan/new', {
         headers: {
@@ -127,7 +127,7 @@ export async function action({ request }) {
     const session = await getSession(request.headers.get('Cookie'));
     
     if (result.decision === 'MATCH') {
-      console.log(`\nÔ£à ===== KEYSCAN V3 - MATCH FOUND =====\n`);
+      console.log(`\n✅ ===== KEYSCAN V5 - MATCH FOUND =====\n`);
       return redirect(
         `/scan/match_yes?keyId=${result.details.keyId}&confidence=${result.confidence.toFixed(4)}`,
         {
@@ -137,7 +137,7 @@ export async function action({ request }) {
         }
       );
     } else if (result.decision === 'POSSIBLE') {
-      console.log(`\nÔÜá´©Å  ===== KEYSCAN V3 - POSSIBLE MATCH =====\n`);
+      console.log(`\n⚠️  ===== KEYSCAN V5 - POSSIBLE MATCH =====\n`);
       return redirect(
         `/scan/possible?keyId=${result.details.keyId}&confidence=${result.confidence.toFixed(4)}`,
         {
@@ -148,7 +148,7 @@ export async function action({ request }) {
       );
     } else {
       // NO_MATCH - redirigir a nueva llave (signature se extraer├í en createKey)
-      console.log(`\nÔØî ===== KEYSCAN V3 - NO MATCH =====\n`);
+      console.log(`\n❌ ===== KEYSCAN V5 - NO MATCH =====\n`);
       
       return redirect('/scan/new', {
         headers: {
@@ -159,7 +159,7 @@ export async function action({ request }) {
     
   } catch (error) {
     const totalTime = Date.now() - startTotal;
-    console.error(`\nÔØî ===== KEYSCAN V3 - ERROR =====`);
+    console.error(`\n❌ ===== KEYSCAN V5 - ERROR =====`);
     console.error(`Error: ${error.message}`);
     console.error(`Stack: ${error.stack}`);
     console.error(`Total time: ${totalTime}ms\n`);

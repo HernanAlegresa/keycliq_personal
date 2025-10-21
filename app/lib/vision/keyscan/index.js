@@ -4,11 +4,15 @@
  */
 
 import { ProductionKeyScanV3 } from './v3/ProductionKeyScanV3.js';
+import { ProductionKeyScanV4 } from './v4/ProductionKeyScanV4.js';
+import { ProductionKeyScanV5 } from './v5/ProductionKeyScanV5.js';
 
-const DEFAULT_VERSION = 'v3';
+const DEFAULT_VERSION = 'v5';
 
 const VERSIONS = {
-  v3: ProductionKeyScanV3
+  v3: ProductionKeyScanV3,
+  v4: ProductionKeyScanV4,
+  v5: ProductionKeyScanV5
 };
 
 /**
@@ -36,12 +40,14 @@ export function getAvailableVersions() {
   return Object.keys(VERSIONS);
 }
 
-export { ProductionKeyScanV3 };
+export { ProductionKeyScanV3, ProductionKeyScanV4, ProductionKeyScanV5 };
 
 export default {
   getKeyScan,
   getActiveVersion,
   getAvailableVersions,
-  ProductionKeyScanV3
+  ProductionKeyScanV3,
+  ProductionKeyScanV4,
+  ProductionKeyScanV5
 };
 

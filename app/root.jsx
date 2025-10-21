@@ -7,6 +7,8 @@ import pagesCss from "./styles/pages.css?url";
 import welcomeCss from "./styles/welcome.css?url";
 import authCss from "./styles/auth.css?url";
 import settingsCss from "./styles/settings.css?url";
+import scanGuidelinesCss from "./styles/scan-guidelines.css?url";
+import legalCss from "./styles/legal.css?url";
 import { Header } from "./components/layout/Header";
 import { FooterNav } from "./components/layout/FooterNav";
 import { BackButton } from "./components/ui/BackButton";
@@ -23,6 +25,8 @@ export const links = () => [
   { rel: "stylesheet", href: welcomeCss },
   { rel: "stylesheet", href: authCss },
   { rel: "stylesheet", href: settingsCss },
+  { rel: "stylesheet", href: scanGuidelinesCss },
+  { rel: "stylesheet", href: legalCss },
 ];
 
 export const meta = () => ([

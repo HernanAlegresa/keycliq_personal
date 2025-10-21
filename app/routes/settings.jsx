@@ -80,6 +80,29 @@ export default function Settings() {
             </Form>
           </div>
         </div>
+
+        {/* Legal Links Section */}
+        <div className="settings-section settings-legal">
+          <div className="settings-legal-links">
+            <a 
+              href="/privacy-policy" 
+              className="settings-legal-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Privacy Policy
+            </a>
+            <span className="settings-legal-separator">•</span>
+            <a 
+              href="/terms-of-use" 
+              className="settings-legal-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Terms of Use
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

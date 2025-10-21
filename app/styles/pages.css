@@ -2,10 +2,10 @@
 
 /* 1) Homepage Styles */
 .homepage {
-  min-height: 100vh;
+  min-height: calc(100vh - 56px - 80px); /* Full height minus header and footer */
   display: flex;
   flex-direction: column;
-  padding: 24px 0 100px 0; /* Extra bottom padding for footer nav */
+  padding: 24px 0;
 }
 
 .homepage__section {
@@ -265,7 +265,8 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
-  min-height: calc(100dvh - 56px);
+  height: calc(100dvh - 56px); /* Fixed height instead of min-height */
+  overflow: hidden; /* Prevent scroll */
 }
 
 .scan-capture__hint {
@@ -394,17 +395,18 @@
 
 /* 3) Scan Review Styles - Matching step 1 layout */
 :root {
-  --review-image-height: 500px;        /* Ajustable: altura del preview de imagen */
-  --review-banner-to-image-gap: 50px;  /* Espacio entre banner y imagen */
-  --review-image-to-buttons-gap: 60px; /* Espacio entre imagen y botones */
-  --review-actions-gap: 30px;          /* Espacio entre botones */
+  --review-image-height: 280px;        /* Reduced height for better fit */
+  --review-banner-to-image-gap: 20px;  /* Reduced gap between banner and image */
+  --review-image-to-buttons-gap: 24px; /* Reduced gap between image and buttons */
+  --review-actions-gap: 16px;          /* Reduced gap between buttons */
 }
 
 .scan-review {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  min-height: calc(100dvh - 56px);
+  height: calc(100dvh - 56px); /* Fixed height instead of min-height */
+  overflow: hidden; /* Prevent scroll */
 }
 
 .scan-review__banner {
@@ -445,7 +447,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--review-actions-gap);
-  padding-bottom: 37px;
+  padding-bottom: 16px; /* Reduced padding */
 }
 
 /* Image Preview Component - Tamaño customizable */
@@ -1306,7 +1308,7 @@
 
 .key-details__header-actions {
   position: fixed;
-  top: 16px;
+  top: 8px; /* Centrado verticalmente en el header de 56px */
   right: 16px;
   z-index: 1000;
   display: flex;
@@ -1318,10 +1320,10 @@
   background: var(--color-primary);
   color: var(--color-white);
   border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
+  border-radius: 6px;
+  padding: 6px 12px;
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;

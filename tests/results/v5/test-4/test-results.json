@@ -1,0 +1,1374 @@
+{
+  "testId": 1761059669382,
+  "timestamp": "2025-10-21T15:14:29.382Z",
+  "config": {
+    "sameKeyComparisons": 12,
+    "differentKeyComparisons": 12,
+    "totalComparisons": 24,
+    "seed": 1761059669357,
+    "outputDir": "tests/results/random-tests"
+  },
+  "comparisons": [
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "lockbox",
+        "keyId": "lockbox-06",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-06\\aligned-lockbox-06.jpg",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-06\\generated-lockbox-06.png",
+      "similarity": 0.6543187859662072,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 17,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6860569043913379,
+          "edge": 0.870343516168852,
+          "shape": 0.00010249658500153948
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 173.02600960549256,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 173.02600960549256,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 17
+        },
+        "processingTime": 8
+      },
+      "processingTime": 8
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "lockbox",
+        "keyId": "lockbox-03",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-03\\aligned-lockbox-03.jpg",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-03\\generated-lockbox-03.png",
+      "similarity": 0.6723595125601934,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 19,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6693227038399827,
+          "edge": 0.8939698396770774,
+          "shape": 0.25039651936789975
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 85.23496934944014,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 85.23496934944014,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 19
+        },
+        "processingTime": 8
+      },
+      "processingTime": 8
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "regular",
+        "keyId": "regular-07",
+        "image1": "generated",
+        "image2": "aligned",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-07\\generated-regular-07.png",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-07\\aligned-regular-07.jpg",
+      "similarity": 0.6507268784806122,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 17,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.7144862105951174,
+          "edge": 0.7529324627690513,
+          "shape": 3.8510219589850496e-7
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 201.97277044195835,
+          "huSimilarity": 0.1016113693838735,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 201.97277044195835,
+              "max": 200,
+              "passed": false
+            },
+            "huCheck": {
+              "value": 0.1016113693838735,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 17
+        },
+        "processingTime": 2
+      },
+      "processingTime": 2
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "regular",
+        "keyId": "regular-04",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-04\\aligned-regular-04.jpg",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-04\\generated-regular-04.png",
+      "similarity": 0.7618143381777375,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 28,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.715661771687716,
+          "edge": 0.8585430861980621,
+          "shape": 0.8914248075672374
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 64.76109943476871,
+          "huSimilarity": 0.04829574407371773,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 64.76109943476871,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.04829574407371773,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 28
+        },
+        "processingTime": 3
+      },
+      "processingTime": 3
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "regular",
+        "keyId": "regular-09",
+        "image1": "generated",
+        "image2": "aligned",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-09\\generated-regular-09.png",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-09\\aligned-regular-09.jpg",
+      "similarity": 0.6474292309152534,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 17,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6940607289627398,
+          "edge": 0.7888870689258687,
+          "shape": 0.0380930685616165
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 117.83462988442744,
+          "huSimilarity": 0.26991554766510817,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 117.83462988442744,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.26991554766510817,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 17
+        },
+        "processingTime": 3
+      },
+      "processingTime": 3
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "regular",
+        "keyId": "regular-05",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-05\\aligned-regular-05.jpg",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-05\\generated-regular-05.png",
+      "similarity": 0.6438655821730775,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 16,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6981648179359731,
+          "edge": 0.7724250230039823,
+          "shape": 0.0066520501709991285
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 136.49908424601244,
+          "huSimilarity": 0.02084792872847796,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 136.49908424601244,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.02084792872847796,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 16
+        },
+        "processingTime": 3
+      },
+      "processingTime": 3
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "lockbox",
+        "keyId": "lockbox-08",
+        "image1": "generated",
+        "image2": "aligned",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-08\\generated-lockbox-08.png",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-08\\aligned-lockbox-08.jpg",
+      "similarity": 0.6845943757723622,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 20,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.7105932398400765,
+          "edge": 0.7624633907089023,
+          "shape": 0.3468642974252797
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 147.59742545180114,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 147.59742545180114,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 20
+        },
+        "processingTime": 10
+      },
+      "processingTime": 10
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "regular",
+        "keyId": "regular-13",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-13\\aligned-regular-13.jpg",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-13\\generated-regular-13.png",
+      "similarity": 0.7765738369699792,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 30,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.7093737956216992,
+          "edge": 0.9791111419964966,
+          "shape": 0.8418995163549025
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 81.74350127074322,
+          "huSimilarity": 0.38468014978031406,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 81.74350127074322,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.38468014978031406,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 30
+        },
+        "processingTime": 4
+      },
+      "processingTime": 4
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "lockbox",
+        "keyId": "lockbox-14",
+        "image1": "generated",
+        "image2": "aligned",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-14\\generated-lockbox-14.png",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-14\\aligned-lockbox-14.jpg",
+      "similarity": 0.715569036241299,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 24,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.7494625576330163,
+          "edge": 0.9547232803031611,
+          "shape": 0.000005898375552204987
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 126.11502686040232,
+          "huSimilarity": 0.30776123857324267,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 126.11502686040232,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.30776123857324267,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 24
+        },
+        "processingTime": 12
+      },
+      "processingTime": 12
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "lockbox",
+        "keyId": "lockbox-02",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-02\\aligned-lockbox-02.jpg",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-02\\generated-lockbox-02.png",
+      "similarity": 0.6797289818498004,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 20,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.7083083259195793,
+          "edge": 0.9195657685304737,
+          "shape": 0
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 172.96531444194238,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 172.96531444194238,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 20
+        },
+        "processingTime": 3
+      },
+      "processingTime": 3
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "regular",
+        "keyId": "regular-08",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-08\\aligned-regular-08.jpg",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-08\\generated-regular-08.png",
+      "similarity": 0.7204597711942663,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 24,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6746878213931946,
+          "edge": 0.8679038551601366,
+          "shape": 0.7459752518700268
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 69.6419413859206,
+          "huSimilarity": 0.6981349475788221,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 69.6419413859206,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.6981349475788221,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 24
+        },
+        "processingTime": 3
+      },
+      "processingTime": 3
+    },
+    {
+      "testCase": {
+        "type": "SAME_KEY_DIFFERENT_IMAGE",
+        "category": "lockbox",
+        "keyId": "lockbox-14",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-14\\aligned-lockbox-14.jpg",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-14\\generated-lockbox-14.png",
+      "similarity": 0.715569036241299,
+      "actualStatus": "MATCH",
+      "expectedStatus": "MATCH",
+      "correct": true,
+      "confidence": 24,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.7494625576330163,
+          "edge": 0.9547232803031611,
+          "shape": 0.000005898375552204987
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 126.11502686040232,
+          "huSimilarity": 0.30776123857324267,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 126.11502686040232,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.30776123857324267,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 24
+        },
+        "processingTime": 3
+      },
+      "processingTime": 3
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "regular",
+        "category2": "lockbox",
+        "keyId1": "regular-13",
+        "keyId2": "lockbox-11",
+        "image1": "generated",
+        "image2": "aligned",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-13\\generated-regular-13.png",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-11\\aligned-lockbox-11.jpg",
+      "similarity": 0.7889255281456747,
+      "actualStatus": "NO_MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": true,
+      "confidence": 0,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.7135710054183623,
+          "edge": 0.9895839102325327,
+          "shape": 0.9150904230631448
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 59.464274989274024,
+          "huSimilarity": 0.5786351528669917,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 59.464274989274024,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.5786351528669917,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "NO_MATCH",
+          "confidence": 0
+        },
+        "processingTime": 4
+      },
+      "processingTime": 4
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "regular",
+        "category2": "lockbox",
+        "keyId1": "regular-01",
+        "keyId2": "lockbox-06",
+        "image1": "generated",
+        "image2": "generated",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-01\\generated-regular-01.png",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-06\\generated-lockbox-06.png",
+      "similarity": 0.9102448732133054,
+      "actualStatus": "MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": false,
+      "confidence": 1,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.9205327911742197,
+          "edge": 0.9886590957277848,
+          "shape": 0.6814010024579459
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 78.77182237323191,
+          "huSimilarity": 0.29577529104884603,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 78.77182237323191,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.29577529104884603,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 1
+        },
+        "processingTime": 5
+      },
+      "processingTime": 5
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "lockbox",
+        "category2": "regular",
+        "keyId1": "lockbox-06",
+        "keyId2": "regular-08",
+        "image1": "generated",
+        "image2": "generated",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-06\\generated-lockbox-06.png",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-08\\generated-regular-08.png",
+      "similarity": 0.9440387803381317,
+      "actualStatus": "MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": false,
+      "confidence": 4,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.9384144105954848,
+          "edge": 0.9943597527725014,
+          "shape": 0.88276742366792
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 62.609903369994115,
+          "huSimilarity": 0.6508008301203638,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 62.609903369994115,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.6508008301203638,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 4
+        },
+        "processingTime": 4
+      },
+      "processingTime": 4
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "regular",
+        "category2": "lockbox",
+        "keyId1": "regular-04",
+        "keyId2": "lockbox-02",
+        "image1": "generated",
+        "image2": "aligned",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-04\\generated-regular-04.png",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-02\\aligned-lockbox-02.jpg",
+      "similarity": 0.6508433220712955,
+      "actualStatus": "NO_MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": true,
+      "confidence": 0,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.715661771687716,
+          "edge": 0.7494004094494704,
+          "shape": 4.35603913348726e-274
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 232.47580519271247,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 232.47580519271247,
+              "max": 200,
+              "passed": false
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "NO_MATCH",
+          "confidence": 0
+        },
+        "processingTime": 6
+      },
+      "processingTime": 6
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "regular",
+        "category2": "lockbox",
+        "keyId1": "regular-07",
+        "keyId2": "lockbox-11",
+        "image1": "aligned",
+        "image2": "aligned",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-07\\aligned-regular-07.jpg",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-11\\aligned-lockbox-11.jpg",
+      "similarity": 0.6305046010808536,
+      "actualStatus": "NO_MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": true,
+      "confidence": 0,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6877790520741499,
+          "edge": 0.745296149952477,
+          "shape": 3.463845323786034e-7
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 177.67385851610248,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 177.67385851610248,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "NO_MATCH",
+          "confidence": 0
+        },
+        "processingTime": 29
+      },
+      "processingTime": 29
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "lockbox",
+        "category2": "regular",
+        "keyId1": "lockbox-14",
+        "keyId2": "regular-01",
+        "image1": "generated",
+        "image2": "aligned",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-14\\generated-lockbox-14.png",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-01\\aligned-regular-01.jpg",
+      "similarity": 0.8001981696021351,
+      "actualStatus": "NO_MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": true,
+      "confidence": 0,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.7494625576330163,
+          "edge": 0.964833988683164,
+          "shape": 0.8260758152239083
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 103.61949623502326,
+          "huSimilarity": 0.04845072258437588,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 103.61949623502326,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.04845072258437588,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "NO_MATCH",
+          "confidence": 0
+        },
+        "processingTime": 80
+      },
+      "processingTime": 80
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "lockbox",
+        "category2": "regular",
+        "keyId1": "lockbox-02",
+        "keyId2": "regular-15",
+        "image1": "aligned",
+        "image2": "aligned",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-02\\aligned-lockbox-02.jpg",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-15\\aligned-regular-15.jpg",
+      "similarity": 0.6676873700866136,
+      "actualStatus": "NO_MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": true,
+      "confidence": 0,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6745916999454447,
+          "edge": 0.9773659006240111,
+          "shape": 1.9404669348059692e-266
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 237.56472802164888,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 237.56472802164888,
+              "max": 200,
+              "passed": false
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "NO_MATCH",
+          "confidence": 0
+        },
+        "processingTime": 6
+      },
+      "processingTime": 6
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "regular",
+        "category2": "lockbox",
+        "keyId1": "regular-15",
+        "keyId2": "lockbox-08",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-15\\aligned-regular-15.jpg",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-08\\generated-lockbox-08.png",
+      "similarity": 0.6253668738910376,
+      "actualStatus": "NO_MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": true,
+      "confidence": 0,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6737963709443874,
+          "edge": 0.7685470704568094,
+          "shape": 1.3860451613127968e-9
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 162.92943257741985,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 162.92943257741985,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "NO_MATCH",
+          "confidence": 0
+        },
+        "processingTime": 5
+      },
+      "processingTime": 5
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "lockbox",
+        "category2": "regular",
+        "keyId1": "lockbox-08",
+        "keyId2": "regular-02",
+        "image1": "aligned",
+        "image2": "generated",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\lockbox\\lockbox-08\\aligned-lockbox-08.jpg",
+      "image2Path": "tests\\keys-optimized\\regular\\regular-02\\generated-regular-02.png",
+      "similarity": 0.6841061256866926,
+      "actualStatus": "NO_MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": true,
+      "confidence": 0,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.719989640632929,
+          "edge": 0.7249067344382604,
+          "shape": 0.3513203035599012
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 144.55448799674122,
+          "huSimilarity": 0.33151740563992627,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 144.55448799674122,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.33151740563992627,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "NO_MATCH",
+          "confidence": 0
+        },
+        "processingTime": 79
+      },
+      "processingTime": 79
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "regular",
+        "category2": "lockbox",
+        "keyId1": "regular-15",
+        "keyId2": "lockbox-02",
+        "image1": "aligned",
+        "image2": "aligned",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-15\\aligned-regular-15.jpg",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-02\\aligned-lockbox-02.jpg",
+      "similarity": 0.6676873700866136,
+      "actualStatus": "NO_MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": true,
+      "confidence": 0,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6745916999454447,
+          "edge": 0.9773659006240111,
+          "shape": 1.9404669348059692e-266
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 237.56472802164888,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 237.56472802164888,
+              "max": 200,
+              "passed": false
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "NO_MATCH",
+          "confidence": 0
+        },
+        "processingTime": 8
+      },
+      "processingTime": 8
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "regular",
+        "category2": "lockbox",
+        "keyId1": "regular-03",
+        "keyId2": "lockbox-10",
+        "image1": "generated",
+        "image2": "generated",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-03\\generated-regular-03.png",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-10\\generated-lockbox-10.png",
+      "similarity": 0.9599607705347802,
+      "actualStatus": "MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": false,
+      "confidence": 6,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.9512750385061391,
+          "edge": 0.99846690015768,
+          "shape": 0.9437486354894669
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 60,
+          "huSimilarity": 0,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 60,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0,
+              "min": 0.15,
+              "passed": false
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "MATCH",
+          "confidence": 6
+        },
+        "processingTime": 3
+      },
+      "processingTime": 3
+    },
+    {
+      "testCase": {
+        "type": "DIFFERENT_KEY",
+        "category1": "regular",
+        "category2": "lockbox",
+        "keyId1": "regular-12",
+        "keyId2": "lockbox-06",
+        "image1": "generated",
+        "image2": "aligned",
+        "expectedStatus": "NO_MATCH"
+      },
+      "image1Path": "tests\\keys-optimized\\regular\\regular-12\\generated-regular-12.png",
+      "image2Path": "tests\\keys-optimized\\lockbox\\lockbox-06\\aligned-lockbox-06.jpg",
+      "similarity": 0.6582704143631144,
+      "actualStatus": "NO_MATCH",
+      "expectedStatus": "NO_MATCH",
+      "correct": true,
+      "confidence": 0,
+      "details": {
+        "featureSimilarities": {
+          "bitting": 0.6872230186990542,
+          "edge": 0.8860291158657119,
+          "shape": 0.00008478100633944263
+        },
+        "shapeAnalysis": {
+          "passed": false,
+          "hausdorff": 176.92088627406318,
+          "huSimilarity": 0.3304677284419669,
+          "compactnessPass": false,
+          "areaRatioPass": false,
+          "details": {
+            "hausdorffCheck": {
+              "value": 176.92088627406318,
+              "max": 200,
+              "passed": true
+            },
+            "huCheck": {
+              "value": 0.3304677284419669,
+              "min": 0.15,
+              "passed": true
+            },
+            "compactnessCheck": {
+              "passed": false
+            },
+            "areaRatioCheck": {
+              "passed": false
+            }
+          }
+        },
+        "decision": {
+          "status": "NO_MATCH",
+          "confidence": 0
+        },
+        "processingTime": 3
+      },
+      "processingTime": 3
+    }
+  ],
+  "statistics": {
+    "sameKey": {
+      "total": 12,
+      "correct": 12,
+      "accuracy": 1
+    },
+    "differentKey": {
+      "total": 12,
+      "correct": 9,
+      "accuracy": 0.75
+    },
+    "global": {
+      "total": 24,
+      "correct": 21,
+      "accuracy": 0.875
+    }
+  }
+}
