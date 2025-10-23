@@ -417,10 +417,17 @@ return (
           size="large"
           type="submit"
           form="key-form"
-          disabled={!isEditing || !isFormValid || !hasChanges}
+          disabled={!isEditing || !isFormValid || !hasChanges || isSubmitting}
           className={`key-details__save-button ${isNewKey ? 'key-details__save-button--full-width' : ''}`}
         >
-          {isNewKey ? 'Save Key' : 'Save'}
+          {isSubmitting ? (
+            <>
+              <span className="loading-spinner"></span>
+              {isNewKey ? 'Saving Key...' : 'Saving...'}
+            </>
+          ) : (
+            isNewKey ? 'Save Key' : 'Save'
+          )}
         </Button>
       </div>
 

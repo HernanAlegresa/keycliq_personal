@@ -210,11 +210,11 @@ export async function processKeyImageV6(imageDataURL, inventory = [], config = {
         
         console.log(`📊 Best match: ${(bestScore * 100).toFixed(1)}% similarity, margin: ${(margin * 100).toFixed(1)}%`);
         
-        // Determinar decisión final con thresholds optimizados
+        // Determinar decisión final con thresholds optimizados para mejor matching
         let decision = 'NO_MATCH';
-        if (bestScore >= 0.8 && isConfidentMatch) {
+        if (bestScore >= 0.55 && isConfidentMatch) {
           decision = 'MATCH';
-        } else if (bestScore >= 0.7) {
+        } else if (bestScore >= 0.45) {
           decision = 'POSSIBLE';
         } else {
           decision = 'NO_MATCH';
