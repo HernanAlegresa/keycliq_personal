@@ -18,10 +18,10 @@ const openai = new OpenAI({
 // Schema for validation of AI response
 const KeySignatureSchema = z.object({
   quantitative_properties: z.object({
-    stamped_code: z.string().optional(),
+    stamped_code: z.union([z.string(), z.null()]).optional().transform(val => val || undefined),
     number_of_cuts: z.union([z.number(), z.string().transform(val => parseInt(val) || 0)]).optional(),
-    length_estimate: z.string().optional(),
-    width_estimate: z.string().optional(),
+    length_estimate: z.union([z.string(), z.null()]).optional().transform(val => val || undefined),
+    width_estimate: z.union([z.string(), z.null()]).optional().transform(val => val || undefined),
     groove_count: z.union([z.number(), z.string().transform(val => parseInt(val) || 0)]).optional(),
     cut_depths: z.array(z.union([z.number(), z.string().transform(val => parseFloat(val) || 0)])).optional(),
   }),
@@ -98,60 +98,83 @@ Return a JSON object with this exact structure:
 Be extremely detailed and precise. Include EVERYTHING you see.`;
 
 /**
- * Analyze a key image using GPT-4o and return structured signature
+ * Analyze a key image using GPT-4o with consensus approach
  * @param {Buffer} imageBuffer - Image buffer
  * @param {string} mimeType - Image MIME type
- * @returns {Promise<Object>} Structured key signature
+ * @returns {Promise<Object>} Structured key signature with consensus
  */
 export async function analyzeKeyWithAI(imageBuffer, mimeType = 'image/jpeg') {
   try {
-    console.log('🔍 Starting AI key analysis...');
+    console.log('🔍 Starting AI key analysis with consensus...');
     
     // Convert image to base64
     const base64Image = imageBuffer.toString('base64');
     
-    // Call GPT-4o with image
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: UNIVERSAL_KEY_PROMPT
-        },
-        {
-          role: "user",
-          content: [
+    // Perform multiple analyses for consensus
+    const analyses = [];
+    const numAnalyses = 3; // Number of analyses for consensus
+    
+    for (let i = 0; i < numAnalyses; i++) {
+      try {
+        console.log(`📊 Analysis ${i + 1}/${numAnalyses}...`);
+        
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [
             {
-              type: "text",
-              text: "Analyze this key image and provide a structured JSON response with all properties."
+              role: "system",
+              content: UNIVERSAL_KEY_PROMPT
             },
             {
-              type: "image_url",
-              image_url: {
-                url: `data:${mimeType};base64,${base64Image}`
-              }
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: "Analyze this key image and provide a structured JSON response with all properties."
+                },
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: `data:${mimeType};base64,${base64Image}`
+                  }
+                }
+              ]
             }
-          ]
-        }
-      ],
-      max_tokens: 2000,
-      response_format: { type: "json_object" }
-    });
+          ],
+          max_tokens: 2000,
+          response_format: { type: "json_object" }
+        });
+        
+        const rawResponse = response.choices[0].message.content;
+        const parsedResponse = JSON.parse(rawResponse);
+        const validatedSignature = KeySignatureSchema.parse(parsedResponse);
+        
+        analyses.push(validatedSignature);
+        console.log(`✅ Analysis ${i + 1} completed`);
+        
+      } catch (error) {
+        console.error(`❌ Analysis ${i + 1} failed:`, error.message);
+        // Continue with other analyses
+      }
+    }
     
-    // Parse and validate response
-    const rawResponse = response.choices[0].message.content;
-    console.log('📝 Raw AI response received');
+    if (analyses.length === 0) {
+      throw new Error('All AI analyses failed');
+    }
     
-    const parsedResponse = JSON.parse(rawResponse);
-    const validatedSignature = KeySignatureSchema.parse(parsedResponse);
-    
-    console.log('✅ Key signature generated successfully');
+    // Create consensus signature
+    const consensusSignature = createConsensusSignature(analyses);
+    console.log('✅ Consensus signature created from', analyses.length, 'analyses');
     
     return {
       success: true,
-      signature: validatedSignature,
-      rawResponse: rawResponse,
-      processingTime: Date.now() - Date.now() // Will be calculated properly
+      signature: consensusSignature,
+      rawResponse: JSON.stringify(consensusSignature),
+      processingTime: Date.now() - Date.now(),
+      consensusData: {
+        numAnalyses: analyses.length,
+        individualAnalyses: analyses
+      }
     };
     
   } catch (error) {
@@ -163,6 +186,73 @@ export async function analyzeKeyWithAI(imageBuffer, mimeType = 'image/jpeg') {
       signature: null
     };
   }
+}
+
+/**
+ * Create consensus signature from multiple analyses
+ * @param {Array} analyses - Array of individual analyses
+ * @returns {Object} Consensus signature
+ */
+function createConsensusSignature(analyses) {
+  if (analyses.length === 1) {
+    return analyses[0];
+  }
+  
+  // For consensus, we'll use the most common values or average for numerical fields
+  const consensus = {
+    quantitative_properties: {},
+    qualitative_properties: {},
+    structural_features: {},
+    unique_features: [],
+    confidence_score: 0
+  };
+  
+  // Calculate consensus for quantitative properties
+  const quantitativeFields = ['number_of_cuts', 'groove_count'];
+  quantitativeFields.forEach(field => {
+    const values = analyses.map(a => a.quantitative_properties?.[field]).filter(v => v !== undefined);
+    if (values.length > 0) {
+      // Use most common value
+      const counts = {};
+      values.forEach(v => counts[v] = (counts[v] || 0) + 1);
+      consensus.quantitative_properties[field] = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+    }
+  });
+  
+  // For string fields, use most common value
+  const stringFields = ['stamped_code', 'length_estimate', 'width_estimate', 'material', 'color', 'finish', 'purpose'];
+  stringFields.forEach(field => {
+    const values = analyses.map(a => {
+      if (field.includes('_')) {
+        const [parent, child] = field.split('_');
+        return a[parent]?.[child];
+      }
+      return a.quantitative_properties?.[field] || a.qualitative_properties?.[field];
+    }).filter(v => v !== undefined && v !== null);
+    
+    if (values.length > 0) {
+      const counts = {};
+      values.forEach(v => counts[v] = (counts[v] || 0) + 1);
+      const mostCommon = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+      
+      if (field.includes('_')) {
+        const [parent, child] = field.split('_');
+        if (!consensus[parent]) consensus[parent] = {};
+        consensus[parent][child] = mostCommon;
+      } else if (['stamped_code', 'length_estimate', 'width_estimate'].includes(field)) {
+        consensus.quantitative_properties[field] = mostCommon;
+      } else {
+        consensus.qualitative_properties[field] = mostCommon;
+      }
+    }
+  });
+  
+  // Average confidence score
+  const confidences = analyses.map(a => a.confidence_score || 0.5).filter(c => c > 0);
+  consensus.confidence_score = confidences.length > 0 ? 
+    confidences.reduce((a, b) => a + b, 0) / confidences.length : 0.5;
+  
+  return consensus;
 }
 
 /**
