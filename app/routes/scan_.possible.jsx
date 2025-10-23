@@ -3,6 +3,7 @@ import { useLoaderData, useNavigate } from "@remix-run/react";
 import { requireUserId } from "../utils/session.server.js";
 import { getKeyById } from "../lib/keys.server.js";
 import { Button } from "../components/ui/Button.jsx";
+import { prisma } from "../utils/db.server.js";
 
 export const handle = { 
   hideFooter: true, 
@@ -26,14 +27,27 @@ export async function loader({ request }) {
     return redirect('/scan');
   }
 
+  // Get the latest KeyMatching for this user and key
+  const latestMatching = await prisma.keyMatching.findFirst({
+    where: {
+      userId,
+      matchedKeyId: keyId,
+      matchType: 'POSSIBLE_MATCH'
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+
   return json({ 
     key,
-    confidence: parseFloat(confidence) || 0
+    confidence: parseFloat(confidence) || 0,
+    keyMatchingId: latestMatching?.id || null
   });
 }
 
 export default function ScanPossibleMatch() {
-  const { key, confidence } = useLoaderData();
+  const { key, confidence, keyMatchingId } = useLoaderData();
   const navigate = useNavigate();
 
   const handleConfirmMatch = () => {
@@ -52,7 +66,11 @@ export default function ScanPossibleMatch() {
   };
 
   const handleViewAnalysis = () => {
-    navigate(`/scan/analysis?keyId=${key.id}&confidence=${confidence}`);
+    if (keyMatchingId) {
+      navigate(`/scan/analysis?keyMatchingId=${keyMatchingId}`);
+    } else {
+      navigate(`/scan/analysis?keyId=${key.id}&confidence=${confidence}`);
+    }
   };
 
   const confidencePercent = (confidence * 100).toFixed(1);
