@@ -105,18 +105,26 @@ Be extremely detailed and precise. Include EVERYTHING you see.`;
  */
 export async function analyzeKeyWithAI(imageBuffer, mimeType = 'image/jpeg') {
   try {
-    console.log('🔍 Starting AI key analysis with consensus...');
+    console.log('🔍 Starting AI key analysis (optimized for production)...');
     
     // Convert image to base64
     const base64Image = imageBuffer.toString('base64');
     
+    // For production, use single analysis for speed
+    // Consensus is only used in development/testing
+    const useConsensus = process.env.NODE_ENV === 'development';
+    const numAnalyses = useConsensus ? 3 : 1;
+    
+    console.log(`📊 Using ${numAnalyses} analysis for ${process.env.NODE_ENV} environment`);
+    
     // Perform multiple analyses for consensus
     const analyses = [];
-    const numAnalyses = 3; // Number of analyses for consensus
     
     for (let i = 0; i < numAnalyses; i++) {
       try {
         console.log(`📊 Analysis ${i + 1}/${numAnalyses}...`);
+        
+        const startTime = Date.now();
         
         const response = await openai.chat.completions.create({
           model: "gpt-4o",
@@ -145,6 +153,9 @@ export async function analyzeKeyWithAI(imageBuffer, mimeType = 'image/jpeg') {
           response_format: { type: "json_object" }
         });
         
+        const analysisTime = Date.now() - startTime;
+        console.log(`⏱️ Analysis ${i + 1} completed in ${analysisTime}ms`);
+        
         const rawResponse = response.choices[0].message.content;
         const parsedResponse = JSON.parse(rawResponse);
         const validatedSignature = KeySignatureSchema.parse(parsedResponse);
@@ -162,14 +173,20 @@ export async function analyzeKeyWithAI(imageBuffer, mimeType = 'image/jpeg') {
       throw new Error('All AI analyses failed');
     }
     
-    // Create consensus signature
-    const consensusSignature = createConsensusSignature(analyses);
-    console.log('✅ Consensus signature created from', analyses.length, 'analyses');
+    // Use consensus only in development, single analysis in production
+    let finalSignature;
+    if (useConsensus && analyses.length > 1) {
+      finalSignature = createConsensusSignature(analyses);
+      console.log('✅ Consensus signature created from', analyses.length, 'analyses');
+    } else {
+      finalSignature = analyses[0];
+      console.log('✅ Single analysis signature used for production speed');
+    }
     
     return {
       success: true,
-      signature: consensusSignature,
-      rawResponse: JSON.stringify(consensusSignature),
+      signature: finalSignature,
+      rawResponse: JSON.stringify(finalSignature),
       processingTime: Date.now() - Date.now(),
       consensusData: {
         numAnalyses: analyses.length,
