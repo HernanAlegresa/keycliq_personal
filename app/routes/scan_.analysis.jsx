@@ -17,6 +17,34 @@ export async function loader({ request }) {
   const url = new URL(request.url);
   const keyId = url.searchParams.get('keyId');
   const confidence = url.searchParams.get('confidence');
+  const keyMatchingId = url.searchParams.get('keyMatchingId');
+
+  // If we have keyMatchingId, use it directly
+  if (keyMatchingId) {
+    const keyMatching = await prisma.keyMatching.findUnique({
+      where: { id: keyMatchingId },
+      include: {
+        keyQuery: true,
+        matchedKey: true,
+      },
+    });
+
+    if (!keyMatching) {
+      return redirect('/scan');
+    }
+
+    const querySignature = keyMatching.querySignature;
+    const matchedSignature = keyMatching.matchedSignature;
+    const comparisonResult = keyMatching.comparisonResult;
+
+    return json({ 
+      keyMatching,
+      querySignature,
+      matchedSignature,
+      comparisonResult,
+      confidence: keyMatching.confidence
+    });
+  }
 
   if (!keyId) {
     return redirect('/scan');

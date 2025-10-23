@@ -6,7 +6,7 @@
 
 import { ProductionKeyScanV5 } from './vision/keyscan/v5/ProductionKeyScanV5.js';
 import { dataUrlToBinary } from '../utils/imageConversion.js';
-import { analyzeKeyWithAI, compareKeySignatures } from './ai/multimodal-keyscan.server.js';
+import { analyzeKeyWithHybridBalancedAI, compareHybridBalancedKeySignatures } from './ai/multimodal-keyscan.server.js';
 import { saveMatchingResult } from './matching.server.js';
 import { prisma } from '../utils/db.server.js';
 
@@ -164,7 +164,7 @@ export async function processKeyImageV6(imageDataURL, inventory = [], userId = n
     console.log('🔍 KeyScan V6 - Starting AI analysis...');
     
     // Paso 1: Analizar imagen con GPT-4o
-    const analysisResult = await analyzeKeyWithAI(imageBuffer, 'image/jpeg');
+    const analysisResult = await analyzeKeyWithHybridBalancedAI(imageBuffer, 'image/jpeg');
     
     if (!analysisResult.success) {
       return {
@@ -212,7 +212,7 @@ export async function processKeyImageV6(imageDataURL, inventory = [], userId = n
       for (const inventoryItem of inventory) {
         if (!inventoryItem.signature) continue;
         
-        const comparison = compareKeySignatures(querySignature, inventoryItem.signature);
+        const comparison = compareHybridBalancedKeySignatures(querySignature, inventoryItem.signature);
         
         if (comparison.similarity > bestScore) {
           secondBestScore = bestScore;
