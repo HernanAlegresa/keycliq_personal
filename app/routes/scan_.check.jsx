@@ -85,7 +85,7 @@ export async function action({ request }) {
       });
     }
     
-    const result = await processKeyImageV6(imageDataURL, inventory);
+    const result = await processKeyImageV6(imageDataURL, inventory, userId);
     const extractMatchTime = Date.now() - startExtractMatch;
     
     console.log(`ÔÜÖ´©Å  Extract + Match time: ${extractMatchTime}ms`);
