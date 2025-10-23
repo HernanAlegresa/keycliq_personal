@@ -111,9 +111,13 @@ export async function analyzeKeyWithAI(imageBuffer, mimeType = 'image/jpeg') {
     const base64Image = imageBuffer.toString('base64');
     
     // For production, use single analysis for speed
-    // Consensus is only used in development/testing
-    const useConsensus = process.env.NODE_ENV === 'development';
+    // Consensus is only used in development/testing with explicit flag
+    const useConsensus = process.env.NODE_ENV === 'development' && process.env.USE_CONSENSUS === 'true';
     const numAnalyses = useConsensus ? 3 : 1;
+    
+    // Optimize for faster processing
+    const maxTokens = 1500; // Reduced from 2000
+    const temperature = 0.1; // Lower temperature for more consistent results
     
     console.log(`📊 Using ${numAnalyses} analysis for ${process.env.NODE_ENV} environment`);
     
@@ -149,7 +153,8 @@ export async function analyzeKeyWithAI(imageBuffer, mimeType = 'image/jpeg') {
               ]
             }
           ],
-          max_tokens: 2000,
+          max_tokens: maxTokens,
+          temperature: temperature,
           response_format: { type: "json_object" }
         });
         
