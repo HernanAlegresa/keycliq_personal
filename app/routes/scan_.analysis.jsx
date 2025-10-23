@@ -84,168 +84,148 @@ export default function ScanAnalysis() {
   const confidencePercent = (confidence * 100).toFixed(1);
   const matchLevel = confidence >= 0.92 ? "MATCH_FOUND" : confidence >= 0.80 ? "POSSIBLE_MATCH" : "NO_MATCH";
 
-  const handleBack = () => {
-    // Go back to the previous result screen
-    if (matchLevel === "MATCH_FOUND") {
-      navigate(`/scan/match_yes?keyId=${keyMatching.matchedKeyId}&confidence=${confidence}`);
-    } else if (matchLevel === "POSSIBLE_MATCH") {
-      navigate(`/scan/possible?keyId=${keyMatching.matchedKeyId}&confidence=${confidence}`);
-    } else {
-      navigate('/scan');
-    }
-  };
+  // Navigation is handled by the header back button
 
-  const handleScanAnother = () => {
-    navigate('/scan');
-  };
-
-  const renderParameter = (label, value, isMatch = null) => {
-    const getMatchIcon = () => {
-      if (isMatch === null) return null;
-      if (isMatch) return "✅";
-      return "❌";
-    };
-
-    const getMatchColor = () => {
-      if (isMatch === null) return "text-gray-600";
-      if (isMatch) return "text-green-600";
-      return "text-red-600";
-    };
-
-    return (
-      <div className="analysis-parameter">
-        <div className="analysis-parameter__header">
-          <span className="analysis-parameter__label">{label}</span>
-          {getMatchIcon() && (
-            <span className={`analysis-parameter__match ${getMatchColor()}`}>
-              {getMatchIcon()}
-            </span>
-          )}
-        </div>
-        <div className="analysis-parameter__value">
-          {value === null ? (
-            <span className="text-gray-400 italic">Not detected</span>
-          ) : (
-            <span className="font-medium">{String(value)}</span>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const renderComparisonDetails = () => {
-    if (!comparisonResult) return null;
-
-    return (
-      <div className="analysis-section">
-        <h3 className="analysis-section__title">Comparison Details</h3>
-        <div className="analysis-comparison">
-          <div className="analysis-comparison__item">
-            <span className="analysis-comparison__label">Similarity Score:</span>
-            <span className="analysis-comparison__value">
-              {(comparisonResult.similarity * 100).toFixed(1)}%
-            </span>
-          </div>
-          <div className="analysis-comparison__item">
-            <span className="analysis-comparison__label">Match Type:</span>
-            <span className={`analysis-comparison__value analysis-comparison__value--${matchLevel.toLowerCase()}`}>
-              {matchLevel.replace('_', ' ')}
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   return (
-    <div className="scan-analysis">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="scan-analysis__header">
-        <h1 className="scan-analysis__title">Key Analysis</h1>
-        <p className="scan-analysis__subtitle">
-          Detailed parameter comparison for key matching
-        </p>
+      <div className="bg-white border-b border-gray-200 px-4 py-6">
+        <h1 className="text-2xl font-bold text-gray-900">Key Analysis</h1>
+        <p className="text-gray-600 mt-1">Detailed comparison results</p>
       </div>
 
-      {/* Key Info */}
-      <div className="analysis-section">
-        <h3 className="analysis-section__title">Matched Key</h3>
-        <div className="analysis-key-info">
-          <h4 className="analysis-key-info__name">{keyMatching.matchedKey?.name || 'Unknown Key'}</h4>
-          {keyMatching.matchedKey?.location && (
-            <p className="analysis-key-info__location">{keyMatching.matchedKey.location}</p>
-          )}
-          {keyMatching.matchedKey?.unit && (
-            <p className="analysis-key-info__unit">Unit: {keyMatching.matchedKey.unit}</p>
-          )}
-          {keyMatching.matchedKey?.door && (
-            <p className="analysis-key-info__door">Door: {keyMatching.matchedKey.door}</p>
-          )}
-        </div>
-      </div>
-
-      {/* Comparison Result */}
-      {renderComparisonDetails()}
-
-      {/* Scanned Key Parameters */}
-      <div className="analysis-section">
-        <h3 className="analysis-section__title">Scanned Key Parameters</h3>
-        <div className="analysis-parameters">
-          {querySignature && Object.entries(querySignature).map(([param, value]) => {
-            if (param === 'confidence_score') return null;
-            const isMatch = comparisonResult?.details?.parameterMatches?.[param];
-            return (
-              <div key={param}>
-                {renderParameter(
-                  param.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                  value,
-                  isMatch
-                )}
+      <div className="max-w-4xl mx-auto p-4 space-y-6">
+        {/* Summary Card */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">Match Result</h2>
+              <p className="text-gray-600">Analysis completed successfully</p>
+            </div>
+            <div className="text-right">
+              <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                matchLevel === 'MATCH_FOUND' ? 'bg-green-100 text-green-800' :
+                matchLevel === 'POSSIBLE_MATCH' ? 'bg-yellow-100 text-yellow-800' :
+                'bg-red-100 text-red-800'
+              }`}>
+                {matchLevel === 'MATCH_FOUND' ? '✅ Match Found' :
+                 matchLevel === 'POSSIBLE_MATCH' ? '⚠️ Possible Match' :
+                 '❌ No Match'}
               </div>
-            );
-          })}
+              <div className="text-2xl font-bold text-gray-900 mt-1">{confidencePercent}%</div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Inventory Key Parameters */}
-      <div className="analysis-section">
-        <h3 className="analysis-section__title">Inventory Key Parameters</h3>
-        <div className="analysis-parameters">
-          {matchedSignature && Object.entries(matchedSignature).map(([param, value]) => {
-            if (param === 'confidence_score') return null;
-            const isMatch = comparisonResult?.details?.parameterMatches?.[param];
-            return (
-              <div key={param}>
-                {renderParameter(
-                  param.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                  value,
-                  isMatch
-                )}
+        {/* Matched Key Info */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Matched Key</h3>
+          <div className="space-y-2">
+            <div>
+              <span className="text-sm font-medium text-gray-500">Name:</span>
+              <span className="ml-2 text-gray-900">{keyMatching.matchedKey?.name || 'Unknown Key'}</span>
+            </div>
+            {keyMatching.matchedKey?.location && (
+              <div>
+                <span className="text-sm font-medium text-gray-500">Location:</span>
+                <span className="ml-2 text-gray-900">{keyMatching.matchedKey.location}</span>
               </div>
-            );
-          })}
+            )}
+            {keyMatching.matchedKey?.unit && (
+              <div>
+                <span className="text-sm font-medium text-gray-500">Unit:</span>
+                <span className="ml-2 text-gray-900">{keyMatching.matchedKey.unit}</span>
+              </div>
+            )}
+            {keyMatching.matchedKey?.door && (
+              <div>
+                <span className="text-sm font-medium text-gray-500">Door:</span>
+                <span className="ml-2 text-gray-900">{keyMatching.matchedKey.door}</span>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="scan-analysis__actions">
-        <Button 
-          variant="secondary" 
-          size="large" 
-          onClick={handleBack}
-          className="w-full py-3 rounded-2xl"
-        >
-          Back to Results
-        </Button>
-        
-        <Button 
-          variant="primary" 
-          size="large" 
-          onClick={handleScanAnother}
-          className="w-full py-3 rounded-2xl"
-        >
-          Scan Another Key
-        </Button>
+        {/* Comparison Details */}
+        {comparisonResult && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Comparison Details</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-sm font-medium text-gray-500">Similarity Score:</span>
+                <div className="text-2xl font-bold text-gray-900">
+                  {(comparisonResult.similarity * 100).toFixed(1)}%
+                </div>
+              </div>
+              <div>
+                <span className="text-sm font-medium text-gray-500">Match Type:</span>
+                <div className={`text-lg font-semibold ${
+                  matchLevel === 'MATCH_FOUND' ? 'text-green-600' :
+                  matchLevel === 'POSSIBLE_MATCH' ? 'text-yellow-600' :
+                  'text-red-600'
+                }`}>
+                  {matchLevel.replace('_', ' ')}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Parameters Comparison */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">Parameter Comparison</h3>
+          
+          <div className="space-y-4">
+            {querySignature && matchedSignature && Object.keys(querySignature).map((param) => {
+              if (param === 'confidence_score') return null;
+              
+              const queryValue = querySignature[param];
+              const matchedValue = matchedSignature[param];
+              const isMatch = queryValue === matchedValue;
+              const isMatchNull = queryValue === null && matchedValue === null;
+              
+              return (
+                <div key={param} className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-medium text-gray-900 capitalize">
+                      {param.replace(/_/g, ' ')}
+                    </h4>
+                    <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      isMatch || isMatchNull ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {isMatch || isMatchNull ? '✅ Match' : '❌ Different'}
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-sm font-medium text-gray-500 mb-1">Scanned Key</div>
+                      <div className="text-gray-900">
+                        {queryValue === null ? (
+                          <span className="text-gray-400 italic">Not detected</span>
+                        ) : (
+                          <span className="font-medium">{String(queryValue)}</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="text-sm font-medium text-gray-500 mb-1">Inventory Key</div>
+                      <div className="text-gray-900">
+                        {matchedValue === null ? (
+                          <span className="text-gray-400 italic">Not detected</span>
+                        ) : (
+                          <span className="font-medium">{String(matchedValue)}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
