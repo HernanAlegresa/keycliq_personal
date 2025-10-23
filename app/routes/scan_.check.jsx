@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSubmit } from "@remix-run/react";
 import { requireUserId, getSession, commitSession } from "../utils/session.server.js";
 import { getUserKeys } from "../lib/keys.server.js";
-import { processKeyImageV5, extractFeaturesV5 } from "../lib/keyscan.server.js";
+import { processKeyImageV6, extractSignatureV6 } from "../lib/keyscan.server.js";
 
 export const handle = { 
   hideFooter: true, 
@@ -12,7 +12,7 @@ export const handle = {
 };
 
 /**
- * Action server para procesar la imagen con KeyScan V5
+ * Action server para procesar la imagen con KeyScan V6 (Multimodal AI)
  */
 export async function action({ request }) {
   const userId = await requireUserId(request);
@@ -21,7 +21,7 @@ export async function action({ request }) {
   
   // Logging inicio
   const startTotal = Date.now();
-  console.log('\n🔬 ===== KEYSCAN V5 - PROCESSING START =====');
+  console.log('\n🔬 ===== KEYSCAN V6 - PROCESSING START =====');
   console.log(`­ƒôà Timestamp: ${new Date().toISOString()}`);
   console.log(`­ƒæñ User ID: ${userId}`);
   
@@ -42,14 +42,14 @@ export async function action({ request }) {
           id: key.id,
           type: 'Regular', // TODO: Si agregamos tipos de llave, usar key.type
         },
-        features: key.signature
+        signature: key.signature // V6 uses signature instead of features
       }));
     
     const inventoryTime = Date.now() - startInventory;
     console.log(`­ƒôª Inventory loaded: ${inventory.length} keys with signatures ready`);
     console.log(`ÔÜÖ´©Å  Inventory load time: ${inventoryTime}ms`);
     
-    // 3. Procesar imagen con KeyScan V5
+    // 3. Procesar imagen con KeyScan V6
     const startExtractMatch = Date.now();
     
     // Caso especial: inventario vac├¡o
@@ -62,7 +62,7 @@ export async function action({ request }) {
       
       const totalTime = Date.now() - startTotal;
       console.log(`ÔÜÖ´©Å  Total time: ${totalTime}ms`);
-      console.log('✅ ===== KEYSCAN V5 - EMPTY INVENTORY =====\n');
+      console.log('✅ ===== KEYSCAN V6 - EMPTY INVENTORY =====\n');
       
       return redirect('/scan/new', {
         headers: {
@@ -71,7 +71,7 @@ export async function action({ request }) {
       });
     }
     
-    const result = await processKeyImageV5(imageDataURL, inventory);
+    const result = await processKeyImageV6(imageDataURL, inventory);
     const extractMatchTime = Date.now() - startExtractMatch;
     
     console.log(`ÔÜÖ´©Å  Extract + Match time: ${extractMatchTime}ms`);
@@ -127,7 +127,7 @@ export async function action({ request }) {
     const session = await getSession(request.headers.get('Cookie'));
     
     if (result.decision === 'MATCH') {
-      console.log(`\n✅ ===== KEYSCAN V5 - MATCH FOUND =====\n`);
+      console.log(`\n✅ ===== KEYSCAN V6 - MATCH FOUND =====\n`);
       return redirect(
         `/scan/match_yes?keyId=${result.details.keyId}&confidence=${result.confidence.toFixed(4)}`,
         {
@@ -137,7 +137,7 @@ export async function action({ request }) {
         }
       );
     } else if (result.decision === 'POSSIBLE') {
-      console.log(`\n⚠️  ===== KEYSCAN V5 - POSSIBLE MATCH =====\n`);
+      console.log(`\n⚠️  ===== KEYSCAN V6 - POSSIBLE MATCH =====\n`);
       return redirect(
         `/scan/possible?keyId=${result.details.keyId}&confidence=${result.confidence.toFixed(4)}`,
         {
@@ -148,7 +148,7 @@ export async function action({ request }) {
       );
     } else {
       // NO_MATCH - redirigir a nueva llave (signature se extraer├í en createKey)
-      console.log(`\n❌ ===== KEYSCAN V5 - NO MATCH =====\n`);
+      console.log(`\n❌ ===== KEYSCAN V6 - NO MATCH =====\n`);
       
       return redirect('/scan/new', {
         headers: {
@@ -159,7 +159,7 @@ export async function action({ request }) {
     
   } catch (error) {
     const totalTime = Date.now() - startTotal;
-    console.error(`\n❌ ===== KEYSCAN V5 - ERROR =====`);
+    console.error(`\n❌ ===== KEYSCAN V6 - ERROR =====`);
     console.error(`Error: ${error.message}`);
     console.error(`Stack: ${error.stack}`);
     console.error(`Total time: ${totalTime}ms\n`);

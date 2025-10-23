@@ -6,6 +6,7 @@
 
 import { ProductionKeyScanV5 } from './vision/keyscan/v5/ProductionKeyScanV5.js';
 import { dataUrlToBinary } from '../utils/imageConversion.js';
+import { analyzeKeyWithAI, compareKeySignatures } from './ai/multimodal-keyscan.server.js';
 
 /**
  * Procesa una imagen con KeyScan V5
@@ -140,6 +141,157 @@ export async function extractFeaturesV5(imageDataURL) {
       success: false,
       error: error.message,
       message: `Feature extraction error: ${error.message}`
+    };
+  }
+}
+
+/**
+ * Procesa una imagen con KeyScan V6 (Multimodal AI)
+ * @param {string} imageDataURL - Data URL de la imagen
+ * @param {Array} inventory - Inventario del usuario con signatures
+ * @param {Object} config - Configuración de KeyScan V6
+ * @returns {Promise<Object>} Resultado del procesamiento
+ */
+export async function processKeyImageV6(imageDataURL, inventory = [], config = {}) {
+  try {
+    const startTime = Date.now();
+    
+    // Convertir dataURL a Buffer
+    const { data: imageBuffer } = dataUrlToBinary(imageDataURL);
+    
+    console.log('🔍 KeyScan V6 - Starting AI analysis...');
+    
+    // Paso 1: Analizar imagen con GPT-4o
+    const analysisResult = await analyzeKeyWithAI(imageBuffer, 'image/jpeg');
+    
+    if (!analysisResult.success) {
+      return {
+        success: false,
+        error: analysisResult.error,
+        message: analysisResult.error,
+        processingTime: Date.now() - startTime
+      };
+    }
+    
+    const querySignature = analysisResult.signature;
+    console.log('✅ AI signature generated successfully');
+    
+    // Paso 2: Si hay inventario, hacer matching
+    if (inventory && inventory.length > 0) {
+      console.log(`🔍 Comparing against ${inventory.length} keys in inventory...`);
+      
+      let bestMatch = null;
+      let bestScore = 0;
+      let secondBestScore = 0;
+      
+      // Comparar con cada llave del inventario
+      for (const inventoryItem of inventory) {
+        if (!inventoryItem.signature) continue;
+        
+        const comparison = compareKeySignatures(querySignature, inventoryItem.signature);
+        
+        if (comparison.similarity > bestScore) {
+          secondBestScore = bestScore;
+          bestScore = comparison.similarity;
+          bestMatch = {
+            keyId: inventoryItem.key.id,
+            similarity: comparison.similarity,
+            matchType: comparison.matchType,
+            details: comparison.details
+          };
+        } else if (comparison.similarity > secondBestScore) {
+          secondBestScore = comparison.similarity;
+        }
+      }
+      
+      if (bestMatch) {
+        const margin = bestScore - secondBestScore;
+        const isConfidentMatch = margin >= 0.1; // 10% margin for confidence
+        
+        console.log(`📊 Best match: ${(bestScore * 100).toFixed(1)}% similarity, margin: ${(margin * 100).toFixed(1)}%`);
+        
+        // Determinar decisión final
+        let decision = 'NO_MATCH';
+        if (bestScore >= 0.8 && isConfidentMatch) {
+          decision = 'MATCH';
+        } else if (bestScore >= 0.6) {
+          decision = 'POSSIBLE';
+        }
+        
+        return {
+          success: true,
+          decision: decision,
+          match: decision === 'MATCH',
+          confidence: bestScore * 100,
+          details: {
+            keyId: bestMatch.keyId,
+            similarity: bestScore,
+            margin: margin,
+            matchType: bestMatch.matchType,
+            details: bestMatch.details
+          },
+          processingTime: Date.now() - startTime
+        };
+      }
+    }
+    
+    // No match found or no inventory
+    console.log('❌ No match found in inventory');
+    return {
+      success: true,
+      decision: 'NO_MATCH',
+      match: false,
+      confidence: 0,
+      details: {},
+      processingTime: Date.now() - startTime
+    };
+    
+  } catch (error) {
+    console.error('Error in processKeyImageV6:', error);
+    return {
+      success: false,
+      error: error.message,
+      message: `V6 Processing error: ${error.message}`,
+      processingTime: 0
+    };
+  }
+}
+
+/**
+ * Extrae signature de una imagen con KeyScan V6
+ * @param {string} imageDataURL - Data URL de la imagen
+ * @returns {Promise<Object>} Signature extraída
+ */
+export async function extractSignatureV6(imageDataURL) {
+  try {
+    // Convertir dataURL a Buffer
+    const { data: imageBuffer } = dataUrlToBinary(imageDataURL);
+    
+    // Analizar con GPT-4o
+    const result = await analyzeKeyWithAI(imageBuffer, 'image/jpeg');
+    
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error,
+        message: result.error
+      };
+    }
+    
+    return {
+      success: true,
+      signature: result.signature,
+      metadata: {
+        processingTime: result.processingTime,
+        confidence: result.signature.confidence_score
+      }
+    };
+  } catch (error) {
+    console.error('Error in extractSignatureV6:', error);
+    return {
+      success: false,
+      error: error.message,
+      message: `V6 Signature extraction error: ${error.message}`
     };
   }
 }
