@@ -78,7 +78,7 @@ export async function loader({ request }) {
 }
 
 export default function ScanAnalysis() {
-  const { key, confidence, keySignature, keyQuery, comparisonResult } = useLoaderData();
+  const { keyMatching, querySignature, matchedSignature, comparisonResult, confidence } = useLoaderData();
   const navigate = useNavigate();
 
   const confidencePercent = (confidence * 100).toFixed(1);
@@ -87,9 +87,9 @@ export default function ScanAnalysis() {
   const handleBack = () => {
     // Go back to the previous result screen
     if (matchLevel === "MATCH_FOUND") {
-      navigate(`/scan/match_yes?keyId=${key.id}&confidence=${confidence}`);
+      navigate(`/scan/match_yes?keyId=${keyMatching.matchedKeyId}&confidence=${confidence}`);
     } else if (matchLevel === "POSSIBLE_MATCH") {
-      navigate(`/scan/possible?keyId=${key.id}&confidence=${confidence}`);
+      navigate(`/scan/possible?keyId=${keyMatching.matchedKeyId}&confidence=${confidence}`);
     } else {
       navigate('/scan');
     }
@@ -171,15 +171,15 @@ export default function ScanAnalysis() {
       <div className="analysis-section">
         <h3 className="analysis-section__title">Matched Key</h3>
         <div className="analysis-key-info">
-          <h4 className="analysis-key-info__name">{key.name}</h4>
-          {key.location && (
-            <p className="analysis-key-info__location">{key.location}</p>
+          <h4 className="analysis-key-info__name">{keyMatching.matchedKey?.name || 'Unknown Key'}</h4>
+          {keyMatching.matchedKey?.location && (
+            <p className="analysis-key-info__location">{keyMatching.matchedKey.location}</p>
           )}
-          {key.unit && (
-            <p className="analysis-key-info__unit">Unit: {key.unit}</p>
+          {keyMatching.matchedKey?.unit && (
+            <p className="analysis-key-info__unit">Unit: {keyMatching.matchedKey.unit}</p>
           )}
-          {key.door && (
-            <p className="analysis-key-info__door">Door: {key.door}</p>
+          {keyMatching.matchedKey?.door && (
+            <p className="analysis-key-info__door">Door: {keyMatching.matchedKey.door}</p>
           )}
         </div>
       </div>
@@ -191,7 +191,7 @@ export default function ScanAnalysis() {
       <div className="analysis-section">
         <h3 className="analysis-section__title">Scanned Key Parameters</h3>
         <div className="analysis-parameters">
-          {keyQuery && Object.entries(keyQuery).map(([param, value]) => {
+          {querySignature && Object.entries(querySignature).map(([param, value]) => {
             if (param === 'confidence_score') return null;
             const isMatch = comparisonResult?.details?.parameterMatches?.[param];
             return (
@@ -211,7 +211,7 @@ export default function ScanAnalysis() {
       <div className="analysis-section">
         <h3 className="analysis-section__title">Inventory Key Parameters</h3>
         <div className="analysis-parameters">
-          {keySignature && Object.entries(keySignature).map(([param, value]) => {
+          {matchedSignature && Object.entries(matchedSignature).map(([param, value]) => {
             if (param === 'confidence_score') return null;
             const isMatch = comparisonResult?.details?.parameterMatches?.[param];
             return (
