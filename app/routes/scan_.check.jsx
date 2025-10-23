@@ -4,6 +4,7 @@ import { useSubmit } from "@remix-run/react";
 import { requireUserId, getSession, commitSession } from "../utils/session.server.js";
 import { getUserKeys } from "../lib/keys.server.js";
 import { processKeyImageV6, extractSignatureV6 } from "../lib/keyscan.server.js";
+import { prisma } from "../utils/db.server.js";
 
 export const handle = { 
   hideFooter: true, 
@@ -35,15 +36,28 @@ export async function action({ request }) {
     // 2. Obtener inventario del usuario (solo llaves con signature ready)
     const startInventory = Date.now();
     const userKeys = await getUserKeys(userId);
-    const inventory = userKeys
-      .filter(key => key.sigStatus === 'ready' && key.signature)
-      .map(key => ({
-        key: {
-          id: key.id,
-          type: 'Regular', // TODO: Si agregamos tipos de llave, usar key.type
-        },
-        signature: key.signature // V6 uses signature instead of features
-      }));
+    
+    // Para V6, necesitamos obtener las KeySignatures relacionadas
+    const inventory = [];
+    for (const key of userKeys) {
+      if (key.sigStatus === 'ready') {
+        // Buscar la KeySignature más reciente para esta llave
+        const keySignature = await prisma.keySignature.findFirst({
+          where: { keyId: key.id },
+          orderBy: { createdAt: 'desc' }
+        });
+        
+        if (keySignature && keySignature.signature) {
+          inventory.push({
+            key: {
+              id: key.id,
+              type: 'Regular',
+            },
+            signature: keySignature.signature
+          });
+        }
+      }
+    }
     
     const inventoryTime = Date.now() - startInventory;
     console.log(`­ƒôª Inventory loaded: ${inventory.length} keys with signatures ready`);

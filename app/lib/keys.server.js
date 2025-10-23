@@ -1,6 +1,6 @@
 ﻿import { prisma } from "../utils/db.server.js";
 import { uploadImageToCloudinary, deleteImageFromCloudinary } from "../utils/cloudinary.server.js";
-import { extractFeaturesV5 } from "./keyscan.server.js";
+import { extractSignatureV6 } from "./keyscan.server.js";
 
 /**
  * Obtener todas las llaves de un usuario
@@ -108,43 +108,27 @@ export async function createKey({ userId, name, description, unit, door, notes, 
       }
     }
 
-    // Extraer signature V5 si tenemos imagen
+    // Extraer signature V6 si tenemos imagen
     if (imageDataUrl && imageDataUrl.startsWith('data:')) {
       try {
-        // Extraer signature
-        console.log('🔬 Extrayendo signature V5...');
+        // Extraer signature con V6
+        console.log('🔬 Extrayendo signature V6...');
         const startSig = Date.now();
         
-        const features = await extractFeaturesV5(imageDataUrl);
+        const signatureResult = await extractSignatureV6(imageDataUrl);
         
-        // Verificar calidad de features
-        const isSegmentationValid = features.quality.segmentationValid === true;
-        const isBittingValid = features.quality.bittingValid === true;
-        
-        console.log(`­ƒôè Quality check: segmentation=${isSegmentationValid}, bitting=${isBittingValid}`);
-        
-        if (isSegmentationValid && isBittingValid) {
-          signature = features;
+        if (signatureResult.success) {
+          signature = signatureResult.signature;
           sigStatus = "ready";
           
           const sigTime = Date.now() - startSig;
-          console.log(`Ô£à Signature extra├¡da exitosamente en ${sigTime}ms`);
+          console.log(`✅ Signature V6 extraída exitosamente en ${sigTime}ms`);
         } else {
-          console.warn('ÔÜá´©Å  Feature extraction quality insufficient');
-          console.warn(`   segmentationValid: ${features.quality.segmentationValid} (${typeof features.quality.segmentationValid})`);
-          console.warn(`   bittingValid: ${features.quality.bittingValid} (${typeof features.quality.bittingValid})`);
-          
-          // En localhost, ser m├ís permisivo para testing
-          if (process.env.NODE_ENV === 'development') {
-            console.log('­ƒöº Modo desarrollo: Aceptando signature aunque quality sea insuficiente');
-            signature = features;
-            sigStatus = "ready";
-          } else {
-            sigStatus = "failed";
-          }
+          console.error('❌ Error extrayendo signature V6:', signatureResult.error);
+          sigStatus = "failed";
         }
       } catch (error) {
-        console.error('ÔØî Error extrayendo signature:', error.message);
+        console.error('❌ Error extrayendo signature V6:', error.message);
         sigStatus = "failed";
       }
     }
@@ -164,7 +148,25 @@ export async function createKey({ userId, name, description, unit, door, notes, 
       }
     });
 
-    console.log('Ô£à Llave creada exitosamente:', key.id);
+    // Crear KeySignature si tenemos signature V6
+    if (signature && sigStatus === "ready") {
+      try {
+        await prisma.keySignature.create({
+          data: {
+            keyId: key.id,
+            signature: signature,
+            imageUrl: imageUrl,
+            confidenceScore: signature.confidence_score || 0.95
+          }
+        });
+        console.log('✅ KeySignature creada para la llave:', key.id);
+      } catch (error) {
+        console.error('❌ Error creando KeySignature:', error);
+        // No fallar la creación de la llave por esto
+      }
+    }
+
+    console.log('✅ Llave creada exitosamente:', key.id);
     console.log(`   sigStatus: ${sigStatus}`);
     return key;
   } catch (error) {
