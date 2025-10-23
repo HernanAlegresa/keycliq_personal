@@ -1,117 +1,93 @@
 generator client {
-provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
-
 
 datasource db {
-provider = "postgresql"
-url = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
 
 model User {
-id String @id @default(cuid())
-email String @unique
-password String
-role Role @default(USER)
-sessions Session[]
-keys Key[]
-passwordResetTokens PasswordResetToken[]
-keyQueries KeyQuery[]
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
+  id                  String               @id @default(cuid())
+  email               String               @unique
+  password            String
+  role                Role                 @default(USER)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  passwordResetTokens PasswordResetToken[]
+  sessions            Session[]
+  keyQueries          KeyQuery[]
+  keys                Key[]
 }
-
-
-enum Role {
-USER
-ADMIN
-}
-
 
 model Session {
-id String @id @default(cuid())
-userId String
-user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-expiration DateTime
-createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  userId     String
+  expiration DateTime
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-
 model PasswordResetToken {
-  id String @id @default(cuid())
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tokenHash String @unique
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
   expiresAt DateTime
-  used Boolean @default(false)
+  used      Boolean  @default(false)
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Key {
-  id String @id @default(cuid())
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name String
-  description String?
-  unit String? // Unidad opcional
-  door String? // Puerta opcional
-  notes String? // Notas opcionales
-  imageUrl String? // URL de la imagen en Cloudinary
-  imagePublicId String? // Public ID de Cloudinary para gestión
-  signature Json? // Vector de características (legacy)
-  sigStatus String @default("pending") // 'pending' | 'ready' | 'failed'
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  // New multimodal signatures
-  signatures KeySignature[]
-  
+  id            String         @id @default(cuid())
+  userId        String
+  name          String
+  description   String?
+  unit          String?
+  door          String?
+  notes         String?
+  imageUrl      String?
+  imagePublicId String?
+  signature     Json?
+  sigStatus     String         @default("pending")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  signatures    KeySignature[]
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("keys")
 }
 
-// New table for multimodal key signatures
 model KeySignature {
-  id String @id @default(cuid())
-  
-  // Relation to key (inventory)
-  keyId String?
-  key Key? @relation(fields: [keyId], references: [id], onDelete: Cascade)
-  
-  // Relation to key query (identification)
-  keyQueryId String?
-  keyQuery KeyQuery? @relation(fields: [keyQueryId], references: [id], onDelete: Cascade)
-  
-  // AI-generated signature data
-  signature Json // Structured JSON from GPT-4o
-  imageUrl String? // URL of the analyzed image
-  confidenceScore Float? // AI confidence score
-  
-  // Metadata
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
+  id              String    @id @default(cuid())
+  keyId           String?
+  keyQueryId      String?
+  signature       Json
+  imageUrl        String?
+  confidenceScore Float?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  key             Key?      @relation(fields: [keyId], references: [id], onDelete: Cascade)
+  keyQuery        KeyQuery? @relation(fields: [keyQueryId], references: [id], onDelete: Cascade)
+
   @@map("key_signatures")
 }
 
-// New table for key identification queries
 model KeyQuery {
-  id String @id @default(cuid())
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Query details
-  queryType String // "identification" | "comparison"
-  result Json // Query result data
-  status String @default("pending") // "pending" | "completed" | "failed"
-  
-  // Metadata
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  // Relations
+  id         String         @id @default(cuid())
+  userId     String
+  queryType  String
+  result     Json
+  status     String         @default("pending")
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   signatures KeySignature[]
-  
+
   @@map("key_queries")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
