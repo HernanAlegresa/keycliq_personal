@@ -345,7 +345,7 @@ export async function extractSignatureV6(imageDataURL) {
     const { data: imageBuffer } = dataUrlToBinary(imageDataURL);
     
     // Analizar con GPT-4o
-    const result = await analyzeKeyWithAI(imageBuffer, 'image/jpeg');
+    const result = await analyzeKeyWithHybridBalancedAI(imageBuffer, 'image/jpeg');
     
     if (!result.success) {
       return {
