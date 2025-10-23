@@ -51,6 +51,10 @@ export default function ScanPossibleMatch() {
     navigate('/scan/new');
   };
 
+  const handleViewAnalysis = () => {
+    navigate(`/scan/analysis?keyId=${key.id}&confidence=${confidence}`);
+  };
+
   const confidencePercent = (confidence * 100).toFixed(1);
 
   return (
@@ -127,6 +131,15 @@ export default function ScanPossibleMatch() {
             className="w-full py-3 rounded-2xl"
           >
             No, Save as New Key
+          </Button>
+          
+          <Button 
+            variant="secondary" 
+            size="large" 
+            onClick={handleViewAnalysis}
+            className="w-full py-3 rounded-2xl"
+          >
+            View Analysis
           </Button>
           
           <Button 

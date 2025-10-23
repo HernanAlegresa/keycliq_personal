@@ -51,6 +51,10 @@ export default function ScanMatchFound() {
     navigate('/');
   };
 
+  const handleViewAnalysis = () => {
+    navigate(`/scan/analysis?keyId=${key.id}&confidence=${confidence}`);
+  };
+
   return (
     <div className="scan-match-found">
       {/* Main content */}
@@ -115,6 +119,15 @@ export default function ScanMatchFound() {
             className="w-full py-3 rounded-2xl"
           >
             Scan Another Key
+          </Button>
+          
+          <Button 
+            variant="secondary" 
+            size="large" 
+            onClick={handleViewAnalysis}
+            className="w-full py-3 rounded-2xl"
+          >
+            View Analysis
           </Button>
           
           <Button 

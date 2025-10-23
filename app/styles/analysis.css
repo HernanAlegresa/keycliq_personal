@@ -1,0 +1,239 @@
+/* KeyScan Analysis Screen Styles */
+
+.scan-analysis {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 2rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.scan-analysis__header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.scan-analysis__title {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #1a202c;
+  margin-bottom: 0.5rem;
+}
+
+.scan-analysis__subtitle {
+  color: #4a5568;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.analysis-section {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.analysis-section__title {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #006209;
+}
+
+.analysis-key-info {
+  background: #f7fafc;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border-left: 4px solid #006209;
+}
+
+.analysis-key-info__name {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.analysis-key-info__location,
+.analysis-key-info__unit,
+.analysis-key-info__door {
+  color: #4a5568;
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+.analysis-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  background: #f7fafc;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.analysis-comparison__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.analysis-comparison__label {
+  font-size: 0.875rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.analysis-comparison__value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.analysis-comparison__value--match_found {
+  color: #006209;
+}
+
+.analysis-comparison__value--possible_match {
+  color: #d69e2e;
+}
+
+.analysis-comparison__value--no_match {
+  color: #e53e3e;
+}
+
+.analysis-parameters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.analysis-parameter {
+  background: #f7fafc;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.analysis-parameter:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+.analysis-parameter__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.analysis-parameter__label {
+  font-size: 0.875rem;
+  color: #4a5568;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.analysis-parameter__match {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.analysis-parameter__value {
+  font-size: 1rem;
+  color: #2d3748;
+  word-break: break-word;
+}
+
+.scan-analysis__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .scan-analysis {
+    padding: 1rem 0.5rem;
+  }
+  
+  .scan-analysis__title {
+    font-size: 1.75rem;
+  }
+  
+  .analysis-comparison {
+    grid-template-columns: 1fr;
+  }
+  
+  .analysis-parameters {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .scan-analysis {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  }
+  
+  .analysis-section {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+  
+  .analysis-section__title {
+    color: #e2e8f0;
+  }
+  
+  .analysis-key-info {
+    background: #4a5568;
+  }
+  
+  .analysis-key-info__name {
+    color: #e2e8f0;
+  }
+  
+  .analysis-key-info__location,
+  .analysis-key-info__unit,
+  .analysis-key-info__door {
+    color: #a0aec0;
+  }
+  
+  .analysis-comparison {
+    background: #4a5568;
+  }
+  
+  .analysis-comparison__label {
+    color: #a0aec0;
+  }
+  
+  .analysis-comparison__value {
+    color: #e2e8f0;
+  }
+  
+  .analysis-parameter {
+    background: #4a5568;
+    border-color: #718096;
+  }
+  
+  .analysis-parameter:hover {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+  
+  .analysis-parameter__label {
+    color: #a0aec0;
+  }
+  
+  .analysis-parameter__value {
+    color: #e2e8f0;
+  }
+}

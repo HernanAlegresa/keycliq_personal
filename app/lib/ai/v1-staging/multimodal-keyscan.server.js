@@ -1,20 +1,22 @@
 /**
- * Hybrid Balanced KeyScan System
- * Combines specific parameters with tolerance for same-key consistency
+ * KeyScan V3 Final - Hybrid Balanced System
+ * Optimized for maximum discrimination and consistency
  */
 
+import dotenv from 'dotenv';
 import OpenAI from 'openai';
 import { z } from 'zod';
-import dotenv from 'dotenv';
 
+// Load environment variables
 dotenv.config();
 
+// Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Hybrid balanced schema
-const HybridBalancedKeySignatureSchema = z.object({
+// Hybrid balanced schema for V3 final system
+const KeySignatureSchema = z.object({
   // Core structural parameters
   number_of_cuts: z.union([z.number().int().min(0), z.null()]).optional(),
   blade_profile: z.union([z.string(), z.null()]).optional(),
@@ -30,7 +32,7 @@ const HybridBalancedKeySignatureSchema = z.object({
   confidence_score: z.union([z.number().min(0).max(1), z.string().transform(val => Math.min(Math.max(parseFloat(val) || 0.5, 0), 1))]).optional(),
 });
 
-// Hybrid balanced prompt
+// Hybrid balanced prompt for V3 final system
 const HYBRID_BALANCED_PROMPT = `You are an expert key analyst focusing on BALANCED discrimination and consistency.
 
 CRITICAL INSTRUCTIONS:
@@ -80,7 +82,7 @@ BALANCE FOCUS:
 /**
  * Analyze key with AI using hybrid balanced parameters
  */
-export async function analyzeKeyWithHybridBalancedAI(imageBuffer, mimeType = 'image/jpeg') {
+export async function analyzeKeyWithAI(imageBuffer, mimeType = 'image/jpeg') {
   try {
     console.log('🤖 Starting Hybrid Balanced AI analysis...');
     
@@ -126,7 +128,7 @@ export async function analyzeKeyWithHybridBalancedAI(imageBuffer, mimeType = 'im
     console.log('📊 Raw signature:', parsedData);
 
     // Validate with schema
-    const validatedSignature = HybridBalancedKeySignatureSchema.parse(parsedData);
+    const validatedSignature = KeySignatureSchema.parse(parsedData);
     console.log('✅ Validated signature:', validatedSignature);
 
     return {
@@ -148,12 +150,12 @@ export async function analyzeKeyWithHybridBalancedAI(imageBuffer, mimeType = 'im
 /**
  * Compare hybrid balanced key signatures with tolerance
  */
-export function compareHybridBalancedKeySignatures(signature1, signature2) {
+export function compareKeySignatures(signature1, signature2) {
   console.log('🔍 Comparing Hybrid Balanced signatures...');
   console.log('Signature 1:', signature1);
   console.log('Signature 2:', signature2);
 
-  // Balanced parameter weights
+  // Balanced parameter weights for V3 final system
   const parameterWeights = {
     unique_mark: 0.30,         // 30% - Highest weight (most distinctive)
     key_color: 0.25,           // 25% - High weight (very distinctive)
@@ -237,7 +239,7 @@ export function compareHybridBalancedKeySignatures(signature1, signature2) {
   const similarity = totalWeight > 0 ? weightedMatches / totalWeight : 0;
   console.log(`📊 Final similarity: ${(similarity * 100).toFixed(1)}%`);
 
-  // Balanced thresholds
+  // Balanced thresholds for V3 final system
   let matchType;
   if (similarity >= 0.92) {
     matchType = 'MATCH_FOUND';
@@ -277,4 +279,21 @@ function areSimilarShapes(shape1, shape2) {
   }
   
   return false;
+}
+
+/**
+ * Create consensus signature from multiple analyses
+ */
+export function createConsensusSignature(analyses) {
+  console.log('🔄 Creating consensus signature from', analyses.length, 'analyses');
+  
+  if (analyses.length === 0) {
+    throw new Error('No analyses provided for consensus');
+  }
+
+  // For now, return the first analysis (can be enhanced later)
+  const consensus = analyses[0];
+  console.log('✅ Consensus signature created:', consensus);
+  
+  return consensus;
 }

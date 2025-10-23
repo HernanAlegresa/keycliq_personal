@@ -18,6 +18,7 @@ model User {
   sessions            Session[]
   keyQueries          KeyQuery[]
   keys                Key[]
+  matchings           KeyMatching[]
 }
 
 model Session {
@@ -53,6 +54,7 @@ model Key {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   signatures    KeySignature[]
+  matchings     KeyMatching[]
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("keys")
@@ -83,8 +85,29 @@ model KeyQuery {
   updatedAt  DateTime       @updatedAt
   user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   signatures KeySignature[]
+  matchings  KeyMatching[]
 
   @@map("key_queries")
+}
+
+model KeyMatching {
+  id              String    @id @default(cuid())
+  userId          String
+  keyQueryId      String
+  matchedKeyId    String?
+  matchType       String    // MATCH_FOUND, POSSIBLE_MATCH, NO_MATCH
+  similarity      Float
+  confidence      Float
+  querySignature  Json      // Signature of the scanned key
+  matchedSignature Json?    // Signature of the matched key (if any)
+  comparisonResult Json?    // Detailed comparison results
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  keyQuery        KeyQuery  @relation(fields: [keyQueryId], references: [id], onDelete: Cascade)
+  matchedKey      Key?      @relation(fields: [matchedKeyId], references: [id], onDelete: SetNull)
+
+  @@map("key_matchings")
 }
 
 enum Role {
