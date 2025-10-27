@@ -9,7 +9,7 @@ import path from 'path';
 
 // Test configuration
 const TEST_CONFIG = {
-  totalRuns: 10,
+  totalRuns: 3,  // Optimized for $5 budget
   inventorySize: 15,
   datasetPath: 'tests/keys-optimized',
   resultsPath: 'tests/results/v2',
