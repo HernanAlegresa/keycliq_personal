@@ -7,7 +7,7 @@
 import { z } from 'zod';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
-import { saveDebugLog, saveComparisonAnalysis } from '../debug/v5-debugging.server.js';
+import { saveDebugLog, saveComparisonAnalysis } from '../../debug/v5-debugging.server.js';
 
 dotenv.config();
 
