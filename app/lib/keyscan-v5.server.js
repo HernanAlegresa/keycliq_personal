@@ -74,7 +74,7 @@ export async function processKeyImageV5(imageDataURL, inventory = [], userId = n
         const inventoryItem = inventory[i];
         if (!inventoryItem.signature) continue;
         
-        const comparison = compareV5KeySignatures(querySignature, inventoryItem.signature);
+        const comparison = await compareV5KeySignatures(querySignature, inventoryItem.signature, analysisResult.debugId);
         
         comparisons.push({
           inventoryIndex: i,
@@ -90,7 +90,7 @@ export async function processKeyImageV5(imageDataURL, inventory = [], userId = n
       }
       
       // Aplicar lógica de decisión V5
-      const decision = makeV5Decision(comparisons);
+      const decision = makeV5Decision(comparisons, analysisResult.debugId);
       
       console.log(`📊 V5 Decision: ${decision.type}`);
       console.log(`📊 Total comparisons: ${comparisons.length}`);

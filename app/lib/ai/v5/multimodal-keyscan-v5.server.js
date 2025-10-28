@@ -7,6 +7,7 @@
 import { z } from 'zod';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import { saveDebugLog, saveComparisonAnalysis } from '../debug/v5-debugging.server.js';
 
 dotenv.config();
 
@@ -113,10 +114,22 @@ PARAMETER DEFINITIONS:
 CRITICAL: Only return valid JSON, no additional text or explanations.`;
 
 /**
- * Analiza imagen de llave con V5 ModelAI
+ * Analiza imagen de llave con V5 ModelAI con debugging detallado
  */
 export async function analyzeKeyWithV5AI(imageBuffer, mimeType = 'image/jpeg') {
+  const debugId = `debug_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const debugLog = {
+    id: debugId,
+    timestamp: new Date().toISOString(),
+    step: 'ai_analysis_start',
+    imageSize: imageBuffer.length,
+    mimeType: mimeType
+  };
+
   try {
+    console.log(`🔬 [${debugId}] V5 AI Analysis: Starting GPT-4o analysis...`);
+    console.log(`🔬 [${debugId}] Image size: ${imageBuffer.length} bytes, MIME: ${mimeType}`);
+    
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -141,7 +154,11 @@ export async function analyzeKeyWithV5AI(imageBuffer, mimeType = 'image/jpeg') {
     });
 
     const content = response.choices[0].message.content;
-    console.log('📝 V5 Raw AI response:', content);
+    debugLog.step = 'ai_response_received';
+    debugLog.rawResponse = content;
+    debugLog.responseLength = content.length;
+    
+    console.log(`📝 [${debugId}] V5 Raw AI response (${content.length} chars):`, content);
     
     // Extract JSON from response (handle markdown format)
     let jsonString = content;
@@ -157,23 +174,45 @@ export async function analyzeKeyWithV5AI(imageBuffer, mimeType = 'image/jpeg') {
       }
     }
     
-    console.log('🔍 V5 Extracted JSON:', jsonString);
+    debugLog.step = 'json_extraction';
+    debugLog.extractedJson = jsonString;
+    
+    console.log(`🔍 [${debugId}] V5 Extracted JSON:`, jsonString);
     const parsed = JSON.parse(jsonString);
     
     // Validate with schema
     const validated = V5KeySignatureSchema.parse(parsed);
     
+    debugLog.step = 'validation_success';
+    debugLog.validatedSignature = validated;
+    debugLog.success = true;
+    
+    // Save debug log to file
+    await saveDebugLog(debugLog);
+    
+    console.log(`✅ [${debugId}] V5 Analysis completed successfully`);
+    console.log(`📊 [${debugId}] Extracted parameters:`, Object.keys(validated).length);
+    
     return {
       success: true,
       signature: validated,
-      rawResponse: content
+      rawResponse: content,
+      debugId: debugId
     };
   } catch (error) {
-    console.error('V5 AI Analysis Error:', error);
+    debugLog.step = 'error';
+    debugLog.error = error.message;
+    debugLog.success = false;
+    
+    // Save debug log even on error
+    await saveDebugLog(debugLog);
+    
+    console.error(`❌ [${debugId}] V5 AI Analysis Error:`, error);
     return {
       success: false,
       error: error.message,
-      signature: null
+      signature: null,
+      debugId: debugId
     };
   }
 }
@@ -202,10 +241,16 @@ export function compareV5Parameter(value1, value2, paramName) {
 }
 
 /**
- * Compara signatures V5 con pesos confirmados
+ * Compara signatures V5 con pesos confirmados y debugging detallado
  */
-export function compareV5KeySignatures(signature1, signature2) {
+export async function compareV5KeySignatures(signature1, signature2, debugId = null) {
   if (!signature1 || !signature2) return { similarity: 0, matchType: 'NO_MATCH', details: {} };
+
+  const comparisonId = debugId || `comp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  console.log(`🔍 [${comparisonId}] Starting V5 signature comparison...`);
+  console.log(`🔍 [${comparisonId}] Query signature:`, signature1);
+  console.log(`🔍 [${comparisonId}] Inventory signature:`, signature2);
 
   // Pesos confirmados de los tests (6 con peso, 3 sin peso)
   const weights = {
@@ -225,6 +270,8 @@ export function compareV5KeySignatures(signature1, signature2) {
   let weightedScore = 0;
   const parameterDetails = {};
 
+  console.log(`📊 [${comparisonId}] Comparing parameters with weights:`, weights);
+
   // Solo parámetros con peso > 0
   for (const [param, weight] of Object.entries(weights)) {
     if (weight > 0) {
@@ -240,8 +287,14 @@ export function compareV5KeySignatures(signature1, signature2) {
       parameterDetails[param] = {
         match: comparison.match,
         reason: comparison.reason,
-        similarity: comparison.similarity
+        similarity: comparison.similarity,
+        value1: signature1[param],
+        value2: signature2[param],
+        weight: weight,
+        contribution: weight * comparison.similarity
       };
+
+      console.log(`  📋 [${comparisonId}] ${param}: "${signature1[param]}" vs "${signature2[param]}" → ${comparison.reason} (similarity: ${comparison.similarity}, contribution: ${(weight * comparison.similarity).toFixed(3)})`);
     }
   }
 
@@ -255,7 +308,10 @@ export function compareV5KeySignatures(signature1, signature2) {
     matchType = 'NO_MATCH';
   }
 
-  return { 
+  console.log(`🎯 [${comparisonId}] Final result: similarity=${similarity.toFixed(3)}, matchType=${matchType}`);
+  console.log(`🎯 [${comparisonId}] Total weight: ${totalWeight}, Weighted score: ${weightedScore.toFixed(3)}`);
+
+  const result = { 
     similarity, 
     matchType, 
     details: { 
@@ -265,16 +321,38 @@ export function compareV5KeySignatures(signature1, signature2) {
       weights 
     } 
   };
+
+  // Save detailed comparison analysis
+  const analysis = {
+    id: comparisonId,
+    timestamp: new Date().toISOString(),
+    querySignature: signature1,
+    inventorySignature: signature2,
+    result: result,
+    stepByStep: parameterDetails
+  };
+
+  await saveComparisonAnalysis(analysis);
+
+  return result;
 }
 
 /**
- * Toma decisión final V5 basada en comparaciones
+ * Toma decisión final V5 basada en comparaciones con debugging
  */
-export function makeV5Decision(comparisons) {
+export function makeV5Decision(comparisons, debugId = null) {
+  const decisionId = debugId || `decision_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  console.log(`🎯 [${decisionId}] Making V5 decision with ${comparisons.length} comparisons...`);
+  
   const highMatches = comparisons.filter(c => c.similarity >= 0.95);
   const perfectMatches = comparisons.filter(c => c.similarity === 1.0);
   
+  console.log(`🎯 [${decisionId}] High matches (>=0.95): ${highMatches.length}`);
+  console.log(`🎯 [${decisionId}] Perfect matches (=1.0): ${perfectMatches.length}`);
+  
   if (highMatches.length === 0) {
+    console.log(`❌ [${decisionId}] Decision: NO_MATCH - No high similarity matches found`);
     return { 
       type: 'NO_MATCH', 
       message: 'Llave no encontrada en el inventario',
@@ -283,6 +361,7 @@ export function makeV5Decision(comparisons) {
   }
   
   if (highMatches.length === 1) {
+    console.log(`✅ [${decisionId}] Decision: MATCH_FOUND - Single high similarity match`);
     return { 
       type: 'MATCH_FOUND', 
       result: highMatches[0],
@@ -292,6 +371,7 @@ export function makeV5Decision(comparisons) {
   }
   
   if (perfectMatches.length > 1) {
+    console.log(`🔍 [${decisionId}] Decision: POSSIBLE_KEYS - Multiple perfect matches`);
     return { 
       type: 'POSSIBLE_KEYS', 
       candidates: perfectMatches,
@@ -301,6 +381,7 @@ export function makeV5Decision(comparisons) {
   }
   
   if (highMatches.length > 1) {
+    console.log(`🔍 [${decisionId}] Decision: POSSIBLE_KEYS - Multiple high similarity matches`);
     return { 
       type: 'POSSIBLE_KEYS', 
       candidates: highMatches,
