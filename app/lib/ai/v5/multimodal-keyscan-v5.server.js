@@ -247,9 +247,9 @@ export function compareV5KeySignatures(signature1, signature2) {
 
   const similarity = totalWeight > 0 ? weightedScore / totalWeight : 0;
 
-  // Lógica de decisión V5: solo similarity = 1.0 genera MATCH_FOUND
+  // Lógica de decisión V5: similarity >= 0.95 genera MATCH_FOUND
   let matchType;
-  if (similarity === 1.0) {
+  if (similarity >= 0.95) {
     matchType = 'MATCH_FOUND';
   } else {
     matchType = 'NO_MATCH';
@@ -271,9 +271,10 @@ export function compareV5KeySignatures(signature1, signature2) {
  * Toma decisión final V5 basada en comparaciones
  */
 export function makeV5Decision(comparisons) {
+  const highMatches = comparisons.filter(c => c.similarity >= 0.95);
   const perfectMatches = comparisons.filter(c => c.similarity === 1.0);
   
-  if (perfectMatches.length === 0) {
+  if (highMatches.length === 0) {
     return { 
       type: 'NO_MATCH', 
       message: 'Llave no encontrada en el inventario',
@@ -281,11 +282,11 @@ export function makeV5Decision(comparisons) {
     };
   }
   
-  if (perfectMatches.length === 1) {
+  if (highMatches.length === 1) {
     return { 
       type: 'MATCH_FOUND', 
-      result: perfectMatches[0],
-      message: 'Llave encontrada con precisión máxima',
+      result: highMatches[0],
+      message: 'Llave encontrada con alta precisión',
       allResults: comparisons
     };
   }
@@ -295,6 +296,15 @@ export function makeV5Decision(comparisons) {
       type: 'POSSIBLE_KEYS', 
       candidates: perfectMatches,
       message: `Se encontraron ${perfectMatches.length} llaves idénticas. Selecciona la correcta:`,
+      allResults: comparisons
+    };
+  }
+  
+  if (highMatches.length > 1) {
+    return { 
+      type: 'POSSIBLE_KEYS', 
+      candidates: highMatches,
+      message: `Se encontraron ${highMatches.length} llaves similares. Selecciona la correcta:`,
       allResults: comparisons
     };
   }
