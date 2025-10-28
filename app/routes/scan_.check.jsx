@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSubmit } from "@remix-run/react";
 import { requireUserId, getSession, commitSession } from "../utils/session.server.js";
 import { getUserKeys } from "../lib/keys.server.js";
-import { processKeyImageV6, extractSignatureV6 } from "../lib/keyscan.server.js";
+import { processKeyImageV5ModelAI, extractSignatureV5ModelAI } from "../lib/keyscan.server.js";
 import { prisma } from "../utils/db.server.js";
 
 export const handle = { 
@@ -13,7 +13,7 @@ export const handle = {
 };
 
 /**
- * Action server para procesar la imagen con KeyScan V6 (Multimodal AI)
+ * Action server para procesar la imagen con KeyScan V5 (ModelAI)
  */
 export async function action({ request }) {
   const userId = await requireUserId(request);
@@ -22,7 +22,7 @@ export async function action({ request }) {
   
   // Logging inicio
   const startTotal = Date.now();
-  console.log('\n🔬 ===== KEYSCAN V6 - PROCESSING START =====');
+  console.log('\n🔬 ===== KEYSCAN V5 - PROCESSING START =====');
   console.log(`­ƒôà Timestamp: ${new Date().toISOString()}`);
   console.log(`­ƒæñ User ID: ${userId}`);
   
@@ -76,7 +76,7 @@ export async function action({ request }) {
       
       const totalTime = Date.now() - startTotal;
       console.log(`ÔÜÖ´©Å  Total time: ${totalTime}ms`);
-      console.log('✅ ===== KEYSCAN V6 - EMPTY INVENTORY =====\n');
+      console.log('✅ ===== KEYSCAN V5 - EMPTY INVENTORY =====\n');
       
       return redirect('/scan/new', {
         headers: {
@@ -85,7 +85,7 @@ export async function action({ request }) {
       });
     }
     
-    const result = await processKeyImageV6(imageDataURL, inventory, userId);
+    const result = await processKeyImageV5ModelAI(imageDataURL, inventory, userId);
     const extractMatchTime = Date.now() - startExtractMatch;
     
     console.log(`ÔÜÖ´©Å  Extract + Match time: ${extractMatchTime}ms`);
@@ -151,18 +151,33 @@ export async function action({ request }) {
         }
       );
     } else if (result.decision === 'POSSIBLE') {
-      console.log(`\n⚠️  ===== KEYSCAN V6 - POSSIBLE MATCH =====\n`);
-      return redirect(
-        `/scan/possible?keyId=${result.details.keyId}&confidence=${result.confidence.toFixed(4)}`,
-        {
-          headers: {
-            'Set-Cookie': await commitSession(session)
+      console.log(`\n⚠️  ===== KEYSCAN V5 - POSSIBLE MATCH =====\n`);
+      
+      // V5 POSSIBLE_KEYS: Manejar múltiples candidatos
+      if (result.details.matchType === 'POSSIBLE_KEYS' && result.details.candidates) {
+        const candidatesParam = encodeURIComponent(JSON.stringify(result.details.candidates));
+        return redirect(
+          `/scan/possible?candidates=${candidatesParam}&confidence=${result.confidence.toFixed(4)}`,
+          {
+            headers: {
+              'Set-Cookie': await commitSession(session)
+            }
           }
-        }
-      );
+        );
+      } else {
+        // V4/V6 POSSIBLE_MATCH: Un solo candidato (backward compatibility)
+        return redirect(
+          `/scan/possible?keyId=${result.details.keyId}&confidence=${result.confidence.toFixed(4)}`,
+          {
+            headers: {
+              'Set-Cookie': await commitSession(session)
+            }
+          }
+        );
+      }
     } else {
       // NO_MATCH - redirigir a nueva llave (signature se extraer├í en createKey)
-      console.log(`\n❌ ===== KEYSCAN V6 - NO MATCH =====\n`);
+      console.log(`\n❌ ===== KEYSCAN V5 - NO MATCH =====\n`);
       
       return redirect('/scan/new', {
         headers: {
@@ -173,7 +188,7 @@ export async function action({ request }) {
     
   } catch (error) {
     const totalTime = Date.now() - startTotal;
-    console.error(`\n❌ ===== KEYSCAN V6 - ERROR =====`);
+    console.error(`\n❌ ===== KEYSCAN V5 - ERROR =====`);
     console.error(`Error: ${error.message}`);
     console.error(`Stack: ${error.stack}`);
     console.error(`Total time: ${totalTime}ms\n`);

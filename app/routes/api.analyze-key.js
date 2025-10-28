@@ -4,7 +4,7 @@
  */
 
 import { json } from "@remix-run/node";
-import { analyzeKeyWithHybridBalancedAI } from "~/lib/ai/multimodal-keyscan.server";
+import { analyzeKeyWithV5AI } from "~/lib/ai/v5/multimodal-keyscan-v5.server";
 import { prisma as db } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
@@ -31,8 +31,8 @@ export async function action({ request }) {
     
     console.log(`🔍 Analyzing key image for user ${userId}`);
     
-    // Analyze image with AI
-    const analysisResult = await analyzeKeyWithHybridBalancedAI(
+    // Analyze image with V5 ModelAI
+    const analysisResult = await analyzeKeyWithV5AI(
       imageBuffer, 
       imageFile.type || 'image/jpeg'
     );

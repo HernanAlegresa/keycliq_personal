@@ -86,31 +86,31 @@ export async function analyzeKeyWithHybridBalancedAI(imageBuffer, mimeType = 'im
     
     // Convert buffer to base64
     const base64Image = imageBuffer.toString('base64');
-    
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "user",
-          content: [
+        
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [
             {
-              type: "text",
+              role: "user",
+              content: [
+                {
+                  type: "text",
               text: HYBRID_BALANCED_PROMPT
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: `data:${mimeType};base64,${base64Image}`
-              }
+                },
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: `data:${mimeType};base64,${base64Image}`
+                  }
+                }
+              ]
             }
-          ]
-        }
-      ],
+          ],
       max_tokens: 1000,
       temperature: 0.1
-    });
-
-    const rawResponse = response.choices[0].message.content;
+        });
+        
+        const rawResponse = response.choices[0].message.content;
     console.log('📝 Raw AI response:', rawResponse);
 
     // Extract JSON from response
@@ -128,13 +128,13 @@ export async function analyzeKeyWithHybridBalancedAI(imageBuffer, mimeType = 'im
     // Validate with schema
     const validatedSignature = HybridBalancedKeySignatureSchema.parse(parsedData);
     console.log('✅ Validated signature:', validatedSignature);
-
+    
     return {
       success: true,
       signature: validatedSignature,
       rawResponse: rawResponse
     };
-
+    
   } catch (error) {
     console.error('❌ Hybrid Balanced AI analysis failed:', error.message);
     return {
@@ -233,26 +233,26 @@ export function compareHybridBalancedKeySignatures(signature1, signature2) {
       }
     }
   });
-
+  
   const similarity = totalWeight > 0 ? weightedMatches / totalWeight : 0;
   console.log(`📊 Final similarity: ${(similarity * 100).toFixed(1)}%`);
 
   // Balanced thresholds
   let matchType;
   if (similarity >= 0.92) {
-    matchType = 'MATCH_FOUND';
+      matchType = 'MATCH_FOUND';
   } else if (similarity >= 0.80) {
-    matchType = 'POSSIBLE_MATCH';
+      matchType = 'POSSIBLE_MATCH';
   } else {
     matchType = 'NO_MATCH';
-  }
-
+    }
+    
   console.log(`🎯 Match type: ${matchType}`);
-
-  return {
+    
+    return {
     similarity,
-    matchType,
-    details: {
+      matchType,
+      details: {
       totalWeight,
       weightedMatches,
       parameterWeights
