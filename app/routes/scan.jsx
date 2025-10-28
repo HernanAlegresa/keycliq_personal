@@ -27,14 +27,6 @@ export default function ScanCapture() {
   const [isLoading, setIsLoading] = useState(false);
   const [showGuidelines, setShowGuidelines] = useState(false);
 
-  // Check if user has seen guidelines before
-  useEffect(() => {
-    const hasSeenGuidelines = localStorage.getItem('hasSeenScanGuidelines');
-    if (!hasSeenGuidelines) {
-      // Show guidelines on first visit
-      setShowGuidelines(true);
-    }
-  }, []);
 
   const handleFileUpload = async (event) => {
     const file = event.target.files?.[0];
@@ -74,21 +66,11 @@ export default function ScanCapture() {
   };
 
   const handleScan = () => {
-    // Check if user has seen guidelines
-    const hasSeenGuidelines = localStorage.getItem('hasSeenScanGuidelines');
-    
-    if (!hasSeenGuidelines) {
-      // Show guidelines first
-      setShowGuidelines(true);
-    } else {
-      // Proceed with scan
-      fileInputRef.current?.click();
-    }
+    // Always show guidelines when user clicks scan
+    setShowGuidelines(true);
   };
 
   const handleGuidelinesContinue = () => {
-    // Mark guidelines as seen
-    localStorage.setItem('hasSeenScanGuidelines', 'true');
     setShowGuidelines(false);
     
     // Proceed with scan
@@ -96,8 +78,6 @@ export default function ScanCapture() {
   };
 
   const handleGuidelinesCancel = () => {
-    // User skipped guidelines
-    localStorage.setItem('hasSeenScanGuidelines', 'true');
     setShowGuidelines(false);
   };
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "./Button.jsx";
+import keyExampleImage from "../../assets/key-example-lockbox-02.png";
 
 /**
  * ScanGuidelines - Component to show optimal scanning conditions
@@ -71,32 +72,11 @@ export function ScanGuidelines({ onContinue, onCancel }) {
         <div className="scan-guidelines__example">
           <div className="scan-guidelines__example-label">Example:</div>
           <div className="scan-guidelines__example-image">
-            <svg 
-              viewBox="0 0 200 100" 
-              className="scan-guidelines__key-illustration"
-              aria-label="Key positioning example"
-            >
-              {/* Key outline */}
-              <rect x="20" y="35" width="30" height="30" rx="5" fill="#006209" opacity="0.9"/>
-              {/* Key shaft */}
-              <rect x="50" y="45" width="120" height="10" fill="#006209" opacity="0.9"/>
-              {/* Key teeth */}
-              <rect x="100" y="35" width="5" height="10" fill="#006209"/>
-              <rect x="110" y="30" width="5" height="15" fill="#006209"/>
-              <rect x="120" y="35" width="5" height="10" fill="#006209"/>
-              <rect x="130" y="28" width="5" height="17" fill="#006209"/>
-              <rect x="140" y="33" width="5" height="12" fill="#006209"/>
-              <rect x="150" y="30" width="5" height="15" fill="#006209"/>
-              <rect x="160" y="35" width="5" height="10" fill="#006209"/>
-              
-              {/* Labels */}
-              <text x="35" y="80" fontSize="10" fill="#666" textAnchor="middle">Handle</text>
-              <text x="165" y="25" fontSize="10" fill="#666" textAnchor="middle">Teeth Up</text>
-              
-              {/* Arrow pointing left */}
-              <path d="M 15 50 L 5 50 L 10 45 M 5 50 L 10 55" stroke="#006209" strokeWidth="2" fill="none"/>
-              <text x="12" y="65" fontSize="8" fill="#006209">Left</text>
-            </svg>
+            <img 
+              src={keyExampleImage}
+              alt="Example of properly positioned key for scanning"
+              className="scan-guidelines__key-image"
+            />
           </div>
         </div>
 
