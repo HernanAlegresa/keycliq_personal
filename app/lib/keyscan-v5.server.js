@@ -112,7 +112,24 @@ export async function processKeyImageV5(imageDataURL, inventory = [], userId = n
             comparisonResult: {
               decision: decision,
               comparisons: comparisons,
-              totalComparisons: comparisons.length
+              totalComparisons: comparisons.length,
+              // Include detailed analysis data for View Analysis screen
+              analysisData: {
+                debugId: analysisResult.debugId,
+                timestamp: new Date().toISOString(),
+                querySignature: querySignature,
+                inventorySignature: bestMatch?.inventorySignature || null,
+                similarity: bestMatch?.similarity || 0,
+                matchType: decision.type,
+                parameterDetails: bestMatch?.parameterDetails || {},
+                rawResponse: analysisResult.rawResponse,
+                allComparisons: comparisons.map(c => ({
+                  keyId: c.keyId,
+                  similarity: c.similarity,
+                  parameterDetails: c.parameterDetails,
+                  inventorySignature: c.inventorySignature
+                }))
+              }
             }
           });
         } catch (error) {
