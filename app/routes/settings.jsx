@@ -87,8 +87,6 @@ export default function Settings() {
             <a 
               href="/privacy-policy" 
               className="settings-legal-link"
-              target="_blank"
-              rel="noopener noreferrer"
             >
               Privacy Policy
             </a>
@@ -96,8 +94,6 @@ export default function Settings() {
             <a 
               href="/terms-of-use" 
               className="settings-legal-link"
-              target="_blank"
-              rel="noopener noreferrer"
             >
               Terms of Use
             </a>
