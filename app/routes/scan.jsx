@@ -70,14 +70,7 @@ export default function ScanCapture() {
     setShowGuidelines(true);
   };
 
-  const handleGuidelinesContinue = () => {
-    setShowGuidelines(false);
-    
-    // Proceed with scan
-    fileInputRef.current?.click();
-  };
-
-  const handleGuidelinesCancel = () => {
+  const handleGuidelinesClose = () => {
     setShowGuidelines(false);
   };
 
@@ -124,8 +117,7 @@ export default function ScanCapture() {
       {/* Scan Guidelines Modal */}
       {showGuidelines && (
         <ScanGuidelines 
-          onContinue={handleGuidelinesContinue}
-          onCancel={handleGuidelinesCancel}
+          onClose={handleGuidelinesClose}
         />
       )}
     </div>

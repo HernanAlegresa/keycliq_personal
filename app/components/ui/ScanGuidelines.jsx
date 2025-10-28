@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { Button } from "./Button.jsx";
 import keyExampleImage from "../../assets/key-example-lockbox-02.png";
 
 /**
@@ -8,8 +6,7 @@ import keyExampleImage from "../../assets/key-example-lockbox-02.png";
  * Displays guidelines to help users capture keys in the best way
  * for optimal scanning and matching results.
  */
-export function ScanGuidelines({ onContinue, onCancel }) {
-  const [understood, setUnderstood] = useState(false);
+export function ScanGuidelines({ onClose }) {
 
   const guidelines = [
     {
@@ -36,7 +33,7 @@ export function ScanGuidelines({ onContinue, onCancel }) {
 
   return (
     <div className="scan-guidelines">
-      <div className="scan-guidelines__overlay" onClick={onCancel}></div>
+      <div className="scan-guidelines__overlay" onClick={onClose}></div>
       
       <div className="scan-guidelines__modal">
         {/* Header */}
@@ -47,6 +44,13 @@ export function ScanGuidelines({ onContinue, onCancel }) {
           <p className="scan-guidelines__subtitle">
             Follow these simple guidelines to optimize your key scanning
           </p>
+          <button 
+            className="scan-guidelines__close"
+            onClick={onClose}
+            aria-label="Close guidelines"
+          >
+            ✕
+          </button>
         </div>
 
         {/* Guidelines List */}
@@ -79,46 +83,6 @@ export function ScanGuidelines({ onContinue, onCancel }) {
             />
           </div>
         </div>
-
-        {/* Checkbox */}
-        <label className="scan-guidelines__checkbox">
-          <input 
-            type="checkbox" 
-            checked={understood}
-            onChange={(e) => setUnderstood(e.target.checked)}
-            className="scan-guidelines__checkbox-input"
-          />
-          <span className="scan-guidelines__checkbox-label">
-            I understand these guidelines will help improve results
-          </span>
-        </label>
-
-        {/* Actions */}
-        <div className="scan-guidelines__actions">
-          <Button
-            variant="primary"
-            size="large"
-            onClick={onContinue}
-            disabled={!understood}
-            className="w-full py-3 rounded-2xl"
-          >
-            Got It, Let's Scan
-          </Button>
-          
-          <button
-            type="button"
-            onClick={onCancel}
-            className="scan-guidelines__skip"
-          >
-            Skip for now
-          </button>
-        </div>
-
-        {/* Footer note */}
-        <p className="scan-guidelines__note">
-          💡 These are recommendations, not requirements. 
-          The system will work even if conditions aren't perfect.
-        </p>
       </div>
     </div>
   );

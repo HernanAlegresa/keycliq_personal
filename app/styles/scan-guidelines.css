@@ -56,6 +56,7 @@
 .scan-guidelines__header {
   text-align: center;
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .scan-guidelines__title {
@@ -71,6 +72,32 @@
   font-size: 0.95rem;
   color: #666;
   margin: 0;
+}
+
+/* Close Button */
+.scan-guidelines__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  transition: color 0.2s ease;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scan-guidelines__close:hover {
+  color: #333;
+  background-color: #f8f9fa;
 }
 
 /* Guidelines List */
@@ -160,74 +187,6 @@
   transform: scale(1.02);
 }
 
-/* Checkbox */
-.scan-guidelines__checkbox {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s ease;
-}
-
-.scan-guidelines__checkbox:hover {
-  background-color: #e9ecef;
-}
-
-.scan-guidelines__checkbox-input {
-  width: 1.25rem;
-  height: 1.25rem;
-  cursor: pointer;
-  accent-color: #006209;
-}
-
-.scan-guidelines__checkbox-label {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 0.875rem;
-  color: #333;
-  line-height: 1.4;
-}
-
-/* Actions */
-.scan-guidelines__actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.scan-guidelines__skip {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 0.875rem;
-  color: #666;
-  background: none;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-  text-decoration: underline;
-  transition: color 0.2s ease;
-}
-
-.scan-guidelines__skip:hover {
-  color: #006209;
-}
-
-/* Footer Note */
-.scan-guidelines__note {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 0.75rem;
-  color: #999;
-  text-align: center;
-  margin: 0;
-  padding-top: 1rem;
-  border-top: 1px solid #e9ecef;
-  line-height: 1.4;
-}
-
 /* Responsive */
 @media (max-width: 640px) {
   .scan-guidelines {
@@ -294,17 +253,9 @@
     border-color: #2d5a2f;
   }
 
-  .scan-guidelines__checkbox {
-    background-color: #2d2d2d;
-  }
-
-  .scan-guidelines__checkbox:hover {
+  .scan-guidelines__close:hover {
     background-color: #3a3a3a;
-  }
-
-  .scan-guidelines__note {
-    color: #6c757d;
-    border-top-color: #3a3a3a;
+    color: #e9ecef;
   }
 }
 
