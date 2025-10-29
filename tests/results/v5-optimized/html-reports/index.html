@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyScan V5 ModelAI - Test Reports</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #006209 0%, #004d07 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 98, 9, 0.3);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .test-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid #006209;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .test-card h3 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            color: #006209;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .test-card .test-type {
+            background: #e8f5e8;
+            color: #006209;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .test-card .test-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .test-card .test-link {
+            display: inline-block;
+            background: #006209;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .test-card .test-link:hover {
+            background: #004d07;
+        }
+
+        .status-legend {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-legend h3 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            color: #006209;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .status-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .status-perfect {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-good {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        .v5-info {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .v5-info h3 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            color: #006209;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .parameters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .parameter-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #006209;
+        }
+
+        .parameter-name {
+            font-weight: bold;
+            color: #006209;
+            margin-bottom: 5px;
+        }
+
+        .parameter-weight {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer h4 {
+            color: #006209;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔑 KeyScan V5 ModelAI</h1>
+            <div class="subtitle">Test Reports Dashboard</div>
+            <div class="description">
+                Sistema de reconocimiento de llaves usando inteligencia artificial multimodal con GPT-4o. 
+                Análisis de 9 parámetros clave con pesos optimizados para máxima precisión.
+            </div>
+        </div>
+
+        <div class="tests-grid">
+            <div class="test-card">
+                <h3>Test 1 - Llave EN Inventario</h3>
+                <div class="test-type">MATCH_FOUND Esperado</div>
+                <div class="test-description">
+                    <strong>Escenario:</strong> La llave de query está presente en el inventario de 15 llaves.<br><br>
+                    <strong>Objetivo:</strong> Verificar que el sistema identifique correctamente la llave coincidente con alta similitud (≥0.95).<br><br>
+                    <strong>Query:</strong> aligned-lockbox-02.jpg<br>
+                    <strong>Inventario:</strong> 15 llaves aleatorias del dataset optimizado
+                </div>
+                <a href="test1-report.html" class="test-link">Ver Test 1 →</a>
+            </div>
+
+            <div class="test-card">
+                <h3>Test 2 - Llave NO en Inventario</h3>
+                <div class="test-type">NO_MATCH Esperado</div>
+                <div class="test-description">
+                    <strong>Escenario:</strong> La llave de query NO está presente en el inventario de 15 llaves.<br><br>
+                    <strong>Objetivo:</strong> Verificar que el sistema no encuentre coincidencias falsas y retorne NO_MATCH.<br><br>
+                    <strong>Query:</strong> generated-lockbox-03.png<br>
+                    <strong>Inventario:</strong> 15 llaves aleatorias del dataset optimizado
+                </div>
+                <a href="test2-report.html" class="test-link">Ver Test 2 →</a>
+            </div>
+        </div>
+
+        <div class="status-legend">
+            <h3>📊 Criterios de Evaluación</h3>
+            <div class="status-items">
+                <div class="status-item status-perfect">
+                    <span class="status-icon">✅</span>
+                    <div>
+                        <strong>PERFECT</strong><br>
+                        <small>Resultado exacto esperado</small>
+                    </div>
+                </div>
+                <div class="status-item status-good">
+                    <span class="status-icon">⚙️</span>
+                    <div>
+                        <strong>GOOD</strong><br>
+                        <small>Resultado funcional con ambigüedad</small>
+                    </div>
+                </div>
+                <div class="status-item status-failed">
+                    <span class="status-icon">❌</span>
+                    <div>
+                        <strong>FAILED</strong><br>
+                        <small>Error real del sistema</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="v5-info">
+            <h3>⚙️ Parámetros V5 ModelAI</h3>
+            <div class="parameters-grid">
+                <div class="parameter-item">
+                    <div class="parameter-name">Bowmark</div>
+                    <div class="parameter-weight">Peso: 35% (Crítico)</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-name">Bowcode</div>
+                    <div class="parameter-weight">Peso: 30% (Muy importante)</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-name">Surface Finish</div>
+                    <div class="parameter-weight">Peso: 20% (Importante)</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-name">Key Color</div>
+                    <div class="parameter-weight">Peso: 10%</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-name">Bow Shape</div>
+                    <div class="parameter-weight">Peso: 3%</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-name">Bow Size</div>
+                    <div class="parameter-weight">Peso: 2%</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-name">Peak Count</div>
+                    <div class="parameter-weight">Peso: 0% (Tolerancia ±1)</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-name">Groove Count</div>
+                    <div class="parameter-weight">Peso: 0% (Exact match)</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-name">Blade Profile</div>
+                    <div class="parameter-weight">Peso: 0% (Ignorado)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h4>🔑 KeyScan V5 ModelAI</h4>
+            <p>Sistema de Reconocimiento de Llaves con Inteligencia Artificial</p>
+            <p>Generado el ${new Date().toLocaleDateString('es-ES')}</p>
+        </div>
+    </div>
+</body>
+</html>
