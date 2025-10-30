@@ -16,6 +16,8 @@ tests/fixtures/keys/*/
 tests/fixtures/images/
 client-dataset/
 tests/keys-optimized/
+# Note: keys-optimized/ README.md is kept in repo
+!tests/keys-optimized/README.md
 
 # Configuration secrets
 .env
