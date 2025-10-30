@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>KeyCliq V6 - Test Index</title>
+<style>
+body{font-family: 'Open Sans', sans-serif; background:#f5f7fa; color:#333; margin:0}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+.header{background:linear-gradient(135deg,#006209,#004d07);color:#fff;padding:20px;border-radius:12px}
+h1{font-family:'Raleway',sans-serif;margin:0}
+.card{background:#fff;border-radius:12px;padding:18px;margin-top:16px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.stat{display:flex;gap:16px}
+.stat div{background:#f8f9fa;border:1px solid #e9ecef;border-radius:10px;padding:12px 16px}
+.badge{padding:4px 10px;border-radius:999px;font-weight:700}
+.badge-perfect{background:#28a745;color:#fff}
+.badge-failed{background:#dc3545;color:#fff}
+.badge-good{background:#ffc107;color:#333}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:10px;border-bottom:1px solid #e9ecef;text-align:left}
+.table th{background:#eef2f4;color:#495057}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>KeyCliq V6 - 10 Tests</h1>
+    <div>Global Accuracy (Perfect): <strong>90%</strong> (9/10)</div>
+  </div>
+  <div class="card stat">
+    <div><strong>Total Tests</strong><div>10</div></div>
+    <div><strong>Perfect</strong><div>9</div></div>
+    <div><strong>Good</strong><div>1</div></div>
+    <div><strong>Failed</strong><div>0</div></div>
+  </div>
+  <div class="card">
+    <table class="table">
+      <thead><tr><th>Test</th><th>Type</th><th>Result</th><th>Summary</th><th>Report</th></tr></thead>
+      <tbody>
+        <tr><td>IN/test-1</td><td>IN</td><td>Perfect</td><td>matches=1</td><td><a href="in/test-1/report.html" target="_blank">Open</a></td></tr><tr><td>IN/test-2</td><td>IN</td><td>Good</td><td>matches=4</td><td><a href="in/test-2/report.html" target="_blank">Open</a></td></tr><tr><td>IN/test-3</td><td>IN</td><td>Perfect</td><td>matches=1</td><td><a href="in/test-3/report.html" target="_blank">Open</a></td></tr><tr><td>IN/test-4</td><td>IN</td><td>Perfect</td><td>matches=1</td><td><a href="in/test-4/report.html" target="_blank">Open</a></td></tr><tr><td>IN/test-5</td><td>IN</td><td>Perfect</td><td>matches=1</td><td><a href="in/test-5/report.html" target="_blank">Open</a></td></tr><tr><td>OUT/test-10</td><td>OUT</td><td>Perfect</td><td>0 matches (expected)</td><td><a href="out/test-10/report.html" target="_blank">Open</a></td></tr><tr><td>OUT/test-6</td><td>OUT</td><td>Perfect</td><td>0 matches (expected)</td><td><a href="out/test-6/report.html" target="_blank">Open</a></td></tr><tr><td>OUT/test-7</td><td>OUT</td><td>Perfect</td><td>0 matches (expected)</td><td><a href="out/test-7/report.html" target="_blank">Open</a></td></tr><tr><td>OUT/test-8</td><td>OUT</td><td>Perfect</td><td>0 matches (expected)</td><td><a href="out/test-8/report.html" target="_blank">Open</a></td></tr><tr><td>OUT/test-9</td><td>OUT</td><td>Perfect</td><td>0 matches (expected)</td><td><a href="out/test-9/report.html" target="_blank">Open</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
