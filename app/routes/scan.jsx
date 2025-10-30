@@ -72,6 +72,10 @@ export default function ScanCapture() {
 
   const handleGuidelinesClose = () => {
     setShowGuidelines(false);
+    // Open file picker when user closes guidelines
+    setTimeout(() => {
+      fileInputRef.current?.click();
+    }, 100);
   };
 
   return (
