@@ -19,7 +19,7 @@ export async function loader({ request }) {
   const confidence = url.searchParams.get('confidence');
   const candidates = url.searchParams.get('candidates');
 
-  // V5 POSSIBLE_KEYS: Manejar múltiples candidatos
+  // V6 POSSIBLE_KEYS: Manejar múltiples candidatos con similarity === 1.0
   if (candidates) {
     try {
       const candidatesData = JSON.parse(decodeURIComponent(candidates));
@@ -52,7 +52,7 @@ export async function loader({ request }) {
     }
   }
 
-  // V4/V6 POSSIBLE_MATCH: Manejar un solo candidato (backward compatibility)
+  // Legacy POSSIBLE_MATCH: Manejar un solo candidato (backward compatibility with V4)
   if (!keyId) {
     return redirect('/scan');
   }
@@ -90,10 +90,10 @@ export default function ScanPossibleMatch() {
 
   const handleConfirmMatch = () => {
     if (isMultipleCandidates && selectedKeyId) {
-      // V5: Usuario confirma la llave seleccionada
+      // V6: Usuario confirma la llave seleccionada
       navigate(`/keys/${selectedKeyId}?from=/scan/possible&confirmed=true`);
     } else if (!isMultipleCandidates && key) {
-      // V4/V6: Usuario confirma la única llave
+      // Legacy: Usuario confirma la única llave
       navigate(`/keys/${key.id}?from=/scan/possible&confirmed=true`);
     }
   };
@@ -110,13 +110,13 @@ export default function ScanPossibleMatch() {
 
   const handleViewAnalysis = () => {
     if (isMultipleCandidates && selectedKeyId) {
-      // V5: Ver análisis de la llave seleccionada
+      // V6: Ver análisis de la llave seleccionada
       navigate(`/scan/analysis?keyId=${selectedKeyId}&confidence=${confidence}`);
     } else if (!isMultipleCandidates && keyMatchingId) {
-      // V4/V6: Ver análisis con keyMatchingId
+      // Legacy: Ver análisis con keyMatchingId
       navigate(`/scan/analysis?keyMatchingId=${keyMatchingId}`);
     } else if (!isMultipleCandidates && key) {
-      // V4/V6: Ver análisis con keyId
+      // Legacy: Ver análisis con keyId
       navigate(`/scan/analysis?keyId=${key.id}&confidence=${confidence}`);
     }
   };
@@ -127,12 +127,12 @@ export default function ScanPossibleMatch() {
 
   const confidencePercent = (confidence * 100).toFixed(1);
 
-  // V5 POSSIBLE_KEYS: Múltiples candidatos
+  // V6 POSSIBLE_KEYS: Múltiples candidatos
   if (isMultipleCandidates && candidates) {
     return (
       <div className="scan-match-found">
         <div className="scan-match-found__content">
-          {/* V5 Header */}
+          {/* V6 Header */}
           <div className="scan-match-found__header">
             <h1 className="scan-match-found__title">Possible Keys – Best Matches</h1>
             <div className="scan-match-found__success-icon" style={{ backgroundColor: '#f59e0b' }}>
@@ -142,7 +142,7 @@ export default function ScanPossibleMatch() {
             </div>
           </div>
 
-          {/* V5 Message */}
+          {/* V6 Message */}
           <div className="scan-match-found__message" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
             <p style={{ fontSize: '0.95rem', color: '#4b5563', lineHeight: '1.5' }}>
               We found the best matches according to the key you scanned from your inventory.
@@ -152,7 +152,7 @@ export default function ScanPossibleMatch() {
             </p>
           </div>
 
-          {/* V5 Candidates List */}
+          {/* V6 Candidates List */}
           <div className="possible-keys__list" style={{ marginBottom: '2rem' }}>
             {candidates.map((candidate) => (
               <div
@@ -244,7 +244,7 @@ export default function ScanPossibleMatch() {
             ))}
           </div>
 
-          {/* V5 Action Buttons */}
+          {/* V6 Action Buttons */}
           <div className="scan-match-found__actions">
             <Button 
               variant="primary" 

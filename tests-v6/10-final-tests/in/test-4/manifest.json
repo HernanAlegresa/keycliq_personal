@@ -1,0 +1,105 @@
+{
+  "testId": "test-4",
+  "testType": "IN",
+  "seed": 147,
+  "optimize": true,
+  "timestamp": "2025-10-30T03:19:51.363Z",
+  "queryKey": {
+    "keyId": "lockbox-06",
+    "imageType": "aligned",
+    "imageName": "aligned-lockbox-06.jpg",
+    "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\lockbox\\lockbox-06\\aligned-lockbox-06.jpg"
+  },
+  "inventoryKeys": [
+    {
+      "keyId": "regular-07",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-07.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-07\\aligned-regular-07.jpg"
+    },
+    {
+      "keyId": "regular-24",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-24.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-24\\aligned-regular-24.jpg"
+    },
+    {
+      "keyId": "regular-26",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-26.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-26\\aligned-regular-26.jpg"
+    },
+    {
+      "keyId": "regular-15",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-15.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-15\\aligned-regular-15.jpg"
+    },
+    {
+      "keyId": "regular-06",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-06.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-06\\aligned-regular-06.jpg"
+    },
+    {
+      "keyId": "regular-27",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-27.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-27\\aligned-regular-27.jpg"
+    },
+    {
+      "keyId": "regular-19",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-19.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-19\\aligned-regular-19.jpg"
+    },
+    {
+      "keyId": "regular-18",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-18.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-18\\aligned-regular-18.jpg"
+    },
+    {
+      "keyId": "regular-21",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-21.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-21\\aligned-regular-21.jpg"
+    },
+    {
+      "keyId": "regular-12",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-12.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-12\\aligned-regular-12.jpg"
+    },
+    {
+      "keyId": "lockbox-12",
+      "imageType": "aligned",
+      "imageName": "aligned-lockbox-12.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\lockbox\\lockbox-12\\aligned-lockbox-12.jpg"
+    },
+    {
+      "keyId": "lockbox-11",
+      "imageType": "aligned",
+      "imageName": "aligned-lockbox-11.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\lockbox\\lockbox-11\\aligned-lockbox-11.jpg"
+    },
+    {
+      "keyId": "lockbox-10",
+      "imageType": "aligned",
+      "imageName": "aligned-lockbox-10.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\lockbox\\lockbox-10\\aligned-lockbox-10.jpg"
+    },
+    {
+      "keyId": "regular-17",
+      "imageType": "aligned",
+      "imageName": "aligned-regular-17.jpg",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\regular\\regular-17\\aligned-regular-17.jpg"
+    },
+    {
+      "keyId": "lockbox-06",
+      "imageType": "generated",
+      "imageName": "generated-lockbox-06.png",
+      "path": "C:\\Users\\herna\\keycliq-19\\tests\\keys-optimized\\lockbox\\lockbox-06\\generated-lockbox-06.png"
+    }
+  ]
+}

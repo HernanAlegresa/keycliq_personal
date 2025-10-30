@@ -1,0 +1,152 @@
+{
+  "testId": "test-in-001",
+  "testType": "IN",
+  "seed": 42,
+  "timestamp": "2025-10-29T20:02:48.872Z",
+  "queryKey": {
+    "id": "lockbox-02",
+    "path": "lockbox\\lockbox-02",
+    "image": {
+      "filename": "aligned-lockbox-02.jpg",
+      "type": "aligned",
+      "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-02\\aligned-lockbox-02.jpg"
+    }
+  },
+  "inventoryKeys": [
+    {
+      "id": "lockbox-03",
+      "path": "lockbox\\lockbox-03",
+      "image": {
+        "filename": "aligned-lockbox-03.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-03\\aligned-lockbox-03.jpg"
+      }
+    },
+    {
+      "id": "lockbox-04",
+      "path": "lockbox\\lockbox-04",
+      "image": {
+        "filename": "generated-lockbox-04.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-04\\generated-lockbox-04.png"
+      }
+    },
+    {
+      "id": "lockbox-05",
+      "path": "lockbox\\lockbox-05",
+      "image": {
+        "filename": "aligned-lockbox-05.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-05\\aligned-lockbox-05.jpg"
+      }
+    },
+    {
+      "id": "lockbox-06",
+      "path": "lockbox\\lockbox-06",
+      "image": {
+        "filename": "generated-lockbox-06.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-06\\generated-lockbox-06.png"
+      }
+    },
+    {
+      "id": "lockbox-08",
+      "path": "lockbox\\lockbox-08",
+      "image": {
+        "filename": "aligned-lockbox-08.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-08\\aligned-lockbox-08.jpg"
+      }
+    },
+    {
+      "id": "lockbox-10",
+      "path": "lockbox\\lockbox-10",
+      "image": {
+        "filename": "generated-lockbox-10.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-10\\generated-lockbox-10.png"
+      }
+    },
+    {
+      "id": "lockbox-11",
+      "path": "lockbox\\lockbox-11",
+      "image": {
+        "filename": "aligned-lockbox-11.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-11\\aligned-lockbox-11.jpg"
+      }
+    },
+    {
+      "id": "lockbox-12",
+      "path": "lockbox\\lockbox-12",
+      "image": {
+        "filename": "aligned-lockbox-12.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-12\\aligned-lockbox-12.jpg"
+      }
+    },
+    {
+      "id": "lockbox-14",
+      "path": "lockbox\\lockbox-14",
+      "image": {
+        "filename": "aligned-lockbox-14.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-14\\aligned-lockbox-14.jpg"
+      }
+    },
+    {
+      "id": "regular-01",
+      "path": "regular\\regular-01",
+      "image": {
+        "filename": "generated-regular-01.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-01\\generated-regular-01.png"
+      }
+    },
+    {
+      "id": "regular-02",
+      "path": "regular\\regular-02",
+      "image": {
+        "filename": "aligned-regular-02.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-02\\aligned-regular-02.jpg"
+      }
+    },
+    {
+      "id": "regular-03",
+      "path": "regular\\regular-03",
+      "image": {
+        "filename": "generated-regular-03.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-03\\generated-regular-03.png"
+      }
+    },
+    {
+      "id": "regular-04",
+      "path": "regular\\regular-04",
+      "image": {
+        "filename": "aligned-regular-04.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-04\\aligned-regular-04.jpg"
+      }
+    },
+    {
+      "id": "regular-05",
+      "path": "regular\\regular-05",
+      "image": {
+        "filename": "generated-regular-05.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-05\\generated-regular-05.png"
+      }
+    },
+    {
+      "id": "lockbox-02",
+      "path": "lockbox\\lockbox-02",
+      "image": {
+        "filename": "generated-lockbox-02.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\lockbox\\lockbox-02\\generated-lockbox-02.png"
+      }
+    }
+  ]
+}
