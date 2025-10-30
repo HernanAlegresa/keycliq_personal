@@ -15,6 +15,7 @@ docs/
 tests/fixtures/keys/*/
 tests/fixtures/images/
 client-dataset/
+tests/keys-optimized/
 
 # Configuration secrets
 .env
