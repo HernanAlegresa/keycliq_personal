@@ -6,7 +6,7 @@
 
 import { ProductionKeyScanV5 } from './vision/keyscan/v5/ProductionKeyScanV5.js';
 import { dataUrlToBinary } from '../utils/imageConversion.js';
-import { analyzeKeyWithHybridBalancedAI, compareHybridBalancedKeySignatures } from './ai/multimodal-keyscan.server.js';
+import { analyzeKeyWithHybridBalancedAI, compareHybridBalancedKeySignatures } from './ai/active-logic/multimodal-keyscan.server.js';
 import { analyzeKeyWithV5AI, compareV5KeySignatures, makeV5Decision } from './ai/v5/multimodal-keyscan-v5.server.js';
 import { saveMatchingResult } from './matching.server.js';
 import { prisma } from '../utils/db.server.js';
@@ -205,47 +205,58 @@ export async function processKeyImageV6(imageDataURL, inventory = [], userId = n
     if (inventory && inventory.length > 0) {
       console.log(`🔍 Comparing against ${inventory.length} keys in inventory...`);
       
-      let bestMatch = null;
-      let bestScore = 0;
-      let secondBestScore = 0;
+      // Collect all comparisons for efficient processing
+      const allComparisons = [];
       
       // Comparar con cada llave del inventario
       for (const inventoryItem of inventory) {
         if (!inventoryItem.signature) continue;
         
         const comparison = compareHybridBalancedKeySignatures(querySignature, inventoryItem.signature);
-        
-        if (comparison.similarity > bestScore) {
-          secondBestScore = bestScore;
-          bestScore = comparison.similarity;
-          bestMatch = {
-            keyId: inventoryItem.key.id,
-            similarity: comparison.similarity,
-            matchType: comparison.matchType,
-            details: comparison.details
-          };
-        } else if (comparison.similarity > secondBestScore) {
-          secondBestScore = comparison.similarity;
-        }
+        allComparisons.push({
+          keyId: inventoryItem.key.id,
+          signature: inventoryItem.signature,
+          similarity: comparison.similarity,
+          matchType: comparison.matchType,
+          details: comparison.details
+        });
       }
       
-      if (bestMatch) {
+      // Sort by similarity descending
+      allComparisons.sort((a, b) => b.similarity - a.similarity);
+      
+      if (allComparisons.length > 0) {
+        const bestMatch = allComparisons[0];
+        const bestScore = bestMatch.similarity;
+        const secondBestScore = allComparisons.length > 1 ? allComparisons[1].similarity : 0;
         const margin = bestScore - secondBestScore;
-        const isConfidentMatch = margin >= 0.1; // 10% margin for confidence
         
         console.log(`📊 Best match: ${(bestScore * 100).toFixed(1)}% similarity, margin: ${(margin * 100).toFixed(1)}%`);
         
-        // Determinar decisión final con thresholds optimizados para mejor matching
+        // V6 Decision Logic: similarity === 1.0 is MATCH_FOUND
         let decision = 'NO_MATCH';
         let matchType = 'NO_MATCH';
         
-        if (bestScore >= 0.55 && isConfidentMatch) {
-          decision = 'MATCH';
-          matchType = 'MATCH_FOUND';
-        } else if (bestScore >= 0.45) {
-          decision = 'POSSIBLE';
-          matchType = 'POSSIBLE_MATCH';
+        if (bestScore === 1.0) {
+          // Check how many perfect matches we have
+          const perfectMatches = allComparisons.filter(c => c.similarity === 1.0);
+          
+          if (perfectMatches.length > 1) {
+            // Multiple perfect matches → POSSIBLE_KEYS
+            decision = 'POSSIBLE';
+            matchType = 'POSSIBLE_KEYS';
+            bestMatch.candidates = perfectMatches.map(m => ({
+              keyId: m.keyId,
+              similarity: m.similarity,
+              matchType: m.matchType
+            }));
+          } else if (perfectMatches.length === 1) {
+            // Single perfect match → MATCH_FOUND
+            decision = 'MATCH';
+            matchType = 'MATCH_FOUND';
+          }
         } else {
+          // Not a perfect match → NO_MATCH
           decision = 'NO_MATCH';
           matchType = 'NO_MATCH';
         }
@@ -253,7 +264,7 @@ export async function processKeyImageV6(imageDataURL, inventory = [], userId = n
         // Guardar matching result
         if (userId && keyQueryId) {
           try {
-            const matchedSignature = inventory.find(item => item.key.id === bestMatch.keyId)?.signature;
+            const matchedSignature = bestMatch.signature;
             await saveMatchingResult({
               userId,
               keyQueryId,
@@ -276,18 +287,25 @@ export async function processKeyImageV6(imageDataURL, inventory = [], userId = n
           }
         }
         
+        // Return result with candidates if POSSIBLE_KEYS
+        const resultDetails = {
+          keyId: bestMatch.keyId,
+          similarity: bestScore,
+          margin: margin,
+          matchType: bestMatch.matchType,
+          details: bestMatch.details
+        };
+        
+        if (bestMatch.candidates) {
+          resultDetails.candidates = bestMatch.candidates;
+        }
+        
         return {
           success: true,
           decision: decision,
           match: decision === 'MATCH',
           confidence: bestScore * 100,
-          details: {
-            keyId: bestMatch.keyId,
-            similarity: bestScore,
-            margin: margin,
-            matchType: bestMatch.matchType,
-            details: bestMatch.details
-          },
+          details: resultDetails,
           processingTime: Date.now() - startTime
         };
       }
