@@ -1,0 +1,17 @@
+{
+  "keyId": "lockbox-06",
+  "imageType": "aligned",
+  "imageName": "aligned-lockbox-06.jpg",
+  "signature": {
+    "number_of_cuts": 5,
+    "blade_profile": "single-sided",
+    "groove_count": 1,
+    "key_color": "silver",
+    "bow_shape": "round",
+    "has_bow_text": true,
+    "unique_mark": false,
+    "confidence_score": 0.95
+  },
+  "timestamp": "2025-10-30T02:10:21.633Z",
+  "extracted": true
+}

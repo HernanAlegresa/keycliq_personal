@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyCliq V6 - Test IN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #006209 0%, #004d07 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 98, 9, 0.3);
+        }
+
+        .header h1 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .summary-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-section h2 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            color: #006209;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .summary-boxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #006209;
+            text-align: center;
+        }
+
+        .summary-box h3 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            color: #006209;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .summary-box .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .status-perfect {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-good {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .status-failed {
+            background: #dc3545;
+            color: white;
+        }
+
+        .query-section, .inventory-section, .results-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .query-section h3, .inventory-section h3, .results-section h3 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            color: #006209;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .query-image {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .query-image img {
+            max-width: 300px;
+            max-height: 200px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .query-image p {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .inventory-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .inventory-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .inventory-item img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .inventory-item .key-id {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #006209;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .results-table th, .results-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .results-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #006209;
+        }
+
+        .similarity-cell {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .similarity-perfect {
+            color: #28a745;
+        }
+
+        .similarity-good {
+            color: #ffc107;
+        }
+
+        .similarity-failed {
+            color: #dc3545;
+        }
+
+        .match-type {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .match-found {
+            background: #28a745;
+            color: white;
+        }
+
+        .no-match {
+            background: #dc3545;
+            color: white;
+        }
+
+        .keys-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .key-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .key-details h4 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            color: #006209;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .key-details img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .parameter-table th, .parameter-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .parameter-table th {
+            background: #e9ecef;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .weighted-breakdown {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .weighted-breakdown h5 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            color: #006209;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #dee2e6;
+            margin-top: 30px;
+        }
+
+        .footer a {
+            color: #006209;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KeyCliq V6 - Test IN</h1>
+            <div class="subtitle">Key in Inventory Test</div>
+        </div>
+
+        <div class="summary-section">
+            <h2>Test Summary</h2>
+            <div class="summary-boxes" id="summary-boxes">
+                <!-- Will be populated by JavaScript -->
+            </div>
+            <div id="status-badge" class="status-badge">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="query-section">
+            <h3>Query Key</h3>
+            <div class="query-image">
+                <img id="query-image" alt="Query Key" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZjBmMGYwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZTBlMGUwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9InVybCgjYSkiLz48dGV4dCB4PSI1MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiPkltYWdlIG5vdCBmb3VuZDwvdGV4dD48L3N2Zz4=';">
+                <p id="query-image-name"><strong>Image:</strong> Loading...</p>
+            </div>
+            <div id="query-parameters">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="inventory-section">
+            <h3>Inventory Keys (15)</h3>
+            <div class="inventory-grid" id="inventory-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h3>Comparison Results (15)</h3>
+            <div id="comparisons-container">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="footer">
+            <a href="test-in-001/data.json" target="_blank">View JSON Data</a>
+            <a href="test-in-001/manifest.json" target="_blank">View Manifest</a>
+            <a href="index.html">Back to Index</a>
+        </div>
+    </div>
+
+    <script>
+        async function loadTestData() {
+            try {
+                const [data, manifest] = await Promise.all([
+                    fetch('test-in-001/data.json').then(r => r.json()),
+                    fetch('test-in-001/manifest.json').then(r => r.json())
+                ]);
+
+                // Populate summary boxes
+                const summaryBoxes = document.getElementById('summary-boxes');
+                const matches = data.comparisons.filter(c => c.similarity >= 0.95).length;
+                const noMatches = data.comparisons.length - matches;
+                const topSimilarity = Math.max(...data.comparisons.map(c => c.similarity));
+                
+                summaryBoxes.innerHTML = `
+                    <div class="summary-box">
+                        <h3>Test Result</h3>
+                        <div class="value">${data.result}</div>
+                    </div>
+                    <div class="summary-box">
+                        <h3>Matches Found</h3>
+                        <div class="value">${matches}/15</div>
+                    </div>
+                    <div class="summary-box">
+                        <h3>No Matches</h3>
+                        <div class="value">${noMatches}/15</div>
+                    </div>
+                    <div class="summary-box">
+                        <h3>Top Similarity</h3>
+                        <div class="value">${(topSimilarity * 100).toFixed(1)}%</div>
+                    </div>
+                    <div class="summary-box">
+                        <h3>Seed</h3>
+                        <div class="value">${manifest.seed}</div>
+                    </div>
+                    <div class="summary-box">
+                        <h3>Engine</h3>
+                        <div class="value">${manifest.extraction_engine}</div>
+                    </div>
+                `;
+
+                // Status badge
+                const statusBadge = document.getElementById('status-badge');
+                statusBadge.textContent = `Status: ${data.result}`;
+                statusBadge.className = `status-badge status-${data.result.toLowerCase()}`;
+
+                // Query image and parameters
+                document.getElementById('query-image').src = manifest.queryKey.image.relativePath;
+                document.getElementById('query-image-name').innerHTML = `<strong>Image:</strong> ${manifest.queryKey.image.filename}`;
+                
+                const queryParams = document.getElementById('query-parameters');
+                queryParams.innerHTML = `
+                    <h4 style="font-family: 'Raleway', sans-serif; font-weight: bold; color: #006209; margin-bottom: 15px;">Extracted Parameters</h4>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Object.entries(data.querySignature.parameters || {}).map(([key, value]) => {
+                                const val = (value && typeof value === 'object' && 'value' in value) ? value.value : value;
+                                const conf = (value && typeof value === 'object' && 'confidence' in value) ? value.confidence : 'N/A';
+                                return `<tr><td>${key}</td><td>${val}</td><td>${conf}</td></tr>`;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+
+                // Inventory grid
+                const inventoryGrid = document.getElementById('inventory-grid');
+                inventoryGrid.innerHTML = manifest.inventoryKeys.map((key, index) => `
+                    <div class="inventory-item" onclick="document.getElementById('comparison-${index}').scrollIntoView({behavior: 'smooth'})">
+                        <img src="${key.image.relativePath}" alt="Key ${index + 1}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA4MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAiIGhlaWdodD0iNjAiIGZpbGw9IiNmMGYwZjAiLz48dGV4dCB4PSI0MCIgeT0iMzAiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5vIGltYWdlPC90ZXh0Pjwvc3ZnPg==';">
+                        <div class="key-id">${key.id}</div>
+                    </div>
+                `).join('');
+
+                // Comparisons
+                const comparisonsContainer = document.getElementById('comparisons-container');
+                comparisonsContainer.innerHTML = data.comparisons.map((comp, index) => {
+                    const similarityClass = comp.similarity >= 0.95 ? 'similarity-perfect' : 
+                                          comp.similarity >= 0.8 ? 'similarity-good' : 'similarity-failed';
+                    const matchClass = comp.similarity >= 0.95 ? 'match-found' : 'no-match';
+                    const matchText = comp.similarity >= 0.95 ? 'MATCH_FOUND' : 'NO_MATCH';
+                    
+                    const queryParams = data.querySignature.parameters || {};
+                    const invParams = data.inventorySignatures[index].parameters || {};
+                    const matches = comp.parameterMatches || {};
+                    
+                    return `
+                        <div class="comparison-item" id="comparison-${index}" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e9ecef;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <h4 style="font-family: 'Raleway', sans-serif; font-weight: bold; color: #006209; font-size: 1.3rem; margin: 0;">Comparison ${index + 1}</h4>
+                                <div style="display: flex; gap: 15px; align-items: center;">
+                                    <span class="similarity-cell ${similarityClass}" style="font-size: 1.2rem; font-weight: bold;">${comp.similarity.toFixed(3)}</span>
+                                    <span class="match-type ${matchClass}" style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">${matchText}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="keys-comparison" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 25px;">
+                                <div class="key-details">
+                                    <h4>Query Key</h4>
+                                    <img src="${manifest.queryKey.image.relativePath}" alt="Query" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDIwMCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiNmMGYwZjAiLz48dGV4dCB4PSIxMDAiIHk9Ijc1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5vIGltYWdlPC90ZXh0Pjwvc3ZnPg==';">
+                                    <table class="parameter-table">
+                                        <thead>
+                                            <tr><th>Parameter</th><th>Value</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            ${Object.entries(queryParams).map(([k, v]) => {
+                                                const val = (v && typeof v === 'object' && 'value' in v) ? v.value : v;
+                                                return `<tr><td>${k}</td><td>${val}</td></tr>`;
+                                            }).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="key-details">
+                                    <h4>Inventory Key ${index + 1}</h4>
+                                    <img src="${manifest.inventoryKeys[index].image.relativePath}" alt="Inventory ${index + 1}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDIwMCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiNmMGYwZjAiLz48dGV4dCB4PSIxMDAiIHk9Ijc1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5vIGltYWdlPC90ZXh0Pjwvc3ZnPg==';">
+                                    <table class="parameter-table">
+                                        <thead>
+                                            <tr><th>Parameter</th><th>Value</th><th>Match</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            ${Object.entries(queryParams).map(([k, v]) => {
+                                                const qv = (v && typeof v === 'object' && 'value' in v) ? v.value : v;
+                                                const iv0 = invParams[k];
+                                                const iv = (iv0 && typeof iv0 === 'object' && 'value' in iv0) ? iv0.value : iv0;
+                                                const match = matches[k] ? '✓' : '✗';
+                                                return `<tr><td>${k}</td><td>${iv}</td><td style="text-align: center; font-weight: bold; color: ${match === '✓' ? '#28a745' : '#dc3545'}">${match}</td></tr>`;
+                                            }).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="weighted-breakdown">
+                                <h5>Weighted Breakdown</h5>
+                                <div>${Object.entries(comp.weightedBreakdown || {}).map(([param, weight]) => 
+                                    `${param}: ${(weight * 100).toFixed(1)}%`
+                                ).join(', ')}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading test data:', error);
+                document.body.innerHTML = '<div style="padding: 50px; text-align: center; color: #dc3545;"><h2>Error loading test data</h2><p>Please check that the JSON files exist and are accessible.</p></div>';
+            }
+        }
+
+        // Load data when page loads
+        loadTestData();
+    </script>
+</body>
+</html>

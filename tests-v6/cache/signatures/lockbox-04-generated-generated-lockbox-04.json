@@ -1,0 +1,17 @@
+{
+  "keyId": "lockbox-04",
+  "imageType": "generated",
+  "imageName": "generated-lockbox-04.png",
+  "signature": {
+    "number_of_cuts": 5,
+    "blade_profile": "single-sided",
+    "groove_count": 1,
+    "key_color": "silver",
+    "bow_shape": "rectangular",
+    "has_bow_text": true,
+    "unique_mark": true,
+    "confidence_score": 0.95
+  },
+  "timestamp": "2025-10-30T03:29:20.070Z",
+  "extracted": true
+}

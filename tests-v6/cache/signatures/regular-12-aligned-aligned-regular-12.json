@@ -1,0 +1,17 @@
+{
+  "keyId": "regular-12",
+  "imageType": "aligned",
+  "imageName": "aligned-regular-12.jpg",
+  "signature": {
+    "number_of_cuts": 5,
+    "blade_profile": "single-sided",
+    "groove_count": 1,
+    "key_color": "brass",
+    "bow_shape": "rectangular",
+    "has_bow_text": true,
+    "unique_mark": false,
+    "confidence_score": 0.95
+  },
+  "timestamp": "2025-10-30T02:09:09.679Z",
+  "extracted": true
+}

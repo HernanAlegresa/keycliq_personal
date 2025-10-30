@@ -1,0 +1,152 @@
+{
+  "testId": "test-out-001",
+  "testType": "OUT",
+  "seed": 43,
+  "timestamp": "2025-10-29T19:40:17.949Z",
+  "queryKey": {
+    "id": "regular-06",
+    "path": "regular\\regular-06",
+    "image": {
+      "filename": "aligned-regular-06.jpg",
+      "type": "aligned",
+      "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-06\\aligned-regular-06.jpg"
+    }
+  },
+  "inventoryKeys": [
+    {
+      "id": "regular-07",
+      "path": "regular\\regular-07",
+      "image": {
+        "filename": "aligned-regular-07.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-07\\aligned-regular-07.jpg"
+      }
+    },
+    {
+      "id": "regular-08",
+      "path": "regular\\regular-08",
+      "image": {
+        "filename": "generated-regular-08.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-08\\generated-regular-08.png"
+      }
+    },
+    {
+      "id": "regular-09",
+      "path": "regular\\regular-09",
+      "image": {
+        "filename": "aligned-regular-09.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-09\\aligned-regular-09.jpg"
+      }
+    },
+    {
+      "id": "regular-12",
+      "path": "regular\\regular-12",
+      "image": {
+        "filename": "generated-regular-12.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-12\\generated-regular-12.png"
+      }
+    },
+    {
+      "id": "regular-13",
+      "path": "regular\\regular-13",
+      "image": {
+        "filename": "aligned-regular-13.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-13\\aligned-regular-13.jpg"
+      }
+    },
+    {
+      "id": "regular-15",
+      "path": "regular\\regular-15",
+      "image": {
+        "filename": "generated-regular-15.png",
+        "type": "generated",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-15\\generated-regular-15.png"
+      }
+    },
+    {
+      "id": "regular-16",
+      "path": "regular\\regular-16",
+      "image": {
+        "filename": "aligned-regular-16.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-16\\aligned-regular-16.jpg"
+      }
+    },
+    {
+      "id": "regular-17",
+      "path": "regular\\regular-17",
+      "image": {
+        "filename": "aligned-regular-17.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-17\\aligned-regular-17.jpg"
+      }
+    },
+    {
+      "id": "regular-18",
+      "path": "regular\\regular-18",
+      "image": {
+        "filename": "aligned-regular-18.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-18\\aligned-regular-18.jpg"
+      }
+    },
+    {
+      "id": "regular-19",
+      "path": "regular\\regular-19",
+      "image": {
+        "filename": "aligned-regular-19.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-19\\aligned-regular-19.jpg"
+      }
+    },
+    {
+      "id": "regular-21",
+      "path": "regular\\regular-21",
+      "image": {
+        "filename": "aligned-regular-21.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-21\\aligned-regular-21.jpg"
+      }
+    },
+    {
+      "id": "regular-22",
+      "path": "regular\\regular-22",
+      "image": {
+        "filename": "aligned-regular-22.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-22\\aligned-regular-22.jpg"
+      }
+    },
+    {
+      "id": "regular-23",
+      "path": "regular\\regular-23",
+      "image": {
+        "filename": "aligned-regular-23.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-23\\aligned-regular-23.jpg"
+      }
+    },
+    {
+      "id": "regular-24",
+      "path": "regular\\regular-24",
+      "image": {
+        "filename": "aligned-regular-24.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-24\\aligned-regular-24.jpg"
+      }
+    },
+    {
+      "id": "regular-25",
+      "path": "regular\\regular-25",
+      "image": {
+        "filename": "aligned-regular-25.jpg",
+        "type": "aligned",
+        "relativePath": "..\\..\\..\\..\\keys-optimized\\regular\\regular-25\\aligned-regular-25.jpg"
+      }
+    }
+  ]
+}

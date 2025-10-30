@@ -1,0 +1,17 @@
+{
+  "keyId": "regular-17",
+  "imageType": "aligned",
+  "imageName": "aligned-regular-17.jpg",
+  "signature": {
+    "number_of_cuts": 6,
+    "blade_profile": "single-sided",
+    "groove_count": 1,
+    "key_color": "silver",
+    "bow_shape": "rectangular",
+    "has_bow_text": true,
+    "unique_mark": false,
+    "confidence_score": 0.95
+  },
+  "timestamp": "2025-10-30T02:10:11.051Z",
+  "extracted": true
+}

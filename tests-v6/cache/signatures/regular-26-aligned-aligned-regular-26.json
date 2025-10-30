@@ -1,0 +1,17 @@
+{
+  "keyId": "regular-26",
+  "imageType": "aligned",
+  "imageName": "aligned-regular-26.jpg",
+  "signature": {
+    "number_of_cuts": 5,
+    "blade_profile": "single-sided",
+    "groove_count": 1,
+    "key_color": "silver",
+    "bow_shape": "rectangular",
+    "has_bow_text": true,
+    "unique_mark": true,
+    "confidence_score": 0.95
+  },
+  "timestamp": "2025-10-30T03:19:39.956Z",
+  "extracted": true
+}

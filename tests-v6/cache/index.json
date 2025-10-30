@@ -1,0 +1,29 @@
+{
+  "created": "2025-10-30T01:12:28.238Z",
+  "totalImages": 3,
+  "successful": 3,
+  "failed": 0,
+  "images": [
+    {
+      "keyId": "lockbox-02",
+      "imageType": "aligned",
+      "imageName": "aligned-lockbox-02.jpg",
+      "extracted": true,
+      "error": null
+    },
+    {
+      "keyId": "lockbox-02",
+      "imageType": "generated",
+      "imageName": "generated-lockbox-02.png",
+      "extracted": true,
+      "error": null
+    },
+    {
+      "keyId": "lockbox-03",
+      "imageType": "aligned",
+      "imageName": "aligned-lockbox-03.jpg",
+      "extracted": true,
+      "error": null
+    }
+  ]
+}

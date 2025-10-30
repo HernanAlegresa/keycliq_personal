@@ -1,0 +1,17 @@
+{
+  "keyId": "lockbox-03",
+  "imageType": "aligned",
+  "imageName": "aligned-lockbox-03.jpg",
+  "signature": {
+    "number_of_cuts": 5,
+    "blade_profile": "single-sided",
+    "groove_count": 2,
+    "key_color": "brass",
+    "bow_shape": "round",
+    "has_bow_text": true,
+    "unique_mark": true,
+    "confidence_score": 0.95
+  },
+  "timestamp": "2025-10-30T01:12:26.232Z",
+  "extracted": true
+}

@@ -59,7 +59,7 @@ EXTRACTION GUIDELINES:
 - blade_profile: Use general categories (single-sided, double-sided, flat, curved)
 - groove_count: Count parallel grooves on the blade precisely
 - key_color: Use general color categories (silver, brass, gold, bronze, copper)
-- bow_shape: Use general shapes (round, square, rectangular, oval, hexagonal)
+- bow_shape: Use general shapes (round, rectangular) - hexagonal maps to rectangular
 - has_bow_text: TRUE if any text/code is visible on bow, FALSE if none, null if unclear
 - unique_mark: TRUE if any distinctive mark/tape/stain/paint, FALSE if none, null if unclear
 
@@ -111,7 +111,6 @@ export async function analyzeKeyWithHybridBalancedAI(imageBuffer, mimeType = 'im
         });
         
         const rawResponse = response.choices[0].message.content;
-    console.log('📝 Raw AI response:', rawResponse);
 
     // Extract JSON from response
     const jsonMatch = rawResponse.match(/```json\n([\s\S]*?)\n```/);
@@ -120,14 +119,12 @@ export async function analyzeKeyWithHybridBalancedAI(imageBuffer, mimeType = 'im
     }
 
     const jsonString = jsonMatch[1];
-    console.log('🔍 Extracted JSON:', jsonString);
 
     const parsedData = JSON.parse(jsonString);
-    console.log('📊 Raw signature:', parsedData);
 
     // Validate with schema
     const validatedSignature = HybridBalancedKeySignatureSchema.parse(parsedData);
-    console.log('✅ Validated signature:', validatedSignature);
+    console.log('✅ Signature validated successfully');
     
     return {
       success: true,
@@ -150,8 +147,6 @@ export async function analyzeKeyWithHybridBalancedAI(imageBuffer, mimeType = 'im
  */
 export function compareHybridBalancedKeySignatures(signature1, signature2) {
   console.log('🔍 Comparing Hybrid Balanced signatures...');
-  console.log('Signature 1:', signature1);
-  console.log('Signature 2:', signature2);
 
   // Balanced parameter weights
   const parameterWeights = {
@@ -171,64 +166,52 @@ export function compareHybridBalancedKeySignatures(signature1, signature2) {
   Object.entries(parameterWeights).forEach(([param, weight]) => {
     const val1 = signature1[param];
     const val2 = signature2[param];
-    
-    console.log(`Comparing ${param}: "${val1}" vs "${val2}"`);
+
     
     // Handle null values
     if (val1 === null && val2 === null) {
-      console.log(`✅ Both null - MATCH for ${param}`);
       totalWeight += weight;
       weightedMatches += weight;
       return;
     }
     
     if (val1 === null || val2 === null) {
-      console.log(`❌ One null - NO MATCH for ${param}`);
       totalWeight += weight;
       return;
     }
     
     // Both have values - compare with tolerance for specific parameters
     if (param === 'number_of_cuts') {
-      // Tolerance for number_of_cuts (±1 difference)
+      // Tolerance for number_of_cuts (±1 difference) - binary match
       const diff = Math.abs(parseInt(val1) - parseInt(val2));
-      if (diff === 0) {
-        console.log(`✅ Exact match for ${param}`);
+      if (diff <= 1) {
         totalWeight += weight;
-        weightedMatches += weight;
-      } else if (diff === 1) {
-        console.log(`⚠️ Close match for ${param} (tolerance: ±1)`);
-        totalWeight += weight;
-        weightedMatches += weight * 0.8; // 80% similarity for close match
+        weightedMatches += weight; // 1.0 similarity for tolerance match
       } else {
-        console.log(`❌ No match for ${param} (diff: ${diff})`);
         totalWeight += weight;
       }
     } else if (param === 'bow_shape') {
-      // Tolerance for bow_shape (similar shapes)
-      const shape1 = val1.toLowerCase();
-      const shape2 = val2.toLowerCase();
+      // Normalize bow_shape: hexagonal → rectangular
+      const normalizeShape = (shape) => {
+        const normalized = shape.toLowerCase();
+        return normalized === 'hexagonal' ? 'rectangular' : normalized;
+      };
+      
+      const shape1 = normalizeShape(val1);
+      const shape2 = normalizeShape(val2);
       
       if (shape1 === shape2) {
-        console.log(`✅ Exact match for ${param}`);
         totalWeight += weight;
         weightedMatches += weight;
-      } else if (areSimilarShapes(shape1, shape2)) {
-        console.log(`⚠️ Similar shapes for ${param}`);
-        totalWeight += weight;
-        weightedMatches += weight * 0.7; // 70% similarity for similar shapes
       } else {
-        console.log(`❌ No match for ${param}`);
         totalWeight += weight;
       }
     } else {
       // Exact match for other parameters
       if (val1 === val2) {
-        console.log(`✅ Exact match for ${param}`);
         totalWeight += weight;
         weightedMatches += weight;
       } else {
-        console.log(`❌ No match for ${param}`);
         totalWeight += weight;
       }
     }
@@ -237,12 +220,10 @@ export function compareHybridBalancedKeySignatures(signature1, signature2) {
   const similarity = totalWeight > 0 ? weightedMatches / totalWeight : 0;
   console.log(`📊 Final similarity: ${(similarity * 100).toFixed(1)}%`);
 
-  // Balanced thresholds
+  // New threshold: only 1.0 is MATCH_FOUND
   let matchType;
-  if (similarity >= 0.92) {
+  if (similarity === 1.0) {
       matchType = 'MATCH_FOUND';
-  } else if (similarity >= 0.80) {
-      matchType = 'POSSIBLE_MATCH';
   } else {
     matchType = 'NO_MATCH';
     }
@@ -260,21 +241,4 @@ export function compareHybridBalancedKeySignatures(signature1, signature2) {
   };
 }
 
-/**
- * Helper function to determine if shapes are similar
- */
-function areSimilarShapes(shape1, shape2) {
-  const similarShapes = [
-    ['rectangular', 'rectangular-wide', 'rectangular-narrow'],
-    ['round', 'round-small', 'round-large'],
-    ['square', 'square-small', 'square-large']
-  ];
-  
-  for (const group of similarShapes) {
-    if (group.includes(shape1) && group.includes(shape2)) {
-      return true;
-    }
-  }
-  
-  return false;
-}
+// (removed unused helper areSimilarShapes)
