@@ -1,12 +1,30 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization to prevent crashes if key is missing
+let resend;
+function getResend() {
+  if (!resend) {
+    const apiKey = process.env.RESEND_API_KEY || process.env.SENDGRID_API_KEY;
+    if (!apiKey) {
+      console.warn('⚠️ No email API key configured. Email functionality disabled.');
+      return null;
+    }
+    resend = new Resend(apiKey);
+  }
+  return resend;
+}
 
 export async function sendPasswordResetEmail(email, resetToken) {
   const resetUrl = `${process.env.APP_URL}/reset-password?token=${resetToken}`;
   
+  const emailClient = getResend();
+  if (!emailClient) {
+    console.error('Cannot send email: No email API configured');
+    throw new Error('Email service not configured');
+  }
+  
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await emailClient.emails.send({
       from: `${process.env.MAIL_FROM_NAME} <${process.env.MAIL_FROM_ADDRESS}>`,
       to: [email],
       subject: 'Reset your KeyCliq password',
