@@ -34,6 +34,15 @@ export const meta = () => ([
   { name: "viewport", content: "width=device-width, initial-scale=1" },
 ]);
 
+// Prevent HTML caching to ensure users always get the latest version
+export const headers = () => {
+  return {
+    "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+    "Pragma": "no-cache",
+    "Expires": "0",
+  };
+};
+
 export default function App() {
   const matches = useMatches();
   
