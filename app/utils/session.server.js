@@ -114,12 +114,29 @@ export function destroySession(session, request = null) {
 
 
 export async function createUserSession(userId, redirectTo, request = null) {
-const cookieHeader = request ? request.headers.get("Cookie") : null;
-const session = await getSession(cookieHeader, request);
-const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
-await prisma.session.create({ data: { userId, expiration: expires } });
-session.set("userId", userId);
-return redirect(redirectTo, { headers: { "Set-Cookie": await commitSession(session, request) } });
+  try {
+    const cookieHeader = request ? request.headers.get("Cookie") : null;
+    const session = await getSession(cookieHeader, request);
+    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+    
+    // Create database session record
+    await prisma.session.create({ data: { userId, expiration: expires } });
+    
+    session.set("userId", userId);
+    const cookieString = await commitSession(session, request);
+    
+    return redirect(redirectTo, { headers: { "Set-Cookie": cookieString } });
+  } catch (error) {
+    // Log detailed error for debugging
+    console.error("Error in createUserSession:", {
+      error: error.message,
+      stack: error.stack,
+      userId,
+      hasRequest: !!request,
+      protocol: request ? (request.headers.get("X-Forwarded-Proto") || new URL(request.url).protocol) : "unknown"
+    });
+    throw error; // Re-throw to let Remix handle it properly
+  }
 }
 
 
