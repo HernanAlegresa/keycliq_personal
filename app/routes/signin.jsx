@@ -19,6 +19,17 @@ export async function loader({ request }) {
 }
 
 export async function action({ request }) {
+  // Force HTTPS redirect in production (for POST requests)
+  if (process.env.NODE_ENV === "production") {
+    const url = new URL(request.url);
+    const protocol = request.headers.get("X-Forwarded-Proto") || url.protocol.slice(0, -1);
+    
+    if (protocol === "http") {
+      url.protocol = "https:";
+      return redirect(url.toString(), 307); // 307 preserves POST method
+    }
+  }
+
   const form = await request.formData();
   const email = String(form.get("email") || "").trim();
   const password = String(form.get("password") || "");
