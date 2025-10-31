@@ -10,7 +10,7 @@ export const handle = {
 
 export async function loader({ request }) {
   // If already authenticated, redirect to home
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request.headers.get("Cookie"), request);
   const userId = session.get("userId");
   if (userId) return redirect("/");
   return json({});

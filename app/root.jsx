@@ -1,5 +1,6 @@
 // app/root.jsx
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useMatches } from "@remix-run/react";
+import { redirect } from "@remix-run/node";
 import tailwind from "./styles/tailwind.css?url";
 import globalsCss from "./styles/globals.css?url";
 import componentsCss from "./styles/components.css?url";
@@ -42,6 +43,27 @@ export const headers = () => {
     "Expires": "0",
   };
 };
+
+// Force HTTPS redirect in production (Heroku handles SSL termination)
+// Heroku sets X-Forwarded-Proto header, so we check that instead of the direct connection
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  
+  // In production, check X-Forwarded-Proto header (Heroku proxy)
+  // In development, check the actual protocol
+  const protocol = 
+    process.env.NODE_ENV === "production"
+      ? request.headers.get("X-Forwarded-Proto") || url.protocol.slice(0, -1)
+      : url.protocol.slice(0, -1);
+  
+  // Redirect HTTP to HTTPS in production
+  if (process.env.NODE_ENV === "production" && protocol === "http") {
+    url.protocol = "https:";
+    return redirect(url.toString(), 301);
+  }
+  
+  return null;
+}
 
 export default function App() {
   const matches = useMatches();

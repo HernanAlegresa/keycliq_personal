@@ -6,31 +6,114 @@ const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) throw new Error("SESSION_SECRET must be set");
 
 
-export const { getSession, commitSession, destroySession } =
-createCookieSessionStorage({
-cookie: {
-name: "__session",
-httpOnly: true,
-path: "/",
-sameSite: "lax",
-secrets: [sessionSecret],
-secure: process.env.NODE_ENV === "production",
-maxAge: 60 * 60 * 24 * 30,
-},
-});
+// Helper to detect if request is HTTPS (works behind Heroku proxy)
+function isSecure(request) {
+  if (process.env.NODE_ENV !== "production") {
+    return false; // Allow non-secure cookies in development
+  }
+  
+  // In production, check X-Forwarded-Proto header (set by Heroku's SSL termination)
+  // This ensures cookies work correctly behind the proxy
+  const forwardedProto = request.headers.get("X-Forwarded-Proto");
+  if (forwardedProto === "https") {
+    return true;
+  }
+  
+  // Fallback: check the URL protocol directly
+  const url = new URL(request.url);
+  return url.protocol === "https:";
+}
+
+export function createSessionStorage(request) {
+  return createCookieSessionStorage({
+    cookie: {
+      name: "__session",
+      httpOnly: true,
+      path: "/",
+      sameSite: "lax",
+      secrets: [sessionSecret],
+      secure: isSecure(request),
+      maxAge: 60 * 60 * 24 * 30,
+    },
+  });
+}
+
+// Legacy export for backward compatibility (updates secure flag based on request)
+export function getSession(cookieHeader, request = null) {
+  // If request is provided, use dynamic session storage
+  if (request) {
+    const { getSession } = createSessionStorage(request);
+    return getSession(cookieHeader);
+  }
+  
+  // Fallback: create default session storage (for cases without request)
+  const { getSession } = createCookieSessionStorage({
+    cookie: {
+      name: "__session",
+      httpOnly: true,
+      path: "/",
+      sameSite: "lax",
+      secrets: [sessionSecret],
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 30,
+    },
+  });
+  return getSession(cookieHeader);
+}
+
+export function commitSession(session, request = null) {
+  if (request) {
+    const { commitSession } = createSessionStorage(request);
+    return commitSession(session);
+  }
+  
+  const { commitSession } = createCookieSessionStorage({
+    cookie: {
+      name: "__session",
+      httpOnly: true,
+      path: "/",
+      sameSite: "lax",
+      secrets: [sessionSecret],
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 30,
+    },
+  });
+  return commitSession(session);
+}
+
+export function destroySession(session, request = null) {
+  if (request) {
+    const { destroySession } = createSessionStorage(request);
+    return destroySession(session);
+  }
+  
+  const { destroySession } = createCookieSessionStorage({
+    cookie: {
+      name: "__session",
+      httpOnly: true,
+      path: "/",
+      sameSite: "lax",
+      secrets: [sessionSecret],
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 30,
+    },
+  });
+  return destroySession(session);
+}
 
 
-export async function createUserSession(userId, redirectTo) {
-const session = await getSession();
+export async function createUserSession(userId, redirectTo, request = null) {
+const cookieHeader = request ? request.headers.get("Cookie") : null;
+const session = await getSession(cookieHeader, request);
 const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
 await prisma.session.create({ data: { userId, expiration: expires } });
 session.set("userId", userId);
-return redirect(redirectTo, { headers: { "Set-Cookie": await commitSession(session) } });
+return redirect(redirectTo, { headers: { "Set-Cookie": await commitSession(session, request) } });
 }
 
 
 export async function requireUserId(request) {
-const session = await getSession(request.headers.get("Cookie"));
+const session = await getSession(request.headers.get("Cookie"), request);
 const userId = session.get("userId");
 if (!userId) throw redirect("/welcome");
 return userId;
@@ -38,7 +121,7 @@ return userId;
 
 
 export async function logout(request) {
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request.headers.get("Cookie"), request);
   const userId = session.get("userId");
   
   // Clean up database session if userId exists
@@ -53,6 +136,6 @@ export async function logout(request) {
   }
   
   return redirect("/welcome", { 
-    headers: { "Set-Cookie": await destroySession(session) } 
+    headers: { "Set-Cookie": await destroySession(session, request) } 
   });
 }

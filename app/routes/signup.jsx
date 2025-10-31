@@ -12,7 +12,7 @@ export const handle = {
 };
 
 export async function loader({ request }) {
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request.headers.get("Cookie"), request);
   const userId = session.get("userId");
   if (userId) return redirect("/");
   return json({});
@@ -37,7 +37,7 @@ export async function action({ request }) {
 
   try {
     const user = await register(email, password);
-    return createUserSession(user.id, "/");
+    return createUserSession(user.id, "/", request);
   } catch (error) {
     if (error.code === "P2002") {
       return json({ errors: { email: "Email already exists" } }, { status: 400 });

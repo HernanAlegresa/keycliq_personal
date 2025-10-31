@@ -12,7 +12,7 @@ export const handle = {
 };
 
 export async function loader({ request }) {
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request.headers.get("Cookie"), request);
   const userId = session.get("userId");
   if (userId) return redirect("/");
   return json({});
@@ -37,7 +37,7 @@ export async function action({ request }) {
     return json({ errors: { general: "Invalid email or password" } }, { status: 400 });
   }
 
-  return createUserSession(user.id, "/");
+  return createUserSession(user.id, "/", request);
 }
 
 export default function SignIn() {
