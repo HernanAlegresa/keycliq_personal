@@ -1,9 +1,10 @@
-import { Link } from "@remix-run/react";
 import { json } from "@remix-run/node";
 
 export const handle = {
   hideFooter: true,
   title: "Privacy Policy - KeyCliq",
+  showBackButton: true,
+  backTo: '/',
 };
 
 export async function loader() {
@@ -255,16 +256,6 @@ export default function PrivacyPolicy() {
               </a>
             </p>
           </section>
-        </div>
-
-        {/* Footer Navigation */}
-        <div className="legal-footer">
-          <Link to="/" className="legal-back-link">
-            ← Back to Home
-          </Link>
-          <Link to="/terms-of-use" className="legal-related-link">
-            View Terms of Use
-          </Link>
         </div>
       </div>
     </div>

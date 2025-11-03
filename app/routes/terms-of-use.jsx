@@ -4,6 +4,8 @@ import { json } from "@remix-run/node";
 export const handle = {
   hideFooter: true,
   title: "Terms of Use - KeyCliq",
+  showBackButton: true,
+  backTo: '/',
 };
 
 export async function loader() {
@@ -202,16 +204,6 @@ export default function TermsOfUse() {
               4605 Crysler Ave. Unit 4 Niagara Falls Ontario Canada L2E3V6
             </p>
           </section>
-        </div>
-
-        {/* Footer Navigation */}
-        <div className="legal-footer">
-          <Link to="/" className="legal-back-link">
-            ← Back to Home
-          </Link>
-          <Link to="/privacy-policy" className="legal-related-link">
-            View Privacy Policy
-          </Link>
         </div>
       </div>
     </div>
