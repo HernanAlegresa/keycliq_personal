@@ -3,7 +3,6 @@ import { useNavigate } from "@remix-run/react";
 import { useRef, useState, useEffect } from "react";
 import { requireUserId } from "../utils/session.server.js";
 import { Button } from "../components/ui/Button.jsx";
-import { CameraPlaceholder } from "../components/ui/CameraPlaceholder.jsx";
 import { ScanGuidelines } from "../components/ui/ScanGuidelines.jsx";
 import { fileToDataURL } from "../utils/imageUtils.js";
 
@@ -22,14 +21,40 @@ export async function loader({ request }) {
 
 export default function ScanCapture() {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
+  const uploadInputRef = useRef(null);
+  const actionSelectorRef = useRef(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showGuidelines, setShowGuidelines] = useState(false);
+  const [showActionSelector, setShowActionSelector] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
+  // Detect if we're on desktop
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files?.[0];
+  // Close action selector when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (actionSelectorRef.current && !actionSelectorRef.current.contains(event.target)) {
+        setShowActionSelector(false);
+      }
+    };
+
+    if (showActionSelector) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showActionSelector]);
+
+  const handleFileUpload = async (file) => {
     if (!file) return;
 
     // Validate file
@@ -45,6 +70,7 @@ export default function ScanCapture() {
 
     setError(null);
     setIsLoading(true);
+    setShowActionSelector(false);
 
     try {
       // Convert file to data URL for better persistence
@@ -65,40 +91,92 @@ export default function ScanCapture() {
     }
   };
 
-  const handleScan = () => {
-    // Always show guidelines when user clicks scan
-    setShowGuidelines(true);
+  const handleCameraInputChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) handleFileUpload(file);
   };
 
-  const handleGuidelinesClose = () => {
-    setShowGuidelines(false);
-    // Open file picker when user closes guidelines
-    setTimeout(() => {
-      fileInputRef.current?.click();
-    }, 100);
+  const handleGalleryInputChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) handleFileUpload(file);
+  };
+
+  const handleUploadInputChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) handleFileUpload(file);
+  };
+
+  const handleScanClick = () => {
+    setShowActionSelector(!showActionSelector);
+  };
+
+  const handleTakePhoto = () => {
+    cameraInputRef.current?.click();
+  };
+
+  const handleChooseFromGallery = () => {
+    galleryInputRef.current?.click();
+  };
+
+  const handleUploadFile = () => {
+    uploadInputRef.current?.click();
   };
 
   return (
     <div className="scan-capture">
-      {/* Camera Area */}
-      <CameraPlaceholder />
-      
-      {/* Hint Text */}
-      <p className="scan-capture__hint">
-        Place the key on a light background. Align with the frame.
-      </p>
+      {/* Inline Scan Guidelines */}
+      <ScanGuidelines />
 
       {/* Actions */}
       <div className="scan-capture__actions">
-        <Button
-          variant="primary"
-          size="large"
-          onClick={handleScan}
-          disabled={isLoading}
-          className="w-full py-3 rounded-2xl"
-        >
-          SCAN
-        </Button>
+        <div className="scan-capture__action-wrapper" ref={actionSelectorRef}>
+          <Button
+            variant="primary"
+            size="large"
+            onClick={handleScanClick}
+            disabled={isLoading}
+            className="w-full py-3 rounded-2xl"
+          >
+            SCAN
+          </Button>
+
+          {/* Action Selector Popover */}
+          {showActionSelector && (
+            <div className="scan-action-selector">
+              <button
+                type="button"
+                onClick={handleTakePhoto}
+                className="scan-action-selector__option"
+                disabled={isLoading}
+              >
+                <span className="scan-action-selector__icon">📸</span>
+                <span className="scan-action-selector__text">Take a Photo</span>
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleChooseFromGallery}
+                className="scan-action-selector__option"
+                disabled={isLoading}
+              >
+                <span className="scan-action-selector__icon">🖼️</span>
+                <span className="scan-action-selector__text">Choose from Gallery</span>
+              </button>
+
+              {isDesktop && (
+                <button
+                  type="button"
+                  onClick={handleUploadFile}
+                  className="scan-action-selector__option"
+                  disabled={isLoading}
+                >
+                  <span className="scan-action-selector__icon">📁</span>
+                  <span className="scan-action-selector__text">Upload File</span>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
 
         {error && (
           <p className="text-red-600 text-sm text-center" role="alert">
@@ -107,23 +185,34 @@ export default function ScanCapture() {
         )}
       </div>
 
-      {/* Hidden file input */}
+      {/* Hidden file inputs */}
       <input
-        ref={fileInputRef}
+        ref={cameraInputRef}
         type="file"
         accept="image/*"
         capture="environment"
-        onChange={handleFileUpload}
+        onChange={handleCameraInputChange}
         className="scan-capture__file-input"
-        aria-label="Scan a key image"
+        aria-label="Take a photo"
       />
 
-      {/* Scan Guidelines Modal */}
-      {showGuidelines && (
-        <ScanGuidelines 
-          onClose={handleGuidelinesClose}
-        />
-      )}
+      <input
+        ref={galleryInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleGalleryInputChange}
+        className="scan-capture__file-input"
+        aria-label="Choose from gallery"
+      />
+
+      <input
+        ref={uploadInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleUploadInputChange}
+        className="scan-capture__file-input"
+        aria-label="Upload file"
+      />
     </div>
   );
 }
