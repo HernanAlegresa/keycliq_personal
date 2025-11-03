@@ -262,11 +262,11 @@
 }
 
 .scan-capture {
-  padding: 16px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   min-height: calc(100dvh - 56px);
-  gap: 24px;
+  gap: 12px;
   overflow-y: auto;
 }
 
@@ -1375,19 +1375,8 @@
   background: var(--color-background);
 }
 
-.key-details__header-actions {
-  position: fixed;
-  top: 50%; /* Centrado verticalmente perfecto */
-  transform: translateY(-50%);
-  right: 16px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  height: 56px; /* Altura del header para referencia de centrado */
-}
-
-.key-details__edit-button,
-.key-details__cancel-button {
+.key-details__edit-button-header,
+.key-details__cancel-button-header {
   background: var(--color-primary);
   color: var(--color-white);
   border: none;
@@ -1398,18 +1387,22 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px; /* Same height as back button for alignment */
 }
 
-.key-details__edit-button:hover,
-.key-details__cancel-button:hover {
+.key-details__edit-button-header:hover,
+.key-details__cancel-button-header:hover {
   background: var(--color-primary-dark);
 }
 
-.key-details__cancel-button {
+.key-details__cancel-button-header {
   background: var(--color-muted);
 }
 
-.key-details__cancel-button:hover {
+.key-details__cancel-button-header:hover {
   background: #6b7280;
 }
 
