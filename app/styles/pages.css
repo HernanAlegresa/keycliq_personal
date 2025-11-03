@@ -1427,8 +1427,7 @@
   object-fit: contain;
   object-position: center;
   border-radius: 12px;
-  box-shadow: var(--shadow-md);
-  background: var(--color-white);
+  background: transparent;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
