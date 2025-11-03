@@ -42,7 +42,6 @@ export function ScanGuidelines() {
       <div className="scan-guidelines__card">
         {/* Header */}
         <div className="scan-guidelines__header">
-          <div className="scan-guidelines__header-icon">💡</div>
           <h2 className="scan-guidelines__header-title">Scanning Tips</h2>
         </div>
 
