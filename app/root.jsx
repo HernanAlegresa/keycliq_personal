@@ -65,8 +65,9 @@ export async function loader({ request }) {
   return null;
 }
 
-export default function App() {
+function AppContent() {
   const matches = useMatches();
+  const { rightSlot: dynamicRightSlot } = useHeader();
   
   // Find if any route wants to hide footer or has custom header
   const currentMatch = matches[matches.length - 1];
@@ -86,25 +87,37 @@ export default function App() {
     )
   ) : null;
 
+  // Use dynamic rightSlot if available, otherwise use stepLabel from handle
+  const rightSlot = dynamicRightSlot || headerProps?.stepLabel;
+
+  return (
+    <>
+      {!shouldHideHeader && (
+        <Header 
+          title={headerProps?.title || "KeyCliq"}
+          leftSlot={leftSlot}
+          rightSlot={rightSlot}
+        />
+      )}
+      
+      {/* Page content */}
+      <main className={shouldHideFooter ? "" : "container stack with-bottombar"}>
+        <Outlet />
+      </main>
+
+      {!shouldHideFooter && <FooterNav />}
+    </>
+  );
+}
+
+export default function App() {
   return (
     <html lang="en">
       <head><Meta /><Links /></head>
       <body>
-        {!shouldHideHeader && (
-          <Header 
-            title={headerProps?.title || "KeyCliq"}
-            leftSlot={leftSlot}
-            rightSlot={headerProps?.stepLabel}
-          />
-        )}
-        
-        {/* Page content */}
-        <main className={shouldHideFooter ? "" : "container stack with-bottombar"}>
-          <Outlet />
-        </main>
-
-        {!shouldHideFooter && <FooterNav />}
-
+        <HeaderProvider>
+          <AppContent />
+        </HeaderProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

@@ -26,7 +26,11 @@ export function Header({ title = "KeyCliq", leftSlot, rightSlot, children }) {
           
           <div className="topbar__right">
             {rightSlot && (
-              <span className="topbar__step-label">{rightSlot}</span>
+              typeof rightSlot === 'string' ? (
+                <span className="topbar__step-label">{rightSlot}</span>
+              ) : (
+                rightSlot
+              )
             )}
           </div>
         </div>

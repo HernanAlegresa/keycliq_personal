@@ -5,6 +5,7 @@ import { requireUserId } from "../utils/session.server.js";
 import { getKeyById, createKey, updateKey, deleteKey, validateKeyData } from "../lib/keys.server.js";
 import { Button } from "../components/ui/Button.jsx";
 import { ImageModal } from "../components/ui/ImageModal.jsx";
+import { useHeader } from "../contexts/HeaderContext.jsx";
 
 export const handle = { 
   hideFooter: true, 
@@ -154,6 +155,7 @@ export default function KeyDetails() {
   const actionData = useActionData();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+  const { setRightSlot } = useHeader();
 
   // Initialize form data based on whether it's a new key or existing
   const initialFormData = isNewKey ? {
@@ -222,6 +224,41 @@ export default function KeyDetails() {
     }
   }, [actionData?.success, isNewKey, formData]);
 
+  // Update header rightSlot with Edit/Cancel button
+  useEffect(() => {
+    if (!isNewKey) {
+      if (!isEditing) {
+        setRightSlot(
+          <button
+            className="key-details__edit-button-header"
+            onClick={() => setIsEditing(true)}
+          >
+            Edit
+          </button>
+        );
+      } else {
+        setRightSlot(
+          <button
+            className="key-details__cancel-button-header"
+            onClick={() => {
+              setFormData(originalData);
+              setIsEditing(false);
+              setHasChanges(false);
+            }}
+          >
+            Cancel
+          </button>
+        );
+      }
+    } else {
+      setRightSlot(null);
+    }
+
+    // Cleanup: clear rightSlot when component unmounts
+    return () => setRightSlot(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNewKey, isEditing, setRightSlot]);
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -261,30 +298,6 @@ export default function KeyDetails() {
 
 return (
     <div className="key-details">
-      {/* Edit button in the top right corner */}
-      <div className="key-details__header-actions">
-        {!isNewKey && !isEditing && (
-          <button
-            className="key-details__edit-button"
-            onClick={() => setIsEditing(true)}
-          >
-            Edit
-          </button>
-        )}
-        {!isNewKey && isEditing && (
-          <button
-            className="key-details__cancel-button"
-            onClick={() => {
-              setFormData(originalData);
-              setIsEditing(false);
-              setHasChanges(false);
-            }}
-          >
-            Cancel
-          </button>
-        )}
-      </div>
-
       {/* Main content */}
       <div className="key-details__content">
         {/* Key Image */}

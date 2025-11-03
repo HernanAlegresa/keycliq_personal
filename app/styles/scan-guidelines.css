@@ -16,27 +16,26 @@
 .scan-guidelines__list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .scan-guidelines__item {
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
   background-color: #f8f9fa;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   transition: all 0.2s ease;
 }
 
 .scan-guidelines__item:hover {
   background-color: #e8f5e9;
-  transform: translateX(4px);
 }
 
 .scan-guidelines__icon {
-  font-size: 2rem;
+  font-size: 1.5rem;
   line-height: 1;
   flex-shrink: 0;
 }
@@ -48,36 +47,19 @@
 .scan-guidelines__item-title {
   font-family: 'Raleway', sans-serif;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   color: #1a1a1a;
-  margin: 0 0 0.25rem 0;
-}
-
-.scan-guidelines__item-description {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 0.875rem;
-  color: #666;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 /* Visual Example */
 .scan-guidelines__example {
-  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  border: 2px solid #c8e6c9;
-}
-
-.scan-guidelines__example-label {
-  font-family: 'Raleway', sans-serif;
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: #006209;
+  background: transparent;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
   margin-bottom: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  border: none;
 }
 
 .scan-guidelines__example-image {
@@ -88,42 +70,29 @@
 
 .scan-guidelines__key-image {
   width: 100%;
-  max-width: 300px;
+  max-width: 100%;
   height: auto;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
-
-.scan-guidelines__key-image:hover {
-  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive */
 @media (max-width: 640px) {
   .scan-guidelines__item {
-    padding: 0.875rem;
-    gap: 0.75rem;
+    padding: 0.5rem 0.625rem;
+    gap: 0.625rem;
   }
 
   .scan-guidelines__icon {
-    font-size: 1.75rem;
+    font-size: 1.375rem;
   }
 
   .scan-guidelines__item-title {
-    font-size: 0.9375rem;
-  }
-
-  .scan-guidelines__item-description {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
   }
 
   .scan-guidelines__example {
-    padding: 1rem;
-  }
-
-  .scan-guidelines__key-image {
-    max-width: 250px;
+    padding: 0.25rem;
   }
 }
 
