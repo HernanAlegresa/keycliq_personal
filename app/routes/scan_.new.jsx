@@ -60,21 +60,6 @@ export default function ScanNoMatch() {
     <div className="scan-no-match">
       {/* Main content */}
       <div className="scan-no-match__content">
-        {/* Special message for first key */}
-        {isFirstKey && scanMessage && (
-          <div style={{ 
-            padding: '12px 16px', 
-            backgroundColor: '#dbeafe', 
-            borderRadius: '8px', 
-            marginBottom: '16px',
-            textAlign: 'center'
-          }}>
-            <p style={{ color: '#1e40af', fontSize: '0.95rem', margin: 0 }}>
-              ­ƒÄë {scanMessage}
-            </p>
-          </div>
-        )}
-        
         {/* Title and No Match Icon */}
         <div className="scan-no-match__header">
           <h1 className="scan-no-match__title">{isFirstKey ? 'Add Your First Key' : 'No Match Found'}</h1>
