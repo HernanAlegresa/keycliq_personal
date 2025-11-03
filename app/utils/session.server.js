@@ -8,20 +8,31 @@ if (!sessionSecret) throw new Error("SESSION_SECRET must be set");
 
 // Helper to detect if request is HTTPS (works behind Heroku proxy)
 function isSecure(request) {
+  if (!request) {
+    // If no request object, assume secure in production (defensive)
+    return process.env.NODE_ENV === "production";
+  }
+  
   if (process.env.NODE_ENV !== "production") {
     return false; // Allow non-secure cookies in development
   }
   
-  // In production, check X-Forwarded-Proto header (set by Heroku's SSL termination)
-  // This ensures cookies work correctly behind the proxy
+  // In production on Heroku, check X-Forwarded-Proto header first
+  // This is set by Heroku's SSL termination layer
   const forwardedProto = request.headers.get("X-Forwarded-Proto");
   if (forwardedProto === "https") {
     return true;
   }
   
   // Fallback: check the URL protocol directly
-  const url = new URL(request.url);
-  return url.protocol === "https:";
+  try {
+    const url = new URL(request.url);
+    return url.protocol === "https:";
+  } catch (e) {
+    // If URL parsing fails, default to secure in production (defensive)
+    console.warn("Failed to parse request URL for HTTPS detection:", e);
+    return true;
+  }
 }
 
 export function createSessionStorage(request) {
@@ -103,12 +114,29 @@ export function destroySession(session, request = null) {
 
 
 export async function createUserSession(userId, redirectTo, request = null) {
-const cookieHeader = request ? request.headers.get("Cookie") : null;
-const session = await getSession(cookieHeader, request);
-const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
-await prisma.session.create({ data: { userId, expiration: expires } });
-session.set("userId", userId);
-return redirect(redirectTo, { headers: { "Set-Cookie": await commitSession(session, request) } });
+  try {
+    const cookieHeader = request ? request.headers.get("Cookie") : null;
+    const session = await getSession(cookieHeader, request);
+    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+    
+    // Create database session record
+    await prisma.session.create({ data: { userId, expiration: expires } });
+    
+    session.set("userId", userId);
+    const cookieString = await commitSession(session, request);
+    
+    return redirect(redirectTo, { headers: { "Set-Cookie": cookieString } });
+  } catch (error) {
+    // Log detailed error for debugging
+    console.error("Error in createUserSession:", {
+      error: error.message,
+      stack: error.stack,
+      userId,
+      hasRequest: !!request,
+      protocol: request ? (request.headers.get("X-Forwarded-Proto") || new URL(request.url).protocol) : "unknown"
+    });
+    throw error; // Re-throw to let Remix handle it properly
+  }
 }
 
 
