@@ -14,6 +14,7 @@ import { Header } from "./components/layout/Header";
 import { FooterNav } from "./components/layout/FooterNav";
 import { BackButton } from "./components/ui/BackButton";
 import { DynamicBackButton } from "./components/ui/DynamicBackButton";
+import { HeaderProvider, useHeader } from "./contexts/HeaderContext";
 
 export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
