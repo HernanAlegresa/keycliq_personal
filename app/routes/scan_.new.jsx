@@ -95,15 +95,6 @@ export default function ScanNoMatch() {
               className="scan-no-match__key-img"
             />
           </div>
-          
-          {/* Key Details */}
-          <div className="scan-no-match__key-details">
-            {/* No Match Badge */}
-            <div className="scan-no-match__no-match-badge">
-              <div className="scan-no-match__no-match-dot"></div>
-              <span className="scan-no-match__no-match-text">No Match</span>
-            </div>
-          </div>
         </div>
 
         {/* Message */}

@@ -186,7 +186,7 @@
   height: 60px;
   border-radius: 8px;
   overflow: hidden;
-  background: var(--color-light-grey);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -942,8 +942,8 @@
 }
 
 .scan-match-found__key-image {
-  width: 120px;
-  height: 120px;
+  width: 240px;
+  height: 240px;
   border-radius: 12px;
   overflow: hidden;
   background: transparent;
@@ -1084,8 +1084,8 @@
 }
 
 .scan-no-match__key-image {
-  width: 120px;
-  height: 120px;
+  width: 240px;
+  height: 240px;
   border-radius: 12px;
   overflow: hidden;
   background: transparent;
@@ -1290,7 +1290,7 @@
   height: 60px;
   border-radius: 8px;
   overflow: hidden;
-  background: var(--color-light-grey);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;

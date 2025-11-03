@@ -111,11 +111,6 @@ export default function ScanMatchFound() {
               <p className="scan-match-found__key-address">Door: {key.door}</p>
             )}
             
-            {/* Match Level Badge */}
-            <div className="scan-match-found__match-badge">
-              <div className="scan-match-found__match-dot"></div>
-              <span className="scan-match-found__match-text">{matchLevel}</span>
-            </div>
           </div>
         </div>
 
@@ -137,15 +132,6 @@ export default function ScanMatchFound() {
             className="w-full py-3 rounded-2xl"
           >
             Scan Another Key
-          </Button>
-          
-          <Button 
-            variant="secondary" 
-            size="large" 
-            onClick={handleViewAnalysis}
-            className="w-full py-3 rounded-2xl"
-          >
-            View Analysis
           </Button>
           
           <Button 
