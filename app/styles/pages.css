@@ -946,7 +946,7 @@
   height: 120px;
   border-radius: 12px;
   overflow: hidden;
-  background: var(--color-light-grey);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1088,7 +1088,7 @@
   height: 120px;
   border-radius: 12px;
   overflow: hidden;
-  background: var(--color-light-grey);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
