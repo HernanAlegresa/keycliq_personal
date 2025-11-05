@@ -6,6 +6,7 @@ import { getKeyById, createKey, updateKey, deleteKey, validateKeyData } from "..
 import { Button } from "../components/ui/Button.jsx";
 import { ImageModal } from "../components/ui/ImageModal.jsx";
 import { useHeader } from "../contexts/HeaderContext.jsx";
+import { prisma } from "../utils/db.server.js";
 
 export const handle = { 
   hideFooter: true, 
@@ -82,6 +83,47 @@ export async function action({ request, params }) {
 
     try {
       if (isNewKey) {
+        // Buscar el último KeyQuery con NO_MATCH que no tenga una KeySignature asociada
+        // Esto vincula la nueva llave con el escaneo original
+        let keyQueryId = null;
+        try {
+          const latestNoMatch = await prisma.keyMatching.findFirst({
+            where: {
+              userId,
+              matchType: 'NO_MATCH'
+            },
+            orderBy: {
+              createdAt: 'desc'
+            },
+            include: {
+              keyQuery: {
+                include: {
+                  signatures: {
+                    where: {
+                      keyId: { not: null }
+                    }
+                  }
+                }
+              }
+            }
+          });
+
+          // Si hay un NO_MATCH y su KeyQuery no tiene una KeySignature con keyId asignado,
+          // usar ese keyQueryId
+          if (latestNoMatch && latestNoMatch.keyQuery) {
+            const hasSavedSignature = latestNoMatch.keyQuery.signatures.some(
+              sig => sig.keyId !== null
+            );
+            if (!hasSavedSignature) {
+              keyQueryId = latestNoMatch.keyQuery.id;
+              console.log(`🔗 Vinculando nueva llave con KeyQuery: ${keyQueryId}`);
+            }
+          }
+        } catch (error) {
+          console.error('⚠️ Error buscando KeyQuery para vincular:', error.message);
+          // Continuar sin keyQueryId si hay error
+        }
+
         // Create new key
         const key = await createKey({
           userId,
@@ -90,7 +132,8 @@ export async function action({ request, params }) {
           unit: unit?.trim() || null,
           door: door?.trim() || null,
           notes: notes?.trim() || null,
-          imageDataUrl: imageDataUrl
+          imageDataUrl: imageDataUrl,
+          keyQueryId: keyQueryId
         });
         return redirect(`/scan/success/${key.id}`);
       } else {

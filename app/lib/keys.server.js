@@ -70,11 +70,12 @@ export async function getRecentKeys(userId, limit = 2) {
  * @param {Object} keyData - Datos de la llave
  * @param {string} keyData.userId - ID del usuario
  * @param {string} keyData.name - Nombre de la llave
- * @param {string} keyData.description - Descripci├│n opcional
+ * @param {string} keyData.description - Descripción opcional
  * @param {string} keyData.imageDataUrl - Data URL de la imagen
+ * @param {string} keyData.keyQueryId - ID del KeyQuery (opcional, para vincular con escaneo NO_MATCH)
  * @returns {Promise<Object>} Llave creada
  */
-export async function createKey({ userId, name, description, unit, door, notes, imageDataUrl }) {
+export async function createKey({ userId, name, description, unit, door, notes, imageDataUrl, keyQueryId = null }) {
   try {
     let imageUrl = null;
     let imagePublicId = null;
@@ -154,12 +155,16 @@ export async function createKey({ userId, name, description, unit, door, notes, 
         await prisma.keySignature.create({
           data: {
             keyId: key.id,
+            keyQueryId: keyQueryId, // Vincular con el KeyQuery original si viene de un escaneo
             signature: signature,
             imageUrl: imageUrl,
             confidenceScore: signature.confidence_score || 0.95
           }
         });
         console.log('✅ KeySignature creada para la llave:', key.id);
+        if (keyQueryId) {
+          console.log(`   Vinculada con KeyQuery: ${keyQueryId}`);
+        }
       } catch (error) {
         console.error('❌ Error creando KeySignature:', error);
         // No fallar la creación de la llave por esto
@@ -294,6 +299,52 @@ export async function getKeyStats(userId) {
     pending,
     ready,
     failed
+  };
+}
+
+/**
+ * Obtener estad├¡sticas completas de un usuario (llaves, queries, matchings)
+ * @param {string} userId - ID del usuario
+ * @returns {Promise<Object>} Estad├¡sticas completas
+ */
+export async function getUserStats(userId) {
+  const [keys, queries, matchings] = await Promise.all([
+    getKeyStats(userId),
+    prisma.keyQuery.count({ where: { userId } }),
+    prisma.keyMatching.groupBy({
+      by: ['matchType'],
+      where: { userId },
+      _count: {
+        matchType: true
+      }
+    })
+  ]);
+
+  // Calcular total de matchings y agrupar por tipo
+  const matchingsTotal = matchings.reduce((sum, m) => sum + m._count.matchType, 0);
+  const matchingsByType = matchings.reduce((acc, m) => {
+    acc[m.matchType] = m._count.matchType;
+    return acc;
+  }, {});
+
+  return {
+    keys: {
+      total: keys.total,
+      pending: keys.pending,
+      ready: keys.ready,
+      failed: keys.failed
+    },
+    queries: {
+      total: queries
+    },
+    matchings: {
+      total: matchingsTotal,
+      byType: {
+        MATCH_FOUND: matchingsByType.MATCH_FOUND || 0,
+        POSSIBLE_KEYS: matchingsByType.POSSIBLE_KEYS || 0,
+        NO_MATCH: matchingsByType.NO_MATCH || 0
+      }
+    }
   };
 }
 
