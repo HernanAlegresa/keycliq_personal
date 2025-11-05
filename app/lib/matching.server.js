@@ -39,6 +39,20 @@ export async function saveMatchingResult({
     console.log(`   Similarity: ${(similarity * 100).toFixed(1)}%`);
     console.log(`   Confidence: ${(confidence * 100).toFixed(1)}%`);
 
+    // Validación: MATCH_FOUND requiere matchedKeyId
+    if (matchType === 'MATCH_FOUND' && !matchedKeyId) {
+      const error = new Error('MATCH_FOUND requires matchedKeyId');
+      error.code = 'VALIDATION_ERROR';
+      throw error;
+    }
+
+    // Validación: NO_MATCH no debe tener matchedKeyId
+    if (matchType === 'NO_MATCH' && matchedKeyId) {
+      const error = new Error('NO_MATCH should not have matchedKeyId');
+      error.code = 'VALIDATION_ERROR';
+      throw error;
+    }
+
     const matching = await prisma.keyMatching.create({
       data: {
         userId,
