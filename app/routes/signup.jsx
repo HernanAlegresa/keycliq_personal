@@ -50,9 +50,31 @@ export async function action({ request }) {
     const user = await register(email, password);
     return createUserSession(user.id, "/", request);
   } catch (error) {
+    console.error("Signup error:", error);
+    
+    // Error de Prisma: email duplicado
     if (error.code === "P2002") {
       return json({ errors: { email: "Email already exists" } }, { status: 400 });
     }
+    
+    // Error de Prisma: tabla no existe o schema desincronizado
+    if (error.code === "P2021" || error.code === "P2025") {
+      console.error("Database schema error:", error.message);
+      return json({ 
+        errors: { general: "Database error. Please contact support." } 
+      }, { status: 500 });
+    }
+    
+    // Otros errores de Prisma
+    if (error.code && error.code.startsWith("P")) {
+      console.error("Prisma error:", error.code, error.message);
+      return json({ 
+        errors: { general: "Database error. Please try again." } 
+      }, { status: 500 });
+    }
+    
+    // Error general
+    console.error("Unexpected signup error:", error.message, error.stack);
     return json({ errors: { general: "Something went wrong. Please try again." } }, { status: 500 });
   }
 }
