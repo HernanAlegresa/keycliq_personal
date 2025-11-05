@@ -57,6 +57,8 @@ model Key {
   matchings     KeyMatching[]
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, sigStatus])
+  @@index([createdAt])
   @@map("keys")
 }
 
@@ -72,6 +74,7 @@ model KeySignature {
   key             Key?      @relation(fields: [keyId], references: [id], onDelete: Cascade)
   keyQuery        KeyQuery? @relation(fields: [keyQueryId], references: [id], onDelete: Cascade)
 
+  @@index([keyId, createdAt(sort: Desc)])
   @@map("key_signatures")
 }
 
@@ -87,6 +90,8 @@ model KeyQuery {
   signatures KeySignature[]
   matchings  KeyMatching[]
 
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([createdAt])
   @@map("key_queries")
 }
 
@@ -107,6 +112,8 @@ model KeyMatching {
   keyQuery         KeyQuery @relation(fields: [keyQueryId], references: [id], onDelete: Cascade)
   matchedKey       Key?     @relation(fields: [matchedKeyId], references: [id], onDelete: SetNull)
 
+  @@index([userId, matchType])
+  @@index([createdAt])
   @@map("key_matchings")
 }
 

@@ -298,6 +298,52 @@ export async function getKeyStats(userId) {
 }
 
 /**
+ * Obtener estad├¡sticas completas de un usuario (llaves, queries, matchings)
+ * @param {string} userId - ID del usuario
+ * @returns {Promise<Object>} Estad├¡sticas completas
+ */
+export async function getUserStats(userId) {
+  const [keys, queries, matchings] = await Promise.all([
+    getKeyStats(userId),
+    prisma.keyQuery.count({ where: { userId } }),
+    prisma.keyMatching.groupBy({
+      by: ['matchType'],
+      where: { userId },
+      _count: {
+        matchType: true
+      }
+    })
+  ]);
+
+  // Calcular total de matchings y agrupar por tipo
+  const matchingsTotal = matchings.reduce((sum, m) => sum + m._count.matchType, 0);
+  const matchingsByType = matchings.reduce((acc, m) => {
+    acc[m.matchType] = m._count.matchType;
+    return acc;
+  }, {});
+
+  return {
+    keys: {
+      total: keys.total,
+      pending: keys.pending,
+      ready: keys.ready,
+      failed: keys.failed
+    },
+    queries: {
+      total: queries
+    },
+    matchings: {
+      total: matchingsTotal,
+      byType: {
+        MATCH_FOUND: matchingsByType.MATCH_FOUND || 0,
+        POSSIBLE_KEYS: matchingsByType.POSSIBLE_KEYS || 0,
+        NO_MATCH: matchingsByType.NO_MATCH || 0
+      }
+    }
+  };
+}
+
+/**
  * Validar datos de llave
  * @param {Object} data - Datos a validar
  * @returns {Object} { isValid: boolean, errors: Array }
