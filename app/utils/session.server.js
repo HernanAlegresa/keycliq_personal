@@ -141,10 +141,45 @@ export async function createUserSession(userId, redirectTo, request = null) {
 
 
 export async function requireUserId(request) {
-const session = await getSession(request.headers.get("Cookie"), request);
-const userId = session.get("userId");
-if (!userId) throw redirect("/welcome");
-return userId;
+  const session = await getSession(request.headers.get("Cookie"), request);
+  const userId = session.get("userId");
+  
+  if (!userId) {
+    throw redirect("/welcome");
+  }
+  
+  // Verificar que el usuario existe en la BD (para manejar casos después de reset de BD)
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true }
+    });
+    
+    // Si el usuario no existe, limpiar la sesión y redirigir
+    if (!user) {
+      // Limpiar sesiones de BD asociadas a este userId (si existen)
+      try {
+        await prisma.session.deleteMany({ where: { userId } });
+      } catch (error) {
+        console.error("Error cleaning up orphaned sessions:", error);
+      }
+      
+      // Destruir cookie de sesión
+      const cookieString = await destroySession(session, request);
+      throw redirect("/welcome", { headers: { "Set-Cookie": cookieString } });
+    }
+  } catch (error) {
+    // Si es un redirect, re-lanzarlo
+    if (error instanceof Response) {
+      throw error;
+    }
+    // Si hay otro error (BD, etc.), loguear y redirigir a welcome
+    console.error("Error verifying user in requireUserId:", error);
+    const cookieString = await destroySession(session, request);
+    throw redirect("/welcome", { headers: { "Set-Cookie": cookieString } });
+  }
+  
+  return userId;
 }
 
 
