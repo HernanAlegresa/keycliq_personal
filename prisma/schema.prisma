@@ -91,21 +91,21 @@ model KeyQuery {
 }
 
 model KeyMatching {
-  id              String    @id @default(cuid())
-  userId          String
-  keyQueryId      String
-  matchedKeyId    String?
-  matchType       String    // MATCH_FOUND, POSSIBLE_MATCH, NO_MATCH
-  similarity      Float
-  confidence      Float
-  querySignature  Json      // Signature of the scanned key
-  matchedSignature Json?    // Signature of the matched key (if any)
-  comparisonResult Json?    // Detailed comparison results
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  keyQuery        KeyQuery  @relation(fields: [keyQueryId], references: [id], onDelete: Cascade)
-  matchedKey      Key?      @relation(fields: [matchedKeyId], references: [id], onDelete: SetNull)
+  id               String   @id @default(cuid())
+  userId           String
+  keyQueryId       String
+  matchedKeyId     String?
+  matchType        String // MATCH_FOUND, POSSIBLE_MATCH, NO_MATCH
+  similarity       Float
+  confidence       Float
+  querySignature   Json // Signature of the scanned key
+  matchedSignature Json? // Signature of the matched key (if any)
+  comparisonResult Json? // Detailed comparison results
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  keyQuery         KeyQuery @relation(fields: [keyQueryId], references: [id], onDelete: Cascade)
+  matchedKey       Key?     @relation(fields: [matchedKeyId], references: [id], onDelete: SetNull)
 
   @@map("key_matchings")
 }
