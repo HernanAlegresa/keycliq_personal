@@ -35,28 +35,49 @@ export async function action({ request }) {
     
     // 2. Obtener inventario del usuario (solo llaves con signature ready)
     const startInventory = Date.now();
-    const userKeys = await getUserKeys(userId);
-    
-    // Para V6, necesitamos obtener las KeySignatures relacionadas
-    const inventory = [];
-    for (const key of userKeys) {
-      if (key.sigStatus === 'ready') {
-        // Buscar la KeySignature más reciente para esta llave
-        const keySignature = await prisma.keySignature.findFirst({
-          where: { keyId: key.id },
-          orderBy: { createdAt: 'desc' }
-        });
-        
-        if (keySignature && keySignature.signature) {
-          inventory.push({
+    const userKeys = await getUserKeys(userId, '', {
+      select: {
+        id: true,
+        sigStatus: true,
+      },
+    });
+
+    const readyKeys = userKeys.filter((key) => key.sigStatus === 'ready');
+
+    let inventory = [];
+    if (readyKeys.length > 0) {
+      const latestSignatures = await prisma.keySignature.findMany({
+        where: {
+          keyId: { in: readyKeys.map((key) => key.id) },
+          signature: { not: null },
+        },
+        orderBy: { createdAt: 'desc' },
+        distinct: ['keyId'],
+        select: {
+          keyId: true,
+          signature: true,
+        },
+      });
+
+      const signatureMap = new Map(
+        latestSignatures.map((item) => [item.keyId, item.signature])
+      );
+
+      inventory = readyKeys
+        .map((key) => {
+          const signature = signatureMap.get(key.id);
+          if (!signature) {
+            return null;
+          }
+          return {
             key: {
               id: key.id,
               type: 'Regular',
             },
-            signature: keySignature.signature
-          });
-        }
-      }
+            signature,
+          };
+        })
+        .filter(Boolean);
     }
     
     const inventoryTime = Date.now() - startInventory;

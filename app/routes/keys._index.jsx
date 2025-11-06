@@ -3,6 +3,7 @@ import { useNavigate, useLoaderData, useSearchParams } from "@remix-run/react";
 import { useState, useMemo } from "react";
 import { requireUserId } from "../utils/session.server.js";
 import { getUserKeys, getKeyStats } from "../lib/keys.server.js";
+import { buildOptimizedCloudinaryUrl } from "../utils/imageUtils.js";
 
 export const handle = { 
   hideFooter: false, 
@@ -108,18 +109,30 @@ export default function KeysInventory() {
       <div className="keys-inventory__content">
         {filteredKeys.length > 0 ? (
           <div className="keys-inventory__list">
-            {filteredKeys.map((key) => (
+            {filteredKeys.map((key) => {
+              const optimizedImageUrl = key.imageUrl
+                ? buildOptimizedCloudinaryUrl(key.imageUrl, {
+                    width: 480,
+                    height: 320,
+                    crop: "fill",
+                  })
+                : null;
+
+              return (
               <div
                 key={key.id}
                 className="keys-inventory__item"
                 onClick={() => handleKeyClick(key.id)}
               >
                 <div className="keys-inventory__item-image">
-                  {key.imageUrl ? (
+                  {optimizedImageUrl ? (
                     <img
-                      src={`/api/key-image/${key.id}`}
+                      src={optimizedImageUrl}
                       alt={key.name}
                       className="keys-inventory__item-img"
+                      loading="lazy"
+                      decoding="async"
+                      sizes="(max-width: 768px) 100vw, 520px"
                     />
                   ) : (
                     <div className="keys-inventory__item-placeholder">
@@ -141,7 +154,8 @@ export default function KeysInventory() {
                   </div> */}
                 </div>
               </div>
-          ))}
+          );
+        })}
         </div>
         ) : (
           <div className="keys-inventory__empty">

@@ -1,5 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 import brandmarkLogo from "../../assets/KeyCliq_Brandmark_TwoTone_Dark.png";
+import { buildOptimizedCloudinaryUrl } from "../../utils/imageUtils.js";
 
 /**
  * RecentKeys component for Homepage
@@ -36,19 +37,31 @@ export function RecentKeys({ keys = [], isEmpty = true }) {
     <div className="recent-keys">
       <h2 className="recent-keys__title">Recent Keys</h2>
       <div className="recent-keys__list">
-        {keys.map((key) => (
+        {keys.map((key) => {
+          const optimizedImageUrl = key.imageUrl
+            ? buildOptimizedCloudinaryUrl(key.imageUrl, {
+                width: 360,
+                height: 240,
+                crop: "fill",
+              })
+            : null;
+
+          return (
           <div
             key={key.id}
             className="recent-keys__item"
             onClick={() => handleKeyClick(key.id)}
           >
             <div className="recent-keys__item-image">
-              {key.imageUrl ? (
+                {optimizedImageUrl ? (
                 <img
-                  src={`/api/key-image/${key.id}`}
-                  alt={key.name}
-                  className="recent-keys__item-img"
-                />
+                    src={optimizedImageUrl}
+                    alt={key.name}
+                    className="recent-keys__item-img"
+                    loading="lazy"
+                    decoding="async"
+                    sizes="(max-width: 768px) 45vw, 240px"
+                  />
               ) : (
                 <div className="recent-keys__item-placeholder">
                   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,7 +75,8 @@ export function RecentKeys({ keys = [], isEmpty = true }) {
               <p className="recent-keys__item-property">{key.description || "Sin descripción"}</p>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

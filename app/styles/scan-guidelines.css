@@ -94,6 +94,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .scan-guidelines__key-image {
@@ -102,6 +104,34 @@
   height: auto;
   border-radius: 6px;
   border: 2px solid #1a1a1a;
+}
+
+.scan-guidelines__image-skeleton {
+  position: absolute;
+  inset: 6px;
+  border-radius: 4px;
+  background: linear-gradient(110deg, #f3f4f6 8%, #e5e7eb 18%, #f3f4f6 33%);
+  background-size: 200% 100%;
+  animation: scan-guidelines-skeleton 1.4s ease infinite;
+  transition: opacity 200ms ease;
+}
+
+.scan-guidelines__image-skeleton[aria-hidden="true"] {
+  pointer-events: none;
+}
+
+.scan-guidelines__image-skeleton.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes scan-guidelines-skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Responsive */

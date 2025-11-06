@@ -6,9 +6,11 @@ import { extractSignatureV6 } from "./keyscan.server.js";
  * Obtener todas las llaves de un usuario
  * @param {string} userId - ID del usuario
  * @param {string} search - T├®rmino de b├║squeda opcional
+ * @param {Object} options - Opciones para customizar la carga
+ * @param {Object|null} options.select - Selección personalizada de campos de Prisma
  * @returns {Promise<Array>} Lista de llaves
  */
-export async function getUserKeys(userId, search = "") {
+export async function getUserKeys(userId, search = "", options = {}) {
   const where = {
     userId,
     ...(search && {
@@ -19,10 +21,29 @@ export async function getUserKeys(userId, search = "") {
     })
   };
 
-  return await prisma.key.findMany({
+  const baseSelect = options.select ?? {
+    id: true,
+    name: true,
+    description: true,
+    unit: true,
+    door: true,
+    notes: true,
+    imageUrl: true,
+    imagePublicId: true,
+    sigStatus: true,
+    createdAt: true
+  };
+
+  const query = {
     where,
     orderBy: { createdAt: "desc" }
-  });
+  };
+
+  if (options.select !== null) {
+    query.select = baseSelect;
+  }
+
+  return await prisma.key.findMany(query);
 }
 
 /**
