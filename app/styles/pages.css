@@ -182,16 +182,14 @@
 }
 
 .recent-keys__item-image {
-  width: 64px;
-  height: 64px;
   flex-shrink: 0;
+  display: inline-flex;
 }
 
 .recent-keys__item-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
+  height: 56px;
+  width: auto;
+  display: block;
 }
 
 .recent-keys__item-placeholder {
@@ -1271,16 +1269,14 @@
 }
 
 .keys-inventory__item-image {
-  width: 64px;
-  height: 64px;
   flex-shrink: 0;
+  display: inline-flex;
 }
 
 .keys-inventory__item-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
+  height: 56px;
+  width: auto;
+  display: block;
 }
 
 .keys-inventory__item-content {

@@ -115,29 +115,38 @@
 }
 
 .key-image-frame {
-  border: 2px solid #1a1a1a;
-  border-radius: 12px;
-  background: #ffffff;
-  display: flex;
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  border-radius: 12px;
   overflow: hidden;
-  position: relative;
+}
+
+.key-image-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid #9ca3af;
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .key-image-frame__img {
+  display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+
+.key-image-frame__img--contain {
   object-fit: contain;
-  object-position: center;
-  display: block;
 }
 
 .key-card__image {
   width: 100%;
   height: 180px;
-  margin: 0;
-  border-radius: 12px;
+  display: flex;
 }
 
 .key-card__image-placeholder {

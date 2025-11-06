@@ -183,7 +183,7 @@ export default function ScanPossibleMatch() {
                         })
                       : "/api/placeholder/200x150"}
                     alt={candidate.name}
-                    className="possible-keys__item-img key-image-frame__img"
+                    className="possible-keys__item-img key-image-frame__img key-image-frame__img--contain"
                     loading="lazy"
                     decoding="async"
                   />
@@ -326,7 +326,7 @@ export default function ScanPossibleMatch() {
                   })
                 : "/api/placeholder/200x150"}
               alt={key.name}
-              className="scan-match-found__key-img key-image-frame__img"
+              className="scan-match-found__key-img key-image-frame__img key-image-frame__img--contain"
               loading="lazy"
               decoding="async"
             />

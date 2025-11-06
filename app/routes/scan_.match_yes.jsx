@@ -103,7 +103,7 @@ export default function ScanMatchFound() {
             <img 
               src={optimizedImageUrl}
               alt={key.name}
-              className="scan-match-found__key-img key-image-frame__img"
+              className="scan-match-found__key-img key-image-frame__img key-image-frame__img--contain"
               loading="lazy"
               decoding="async"
             />
