@@ -6,7 +6,7 @@ export function ImagePreview({ src, alt = "Key preview", className = "" }) {
         <img 
           src={src} 
           alt={alt}
-          className="image-preview__img key-image-frame__img key-image-frame__img--contain"
+          className="image-preview__img key-image-frame__img"
         />
       ) : (
         <div className="image-preview__placeholder">

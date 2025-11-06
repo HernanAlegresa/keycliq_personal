@@ -57,7 +57,7 @@ export function RecentKeys({ keys = [], isEmpty = true }) {
                 <img
                     src={optimizedImageUrl}
                     alt={key.name}
-                    className="recent-keys__item-img key-image-frame__img key-image-frame__img--contain"
+                    className="recent-keys__item-img key-image-frame__img"
                     loading="lazy"
                     decoding="async"
                     sizes="(max-width: 768px) 45vw, 240px"

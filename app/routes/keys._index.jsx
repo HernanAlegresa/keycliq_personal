@@ -129,7 +129,7 @@ export default function KeysInventory() {
                     <img
                       src={optimizedImageUrl}
                       alt={key.name}
-                      className="keys-inventory__item-img key-image-frame__img key-image-frame__img--contain"
+                      className="keys-inventory__item-img key-image-frame__img"
                       loading="lazy"
                       decoding="async"
                       sizes="(max-width: 768px) 100vw, 520px"
