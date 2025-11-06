@@ -5,7 +5,6 @@ import { requireUserId } from "../utils/session.server.js";
 import { getKeyById } from "../lib/keys.server.js";
 import { Button } from "../components/ui/Button.jsx";
 import { prisma } from "../utils/db.server.js";
-import { buildOptimizedCloudinaryUrl } from "../utils/imageUtils.js";
 
 export const handle = { 
   hideFooter: true, 
@@ -173,19 +172,17 @@ export default function ScanPossibleMatch() {
                 }}
               >
                 {/* Key Image */}
-                <div className="possible-keys__item-image key-image-frame" style={{ marginRight: '1rem', flexShrink: 0, width: '72px', height: '72px' }}>
+                <div className="possible-keys__item-image" style={{ marginRight: '1rem', flexShrink: 0 }}>
                   <img 
-                    src={candidate.imageUrl
-                      ? buildOptimizedCloudinaryUrl(candidate.imageUrl, {
-                          width: 420,
-                          height: 280,
-                          crop: "fill",
-                        })
-                      : "/api/placeholder/200x150"}
+                    src={candidate.imageUrl || "/api/placeholder/200x150"} 
                     alt={candidate.name}
-                    className="possible-keys__item-img key-image-frame__img"
-                    loading="lazy"
-                    decoding="async"
+                    style={{
+                      width: '60px',
+                      height: '60px',
+                      objectFit: 'cover',
+                      borderRadius: '0.5rem',
+                      border: '1px solid #e5e7eb'
+                    }}
                   />
                 </div>
                 
@@ -316,19 +313,11 @@ export default function ScanPossibleMatch() {
 
         {/* V4/V6 Key Card */}
         <div className="scan-match-found__key-card">
-          <div className="scan-match-found__key-image key-image-frame">
+          <div className="scan-match-found__key-image">
             <img 
-              src={key.imageUrl
-                ? buildOptimizedCloudinaryUrl(key.imageUrl, {
-                    width: 480,
-                    height: 320,
-                    crop: "fill",
-                  })
-                : "/api/placeholder/200x150"}
+              src={key.imageUrl || "/api/placeholder/200x150"} 
               alt={key.name}
-              className="scan-match-found__key-img key-image-frame__img"
-              loading="lazy"
-              decoding="async"
+              className="scan-match-found__key-img"
             />
           </div>
           

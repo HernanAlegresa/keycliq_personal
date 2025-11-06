@@ -124,12 +124,12 @@ export default function KeysInventory() {
                 className="keys-inventory__item"
                 onClick={() => handleKeyClick(key.id)}
               >
-                <div className="keys-inventory__item-image key-image-frame">
+                <div className="keys-inventory__item-image">
                   {optimizedImageUrl ? (
                     <img
                       src={optimizedImageUrl}
                       alt={key.name}
-                      className="keys-inventory__item-img key-image-frame__img"
+                      className="keys-inventory__item-img"
                       loading="lazy"
                       decoding="async"
                       sizes="(max-width: 768px) 100vw, 520px"

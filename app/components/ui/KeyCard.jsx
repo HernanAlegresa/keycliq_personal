@@ -15,20 +15,18 @@ export function KeyCard({ id, label, imageUrl }) {
       to={`/keys/${id}`}
       className="block rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md"
     >
-      <div className="key-card__image key-image-frame">
-        {optimizedImageUrl ? (
-          <img
-            src={optimizedImageUrl}
-            alt={label}
-            className="key-image-frame__img"
-            loading="lazy"
-            decoding="async"
-            sizes="(max-width: 640px) 100vw, 320px"
-          />
-        ) : (
-          <div className="key-card__image-placeholder" aria-hidden="true" />
-        )}
-      </div>
+      {optimizedImageUrl ? (
+        <img
+          src={optimizedImageUrl}
+          alt={label}
+          className="h-40 w-full rounded-t-xl object-cover"
+          loading="lazy"
+          decoding="async"
+          sizes="(max-width: 640px) 100vw, 320px"
+        />
+      ) : (
+        <div className="h-40 w-full rounded-t-xl bg-gray-100" aria-hidden="true" />
+      )}
       <div className="p-3">
         <div className="text-sm text-gray-500">Key</div>
         <div className="text-lg font-medium">{label}</div>

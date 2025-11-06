@@ -77,7 +77,7 @@ export default function ScanNoMatch() {
             <img 
               src={scannedImageUrl} 
               alt="Scanned key"
-              className="scan-no-match__key-img key-image-frame__img"
+              className="scan-no-match__key-img"
               loading="lazy"
               decoding="async"
             />
