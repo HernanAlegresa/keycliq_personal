@@ -1,12 +1,12 @@
 // app/components/ui/ImagePreview.jsx
 export function ImagePreview({ src, alt = "Key preview", className = "" }) {
   return (
-    <div className={`image-preview ${className}`}>
+    <div className={`image-preview key-image-frame ${className}`}>
       {src ? (
         <img 
           src={src} 
           alt={alt}
-          className="image-preview__img"
+          className="image-preview__img key-image-frame__img"
         />
       ) : (
         <div className="image-preview__placeholder">

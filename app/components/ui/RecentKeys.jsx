@@ -52,12 +52,12 @@ export function RecentKeys({ keys = [], isEmpty = true }) {
             className="recent-keys__item"
             onClick={() => handleKeyClick(key.id)}
           >
-            <div className="recent-keys__item-image">
+            <div className="recent-keys__item-image key-image-frame">
                 {optimizedImageUrl ? (
                 <img
                     src={optimizedImageUrl}
                     alt={key.name}
-                    className="recent-keys__item-img"
+                    className="recent-keys__item-img key-image-frame__img"
                     loading="lazy"
                     decoding="async"
                     sizes="(max-width: 768px) 45vw, 240px"

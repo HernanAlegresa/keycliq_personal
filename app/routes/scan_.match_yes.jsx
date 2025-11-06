@@ -3,6 +3,7 @@ import { useLoaderData, useNavigate } from "@remix-run/react";
 import { requireUserId } from "../utils/session.server.js";
 import { getKeyById } from "../lib/keys.server.js";
 import { Button } from "../components/ui/Button.jsx";
+import { buildOptimizedCloudinaryUrl } from "../utils/imageUtils.js";
 import { prisma } from "../utils/db.server.js";
 
 export const handle = { 
@@ -73,6 +74,14 @@ export default function ScanMatchFound() {
     }
   };
 
+  const optimizedImageUrl = key.imageUrl
+    ? buildOptimizedCloudinaryUrl(key.imageUrl, {
+        width: 480,
+        height: 320,
+        crop: "fill",
+      })
+    : "/api/placeholder/200x150";
+
   return (
     <div className="scan-match-found">
       {/* Main content */}
@@ -90,11 +99,13 @@ export default function ScanMatchFound() {
         {/* Key Card */}
         <div className="scan-match-found__key-card">
           {/* Key Image */}
-          <div className="scan-match-found__key-image">
+          <div className="scan-match-found__key-image key-image-frame">
             <img 
-              src={key.imageUrl || "/api/placeholder/200x150"} 
+              src={optimizedImageUrl}
               alt={key.name}
-              className="scan-match-found__key-img"
+              className="scan-match-found__key-img key-image-frame__img"
+              loading="lazy"
+              decoding="async"
             />
           </div>
           

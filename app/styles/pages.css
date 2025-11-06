@@ -182,14 +182,8 @@
 }
 
 .recent-keys__item-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 64px;
+  height: 64px;
   flex-shrink: 0;
 }
 
@@ -465,10 +459,10 @@
 
 /* 3) Scan Review Styles - Matching step 1 layout */
 :root {
-  --review-image-height: 280px;        /* Reduced height for better fit */
-  --review-banner-to-image-gap: 20px;  /* Reduced gap between banner and image */
-  --review-image-to-buttons-gap: 24px; /* Reduced gap between image and buttons */
-  --review-actions-gap: 16px;          /* Reduced gap between buttons */
+  --review-image-height: 320px;
+  --review-banner-to-image-gap: 28px;
+  --review-image-to-buttons-gap: 32px;
+  --review-actions-gap: 16px;
 }
 
 .scan-review {
@@ -509,7 +503,8 @@
 .scan-review__content {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   margin-bottom: var(--review-image-to-buttons-gap);
 }
 
@@ -524,15 +519,9 @@
 .image-preview {
   width: 100%;
   height: var(--review-image-height);
-  border-radius: 16px;
-  overflow: hidden;
-  border: 4px solid #000000;
-  background: var(--color-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 12px;
   margin: 0 auto;
-  max-width: 100%;
+  max-width: 340px;
 }
 
 .image-preview__img {
@@ -941,22 +930,18 @@
   box-shadow: var(--shadow-sm);
 }
 
-.scan-match-found__key-image {
+.scan-match-found__key-image,
+.scan-no-match__key-image,
+.scan-new-key__key-image {
   width: 240px;
   height: 240px;
   border-radius: 12px;
+  border: 2px solid #1a1a1a;
+  background: #ffffff;
   overflow: hidden;
-  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.scan-match-found__key-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
 }
 
 .scan-match-found__key-details {
@@ -1286,14 +1271,8 @@
 }
 
 .keys-inventory__item-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 64px;
+  height: 64px;
   flex-shrink: 0;
 }
 
@@ -1427,7 +1406,8 @@
   object-fit: contain;
   object-position: center;
   border-radius: 12px;
-  background: transparent;
+  border: 2px solid #1a1a1a;
+  background: #ffffff;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -1822,15 +1802,7 @@
 }
 
 .scan-new-key__key-image {
-  width: 120px;
-  height: 80px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  margin-bottom: 12px;
-  background: var(--color-gray-50);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
 }
 
 .scan-new-key__key-img {
