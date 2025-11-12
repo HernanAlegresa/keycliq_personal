@@ -27,7 +27,7 @@ export function ScanGuidelines() {
     },
     {
       icon: "👈",
-      title: "Handle on Left",
+      title: "Bow on Left",
       description: null,
     },
     {

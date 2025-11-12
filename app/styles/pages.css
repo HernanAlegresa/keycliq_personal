@@ -281,6 +281,13 @@
   position: relative;
 }
 
+.scan-capture__actions--top {
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: transparent;
+}
+
 .scan-capture__action-wrapper {
   position: relative;
   width: 100%;

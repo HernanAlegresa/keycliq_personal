@@ -48,7 +48,7 @@ Autenticación con `requireUserId` en loaders. La mayoría renderiza header con 
 4. **Resultados**  
    - `/scan/match_yes`: muestra llave existente con detalles.  
    - `/scan/possible`: lista candidatos cuando hay múltiples matches perfectos.  
-   - `/scan/new`: formulario para crear llave nueva (rellena firma al guardar).  
+   - `/scan/new`: formulario para crear llave nueva (rellena firma al guardar).Este es el No Match  
    - `/scan/analysis`, `/scan/error`, `/scan/invalid`: flows auxiliares/legacy para manejo de errores.
 
 ### Inventario (`/keys`)
@@ -58,6 +58,7 @@ Autenticación con `requireUserId` en loaders. La mayoría renderiza header con 
   - UI incluye buscador, filtros por propiedad y cards con imagen optimizada (Cloudinary).  
 
 - **Detalle:** `app/routes/keys.$id.jsx`  
+  - Pantalla Key Details cuando haces click en una llave
   - Muestra metadatos, imagen ampliada (`ImageModal`), notas, historial.  
   - Loader asegura propiedad de la llave.  
 
