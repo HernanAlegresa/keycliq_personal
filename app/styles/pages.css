@@ -5,7 +5,7 @@
   min-height: calc(100vh - 56px - 80px); /* Full height minus header and footer */
   display: flex;
   flex-direction: column;
-  padding: 24px 0;
+  padding: 24px 0 calc(96px + env(safe-area-inset-bottom));
 }
 
 .homepage__section {
@@ -161,6 +161,7 @@
 .recent-keys__list {
   display: grid;
   gap: 12px;
+  padding-bottom: 16px;
 }
 
 .recent-keys__item {
