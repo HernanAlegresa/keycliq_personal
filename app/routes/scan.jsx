@@ -124,11 +124,8 @@ export default function ScanCapture() {
 
   return (
     <div className="scan-capture">
-      {/* Inline Scan Guidelines */}
-      <ScanGuidelines />
-
-      {/* Actions */}
-      <div className="scan-capture__actions">
+      {/* Primary Action */}
+      <div className="scan-capture__actions scan-capture__actions--top">
         <div className="scan-capture__action-wrapper" ref={actionSelectorRef}>
           <Button
             variant="primary"
@@ -184,6 +181,9 @@ export default function ScanCapture() {
           </p>
         )}
       </div>
+
+      {/* Inline Scan Guidelines */}
+      <ScanGuidelines />
 
       {/* Hidden file inputs */}
       <input
