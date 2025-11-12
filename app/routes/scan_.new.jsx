@@ -62,6 +62,7 @@ export default function ScanNoMatch() {
       <div className="scan-no-match__content">
         {/* Title and No Match Icon */}
         <div className="scan-no-match__header">
+          <div className="scan-no-match__header-spacer" />
           <h1 className="scan-no-match__title">{isFirstKey ? 'Add Your First Key' : 'No Match Found'}</h1>
           <div className="scan-no-match__no-match-icon">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">

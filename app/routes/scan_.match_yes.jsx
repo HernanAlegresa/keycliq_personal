@@ -79,6 +79,7 @@ export default function ScanMatchFound() {
       <div className="scan-match-found__content">
         {/* Title and Success Icon */}
         <div className="scan-match-found__header">
+          <div className="scan-match-found__header-spacer" />
           <h1 className="scan-match-found__title">Match Found</h1>
           <div className="scan-match-found__success-icon">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
