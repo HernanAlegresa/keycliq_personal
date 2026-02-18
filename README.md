@@ -76,6 +76,13 @@ For best results, users should capture keys with:
 3. **ADD USER GUIDELINES** - Implement capture instructions in app
 4. **MONITOR PERFORMANCE** - Track accuracy in production
 
+## Deploy en Vercel
+
+1. Importa este repositorio en [Vercel](https://vercel.com) (Import Git Repository).
+2. Configura las **variables de entorno** en el proyecto (Settings → Environment Variables). Usa `.env.example` como referencia; mínimo: `DATABASE_URL`, `SESSION_SECRET`, `OPENAI_API_KEY`, `APP_URL`.
+3. Base de datos: usa [Vercel Postgres](https://vercel.com/storage/postgres), [Neon](https://neon.tech) o cualquier Postgres. Ejecuta `npm run db:push` o `npm run db:migrate:deploy` una vez (por ejemplo con `vercel env pull` y luego localmente, o en un job).
+4. El build usa `npm run build` (Remix); Node 20.x se toma de `package.json` engines.
+
 ## 📞 For Team Members
 
 - **Developers**: See `docs/keyscan/v4/algorithms/` for implementation
