@@ -7,16 +7,14 @@ import { useState } from "react";
  * for optimal scanning and matching results.
  * No longer a modal - displayed inline on the scan page.
  */
-const OPTIMIZED_IMAGE_BASE = "/api/scan-guide-image";
+// Static asset in public/ — no serverless filesystem; same visual behavior
+const SCAN_GUIDE_IMAGE_SRC = "/scan-guide-key.png";
 
 export function ScanGuidelines() {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
 
-  const baseImageParams = "w=720&quality=70";
-  const avifSrcSet = `${OPTIMIZED_IMAGE_BASE}?format=avif&${baseImageParams} 720w, ${OPTIMIZED_IMAGE_BASE}?format=avif&w=960&quality=65 960w`;
-  const webpSrcSet = `${OPTIMIZED_IMAGE_BASE}?format=webp&${baseImageParams} 720w, ${OPTIMIZED_IMAGE_BASE}?format=webp&w=960&quality=65 960w`;
-  const defaultSrc = `${OPTIMIZED_IMAGE_BASE}?format=jpeg&${baseImageParams}`;
+  const defaultSrc = SCAN_GUIDE_IMAGE_SRC;
   const fallbackSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='480' viewBox='0 0 720 480'%3E%3Crect width='720' height='480' fill='%23f3f4f6'/%3E%3Cpath d='M120 120h480v240H120z' fill='none' stroke='%23d1d5db' stroke-width='8' stroke-dasharray='16 18'/%3E%3Cpath d='M240 240c0-52.996 43.004-96 96-96s96 43.004 96 96-43.004 96-96 96-96-43.004-96-96z' fill='none' stroke='%239ca3af' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E";
 
   const guidelines = [
@@ -85,9 +83,7 @@ export function ScanGuidelines() {
               aria-hidden="true"
             />
             <picture>
-              <source type="image/avif" srcSet={avifSrcSet} sizes="(max-width: 768px) 100vw, 640px" />
-              <source type="image/webp" srcSet={webpSrcSet} sizes="(max-width: 768px) 100vw, 640px" />
-              <img 
+              <img
                 src={imageFailed ? fallbackSvg : defaultSrc}
                 alt="Example of properly positioned key for scanning"
                 className="scan-guidelines__key-image"

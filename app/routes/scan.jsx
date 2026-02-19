@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { useNavigate } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { useRef, useState, useEffect } from "react";
 import { requireUserId } from "../utils/session.server.js";
 import { Button } from "../components/ui/Button.jsx";
@@ -16,10 +16,12 @@ export const handle = {
 
 export async function loader({ request }) {
   await requireUserId(request);
-  return json({});
+  const demoMode = !process.env.OPENAI_API_KEY;
+  return json({ demoMode });
 }
 
 export default function ScanCapture() {
+  const { demoMode } = useLoaderData();
   const navigate = useNavigate();
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
@@ -29,6 +31,16 @@ export default function ScanCapture() {
   const [isLoading, setIsLoading] = useState(false);
   const [showActionSelector, setShowActionSelector] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [showDemoNotice, setShowDemoNotice] = useState(false);
+
+  useEffect(() => {
+    if (!demoMode) {
+      setShowDemoNotice(false);
+      return;
+    }
+    const hidden = localStorage.getItem('keycliq_hide_demo_notice') === '1';
+    setShowDemoNotice(!hidden);
+  }, [demoMode]);
 
   // Detect if we're on desktop
   useEffect(() => {
@@ -183,6 +195,41 @@ export default function ScanCapture() {
       </div>
 
       {/* Inline Scan Guidelines */}
+      {demoMode && showDemoNotice && (
+        <div
+          style={{
+            background: '#fff7ed',
+            border: '1px solid #fdba74',
+            color: '#9a3412',
+            borderRadius: '0.75rem',
+            padding: '0.9rem',
+            margin: '0.75rem 0 1rem 0'
+          }}
+        >
+          <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: 1.35 }}>
+            Demo mode: AI key scanning is disabled (no OpenAI API key configured). Scan results are simulated for portfolio purposes.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              localStorage.setItem('keycliq_hide_demo_notice', '1');
+              setShowDemoNotice(false);
+            }}
+            style={{
+              marginTop: '0.5rem',
+              fontSize: '0.82rem',
+              color: '#9a3412',
+              textDecoration: 'underline',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0
+            }}
+          >
+            Don&apos;t show again
+          </button>
+        </div>
+      )}
       <ScanGuidelines />
 
       {/* Hidden file inputs */}

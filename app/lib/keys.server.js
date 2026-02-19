@@ -1,5 +1,6 @@
-﻿import { prisma } from "../utils/db.server.js";
+import { prisma } from "../utils/db.server.js";
 import { uploadImageToCloudinary, deleteImageFromCloudinary } from "../utils/cloudinary.server.js";
+import { uploadImageToBlob, deleteImageFromBlob, isBlobUrl } from "../utils/blob.server.js";
 import { extractSignatureV6 } from "./keyscan.server.js";
 
 /**
@@ -103,30 +104,23 @@ export async function createKey({ userId, name, description, unit, door, notes, 
     let signature = null;
     let sigStatus = "pending";
 
-    // Subir imagen a Cloudinary solo si est├í configurado (staging/production)
+    // Subir imagen: Cloudinary > Vercel Blob > sin persistir
     if (imageDataUrl && imageDataUrl.startsWith('data:')) {
-      const hasCloudinaryConfig = process.env.CLOUDINARY_CLOUD_NAME && 
-                                   process.env.CLOUDINARY_API_KEY && 
-                                   process.env.CLOUDINARY_API_SECRET;
-      
-      if (hasCloudinaryConfig) {
-        console.log('­ƒôñ Subiendo imagen a Cloudinary...');
+      const hasCloudinary = process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET;
+      const hasBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
+
+      if (hasCloudinary) {
         const uploadResult = await uploadImageToCloudinary(imageDataUrl);
-        
         if (uploadResult.success) {
           imageUrl = uploadResult.url;
           imagePublicId = uploadResult.publicId;
-          console.log('Ô£à Imagen subida a Cloudinary:', imageUrl);
-        } else {
-          console.error('ÔØî Error subiendo imagen a Cloudinary:', uploadResult.error);
-          // Continuar sin imagen en caso de error
         }
-      } else {
-        console.log('ÔÜá´©Å  Cloudinary no configurado - modo localhost (imagen en memoria)');
-        // En localhost: guardar un placeholder o null
-        // La imagen se mantiene en sessionStorage para display
-        imageUrl = null;
-        imagePublicId = null;
+      } else if (hasBlob) {
+        const uploadResult = await uploadImageToBlob(imageDataUrl);
+        if (uploadResult.success) {
+          imageUrl = uploadResult.url;
+          imagePublicId = uploadResult.publicId;
+        }
       }
     }
 
@@ -215,23 +209,28 @@ export async function updateKey(keyId, userId, updateData) {
     return null;
   }
 
-  // Manejar actualizaci├│n de imagen si se proporciona
+  // Manejar actualización de imagen si se proporciona
   if (updateData.imageDataUrl && updateData.imageDataUrl.startsWith('data:')) {
-    // Eliminar imagen anterior de Cloudinary si existe
-    if (existingKey.imagePublicId) {
+    if (existingKey.imagePublicId && !isBlobUrl(existingKey.imageUrl)) {
       await deleteImageFromCloudinary(existingKey.imagePublicId);
+    } else if (existingKey.imageUrl && isBlobUrl(existingKey.imageUrl)) {
+      await deleteImageFromBlob(existingKey.imageUrl);
     }
 
-    // Subir nueva imagen a Cloudinary
-    const uploadResult = await uploadImageToCloudinary(updateData.imageDataUrl);
-    
+    const hasCloudinary = process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET;
+    const hasBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
+    let uploadResult = { success: false };
+
+    if (hasCloudinary) {
+      uploadResult = await uploadImageToCloudinary(updateData.imageDataUrl);
+    } else if (hasBlob) {
+      uploadResult = await uploadImageToBlob(updateData.imageDataUrl);
+    }
+
     if (uploadResult.success) {
       updateData.imageUrl = uploadResult.url;
       updateData.imagePublicId = uploadResult.publicId;
-      console.log('Image updated in Cloudinary:', uploadResult.url);
     } else {
-      console.error('Failed to upload new image to Cloudinary:', uploadResult.error);
-      // Mantener imagen anterior en caso de error
       delete updateData.imageDataUrl;
     }
   }
@@ -261,15 +260,10 @@ export async function deleteKey(keyId, userId) {
     return false;
   }
 
-  // Eliminar imagen de Cloudinary si existe
-  if (existingKey.imagePublicId) {
-    const deleteResult = await deleteImageFromCloudinary(existingKey.imagePublicId);
-    if (deleteResult.success) {
-      console.log('Image deleted from Cloudinary:', existingKey.imagePublicId);
-    } else {
-      console.error('Failed to delete image from Cloudinary:', deleteResult.error);
-      // Continuar con la eliminaci├│n de la llave aunque falle la eliminaci├│n de la imagen
-    }
+  if (existingKey.imagePublicId && !isBlobUrl(existingKey.imageUrl)) {
+    await deleteImageFromCloudinary(existingKey.imagePublicId);
+  } else if (existingKey.imageUrl && isBlobUrl(existingKey.imageUrl)) {
+    await deleteImageFromBlob(existingKey.imageUrl);
   }
 
   await prisma.key.delete({

@@ -1,10 +1,12 @@
-﻿import { json, redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useEffect } from "react";
 import { useSubmit } from "@remix-run/react";
 import { requireUserId, getSession, commitSession } from "../utils/session.server.js";
 import { getUserKeys } from "../lib/keys.server.js";
 import { processKeyImageV6 } from "../lib/keyscan.server.js";
 import { prisma } from "../utils/db.server.js";
+import { validateImageDataUrlSize, formatBytes } from "../utils/imageValidation.server.js";
+import { isDemoMode } from "../utils/demoMode.server.js";
 
 export const handle = { 
   hideFooter: true, 
@@ -27,10 +29,25 @@ export async function action({ request }) {
   console.log(`­ƒæñ User ID: ${userId}`);
   
   try {
+    const demoMode = isDemoMode();
     // 1. Validar que tenemos la imagen
     if (!imageDataURL || !imageDataURL.startsWith('data:')) {
       console.error('ÔØî Error: No image data received');
       return json({ error: 'NO_IMAGE_DATA' }, { status: 400 });
+    }
+
+    const sizeValidation = validateImageDataUrlSize(String(imageDataURL));
+    if (!sizeValidation.ok) {
+      const session = await getSession(request.headers.get('Cookie'));
+      session.flash(
+        'scanError',
+        `Image too large. Maximum allowed size is ${formatBytes(sizeValidation.maxBytes)}. Please retake the photo with lower quality.`
+      );
+      return redirect('/scan/error?reason=image-too-large', {
+        headers: {
+          'Set-Cookie': await commitSession(session)
+        }
+      });
     }
     
     // 2. Obtener inventario del usuario (solo llaves con signature ready)
@@ -45,7 +62,16 @@ export async function action({ request }) {
     const readyKeys = userKeys.filter((key) => key.sigStatus === 'ready');
 
     let inventory = [];
-    if (readyKeys.length > 0) {
+    if (demoMode) {
+      // En demo mode, cualquier llave del usuario cuenta como inventario.
+      inventory = userKeys.map((key) => ({
+        key: {
+          id: key.id,
+          type: 'Regular',
+        },
+        signature: key.signature ?? null,
+      }));
+    } else if (readyKeys.length > 0) {
       const latestSignatures = await prisma.keySignature.findMany({
         where: {
           keyId: { in: readyKeys.map((key) => key.id) },
@@ -81,7 +107,7 @@ export async function action({ request }) {
     }
     
     const inventoryTime = Date.now() - startInventory;
-    console.log(`­ƒôª Inventory loaded: ${inventory.length} keys with signatures ready`);
+    console.log(`­ƒôª Inventory loaded: ${inventory.length} keys${demoMode ? ' (demo mode)' : ' with signatures ready'}`);
     console.log(`ÔÜÖ´©Å  Inventory load time: ${inventoryTime}ms`);
     
     // 3. Procesar imagen con KeyScan V6

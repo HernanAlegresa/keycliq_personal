@@ -6,10 +6,13 @@ import dotenv from 'dotenv';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configurar API key directamente
-process.env.OPENAI_API_KEY = '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';
-
-console.log('OPENAI_API_KEY configured:', !!process.env.OPENAI_API_KEY);
+// Use OPENAI_API_KEY from environment only (no hardcoded secrets).
+// Run with: OPENAI_API_KEY=sk-... node validate-progressive.js (or set in .env and load dotenv).
+if (!process.env.OPENAI_API_KEY?.trim()) {
+  console.error('OPENAI_API_KEY must be set in the environment. Do not commit secrets.');
+  process.exit(1);
+}
+console.log('OPENAI_API_KEY configured:', true);
 
 console.log('🔍 KeyCliq V6 Progressive Validation');
 console.log('=====================================');

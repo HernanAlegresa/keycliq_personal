@@ -9,9 +9,14 @@
 import OpenAI from 'openai';
 import { z } from 'zod';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    return null;
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 // Hybrid balanced schema
 const HybridBalancedKeySignatureSchema = z.object({
@@ -82,6 +87,15 @@ BALANCE FOCUS:
  */
 export async function analyzeKeyWithHybridBalancedAI(imageBuffer, mimeType = 'image/jpeg') {
   try {
+    const openai = getOpenAIClient();
+    if (!openai) {
+      return {
+        success: false,
+        error: "Scanning is not configured yet. Please try again later.",
+        signature: null,
+      };
+    }
+
     console.log('🤖 Starting Hybrid Balanced AI analysis...');
     
     // Convert buffer to base64

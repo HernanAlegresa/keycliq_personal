@@ -10,7 +10,7 @@
     "build": "remix build",
     "start": "remix-serve build/index.js",
     "postinstall": "prisma generate",
-    "db:push": "prisma db push",
+    "db:push": "node scripts/run-db-push.js",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:postgres": "node scripts/database/migrate-to-postgres.js",
     "test:v3-multi": "node scripts/keyscan/multi-tests/run-v3-multi-tests.js",
@@ -23,8 +23,8 @@
     "@remix-run/node": "2.17.0",
     "@remix-run/react": "2.17.0",
     "@remix-run/serve": "2.17.0",
+    "@vercel/blob": "^2.3.0",
     "bcryptjs": "3.0.2",
-    "canvas": "^3.2.0",
     "cloudinary": "^2.7.0",
     "isbot": "5.1.27",
     "openai": "^6.6.0",
@@ -32,12 +32,12 @@
     "react-dom": "18.3.1",
     "resend": "^6.1.1",
     "seedrandom": "^3.0.5",
-    "sharp": "^0.34.4",
     "zod": "^4.1.12"
   },
   "devDependencies": {
     "@remix-run/dev": "2.17.0",
     "autoprefixer": "10.4.20",
+    "dotenv": "^16.4.5",
     "postcss": "8.4.45",
     "prisma": "^6.15.0",
     "tailwindcss": "3.4.10"

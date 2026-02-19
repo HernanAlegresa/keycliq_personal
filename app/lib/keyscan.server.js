@@ -1,10 +1,12 @@
-﻿/**
+/**
  * KeyScan V6 Server-side wrapper
  * Este archivo solo se ejecuta en el servidor (Node.js)
  * Versión 6: Hybrid Balanced AI System (GPT-4o multimodal)
  */
 
 import { dataUrlToBinary } from '../utils/imageConversion.js';
+import { validateImageDataUrlSize, formatBytes } from '../utils/imageValidation.server.js';
+import { isDemoMode, simulateDemoScanResult } from '../utils/demoMode.server.js';
 import { analyzeKeyWithHybridBalancedAI, compareHybridBalancedKeySignatures } from './ai/active-logic/multimodal-keyscan.server.js';
 import { saveMatchingResult } from './matching.server.js';
 import { prisma } from '../utils/db.server.js';
@@ -19,11 +21,127 @@ import { prisma } from '../utils/db.server.js';
 export async function processKeyImageV6(imageDataURL, inventory = [], userId = null, config = {}) {
   try {
     const startTime = Date.now();
+    const demoMode = isDemoMode();
+
+    const sizeValidation = validateImageDataUrlSize(imageDataURL);
+    if (!sizeValidation.ok) {
+      return {
+        success: false,
+        error: `Image too large. Maximum allowed size is ${formatBytes(sizeValidation.maxBytes)}.`,
+        message: `Image too large. Maximum allowed size is ${formatBytes(sizeValidation.maxBytes)}. Please upload a smaller image.`,
+        processingTime: Date.now() - startTime
+      };
+    }
     
     // Convertir dataURL a Buffer
     const { data: imageBuffer } = dataUrlToBinary(imageDataURL);
     
     console.log('🔍 KeyScan V6 - Starting AI analysis...');
+
+    // Demo mode fallback (sin OpenAI): simular flujo de producción.
+    if (demoMode) {
+      let keyQueryId = null;
+      const simulated = simulateDemoScanResult(inventory);
+      const querySignature = {
+        mode: "demo",
+        simulatedAt: new Date().toISOString(),
+        confidence_score: simulated.confidence,
+      };
+
+      if (userId) {
+        try {
+          const keyQuery = await prisma.keyQuery.create({
+            data: {
+              userId,
+              queryType: 'scan',
+              result: {
+                mode: 'demo',
+                signature: querySignature,
+                simulated: simulated,
+                timestamp: new Date().toISOString()
+              },
+              status: 'completed'
+            }
+          });
+          keyQueryId = keyQuery.id;
+        } catch (error) {
+          console.error('⚠️ Failed to save demo KeyQuery:', error.message);
+        }
+      }
+
+      if (userId && keyQueryId) {
+        try {
+          const matchType =
+            simulated.outcome === 'MATCH'
+              ? 'MATCH_FOUND'
+              : simulated.outcome === 'POSSIBLE'
+              ? 'POSSIBLE_MATCH'
+              : 'NO_MATCH';
+          await saveMatchingResult({
+            userId,
+            keyQueryId,
+            matchedKeyId: matchType === 'NO_MATCH' ? null : simulated.matchedKeyId,
+            matchType,
+            similarity: simulated.similarity,
+            confidence: simulated.confidence,
+            querySignature,
+            matchedSignature: null,
+            comparisonResult: {
+              mode: 'demo',
+              candidates: simulated.candidates ?? null,
+            }
+          });
+        } catch (error) {
+          console.error('⚠️ Failed to save demo matching result:', error.message);
+        }
+      }
+
+      if (simulated.outcome === 'MATCH') {
+        return {
+          success: true,
+          decision: 'MATCH',
+          match: true,
+          confidence: simulated.confidence,
+          details: {
+            keyId: simulated.matchedKeyId,
+            similarity: simulated.similarity,
+            margin: 0.05,
+            matchType: 'MATCH_FOUND',
+            mode: 'demo',
+          },
+          processingTime: Date.now() - startTime
+        };
+      }
+
+      if (simulated.outcome === 'POSSIBLE') {
+        return {
+          success: true,
+          decision: 'POSSIBLE',
+          match: false,
+          confidence: simulated.confidence,
+          details: {
+            keyId: simulated.matchedKeyId,
+            similarity: simulated.similarity,
+            margin: 0.03,
+            matchType: simulated.candidates && simulated.candidates.length > 1 ? 'POSSIBLE_KEYS' : 'POSSIBLE_MATCH',
+            candidates: simulated.candidates ?? undefined,
+            mode: 'demo',
+          },
+          processingTime: Date.now() - startTime
+        };
+      }
+
+      return {
+        success: true,
+        decision: 'NO_MATCH',
+        match: false,
+        confidence: simulated.confidence,
+        details: {
+          mode: 'demo'
+        },
+        processingTime: Date.now() - startTime
+      };
+    }
     
     // Paso 1: Analizar imagen con GPT-4o
     const analysisResult = await analyzeKeyWithHybridBalancedAI(imageBuffer, 'image/jpeg');
@@ -221,6 +339,23 @@ export async function processKeyImageV6(imageDataURL, inventory = [], userId = n
  */
 export async function extractSignatureV6(imageDataURL) {
   try {
+    if (isDemoMode()) {
+      return {
+        success: false,
+        error: "Scanning is running in Demo Mode.",
+        message: "Scanning is running in Demo Mode."
+      };
+    }
+
+    const sizeValidation = validateImageDataUrlSize(imageDataURL);
+    if (!sizeValidation.ok) {
+      return {
+        success: false,
+        error: `Image too large. Maximum allowed size is ${formatBytes(sizeValidation.maxBytes)}.`,
+        message: `Image too large. Maximum allowed size is ${formatBytes(sizeValidation.maxBytes)}. Please upload a smaller image.`
+      };
+    }
+
     // Convertir dataURL a Buffer
     const { data: imageBuffer } = dataUrlToBinary(imageDataURL);
     

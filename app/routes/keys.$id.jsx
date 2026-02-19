@@ -7,6 +7,7 @@ import { Button } from "../components/ui/Button.jsx";
 import { ImageModal } from "../components/ui/ImageModal.jsx";
 import { useHeader } from "../contexts/HeaderContext.jsx";
 import { prisma } from "../utils/db.server.js";
+import { validateImageDataUrlSize, formatBytes } from "../utils/imageValidation.server.js";
 
 export const handle = { 
   hideFooter: true, 
@@ -71,6 +72,18 @@ export async function action({ request, params }) {
       notes: notes || null,
       imageDataUrl: imageDataUrl || null
     };
+
+    if (imageDataUrl && String(imageDataUrl).startsWith("data:")) {
+      const sizeValidation = validateImageDataUrlSize(String(imageDataUrl));
+      if (!sizeValidation.ok) {
+        return json({
+          errors: [
+            `Image too large. Maximum allowed size is ${formatBytes(sizeValidation.maxBytes)}. Please choose a smaller image.`
+          ],
+          fields: { name, property, unit, door, notes }
+        }, { status: 400 });
+      }
+    }
 
     // Validate data
     const validation = validateKeyData(keyData);

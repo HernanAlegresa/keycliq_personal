@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { useNavigate } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { requireUserId } from "../utils/session.server.js";
 import { Button } from "../components/ui/Button.jsx";
 
@@ -11,11 +11,20 @@ export const handle = {
 
 export async function loader({ request }) {
   await requireUserId(request);
-  return json({});
+  const url = new URL(request.url);
+  const reason = url.searchParams.get("reason");
+  let message = "There was a validation error.";
+
+  if (reason === "image-too-large") {
+    message = "The image is too large. Please retake the photo with lower quality or crop the image before uploading.";
+  }
+
+  return json({ message });
 }
 
 export default function ScanError() {
   const navigate = useNavigate();
+  const { message } = useLoaderData();
 
   const handleRetry = () => {
     navigate('/scan/new');
@@ -37,7 +46,7 @@ export default function ScanError() {
         
         {/* Subcopy */}
         <p className="scan-error__subcopy">
-          There was a validation error.
+          {message}
         </p>
 
         {/* Action Button */}

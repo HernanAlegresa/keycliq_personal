@@ -6,7 +6,6 @@
 /build/
 
 .cache/
-public/
 
 # Private development documentation
 docs/
@@ -28,3 +27,4 @@ dataset-config.local.json
 # Test results with sensitive data
 test-results/
 qa-reports/
+tests/results/
