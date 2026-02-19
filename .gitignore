@@ -18,6 +18,10 @@ tests/keys-optimized/
 # Note: keys-optimized/ README.md is kept in repo
 !tests/keys-optimized/README.md
 
+# Vercel build artifacts and local Claude config
+.vercel/
+.claude/
+
 # Configuration secrets
 .env
 .env.local

@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "remix dev",
-    "build": "remix build",
+    "build": "remix vite:build",
     "start": "remix-serve build/index.js",
     "postinstall": "prisma generate",
     "db:push": "node scripts/run-db-push.js",
@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
-    "@remix-run/node": "2.17.0",
-    "@remix-run/react": "2.17.0",
-    "@remix-run/serve": "2.17.0",
+    "@remix-run/node": "2.16.7",
+    "@remix-run/react": "2.16.7",
+    "@remix-run/serve": "2.16.7",
     "@vercel/blob": "^2.3.0",
     "bcryptjs": "3.0.2",
     "cloudinary": "^2.7.0",
@@ -35,7 +35,9 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@remix-run/dev": "2.17.0",
+    "@remix-run/dev": "2.16.7",
+    "@vercel/remix": "^2.1.0",
+    "vite-tsconfig-paths": "^5.0.0",
     "autoprefixer": "10.4.20",
     "dotenv": "^16.4.5",
     "postcss": "8.4.45",
